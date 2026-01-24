@@ -5,13 +5,12 @@
  */
 package main;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JTextField;
-import javax.swing.Timer;
+import config.LogReg_config;
+import config.animation;
+import config.config;
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.*;
 import main.LandingPage;
 
 /**
@@ -26,6 +25,7 @@ public class LoginRegister extends javax.swing.JFrame {
     public LoginRegister() {
         
         initComponents();
+        
         
     }
     
@@ -44,24 +44,16 @@ public class LoginRegister extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabelImage = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        log_name = new javax.swing.JTextField();
+        log_pass = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
+        pass = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jTextField7 = new javax.swing.JTextField();
-        jLabel22 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        name = new javax.swing.JTextField();
+        badge = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
@@ -100,46 +92,60 @@ public class LoginRegister extends javax.swing.JFrame {
 
         jLabelImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Title_Logo_design_bg.png"))); // NOI18N
         jLabelImage.setText("jLabel2");
+        jLabelImage.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabelImageMouseClicked(evt);
+            }
+        });
         jPanel1.add(jLabelImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 0, 500, 450));
 
-        jLabel1.setFont(new java.awt.Font("Nirmala UI", 1, 24)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("LOG IN");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 60, 301, -1));
-
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setOpaque(false);
-        jTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+        log_name.setEditable(false);
+        log_name.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        log_name.setForeground(new java.awt.Color(153, 153, 153));
+        log_name.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        log_name.setText("Username");
+        log_name.setOpaque(false);
+        log_name.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                log_nameMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jTextField1MouseEntered(evt);
+                log_nameMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                jTextField1MouseExited(evt);
+                log_nameMouseExited(evt);
             }
         });
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        log_name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                log_nameActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 110, 420, 50));
+        jPanel1.add(log_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 110, 420, 50));
 
-        jTextField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField2.setOpaque(false);
-        jTextField2.addMouseListener(new java.awt.event.MouseAdapter() {
+        log_pass.setEditable(false);
+        log_pass.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        log_pass.setForeground(new java.awt.Color(153, 153, 153));
+        log_pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        log_pass.setText("Password");
+        log_pass.setOpaque(false);
+        log_pass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                log_passMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jTextField2MouseEntered(evt);
+                log_passMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                jTextField2MouseExited(evt);
+                log_passMouseExited(evt);
             }
         });
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        log_pass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                log_passActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 200, 420, 51));
+        jPanel1.add(log_pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 200, 420, 51));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel4.setText("<");
@@ -150,25 +156,29 @@ public class LoginRegister extends javax.swing.JFrame {
         });
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 10, 37, -1));
 
-        jTextField4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField4.setOpaque(false);
-        jTextField4.addMouseListener(new java.awt.event.MouseAdapter() {
+        pass.setEditable(false);
+        pass.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        pass.setForeground(new java.awt.Color(153, 153, 153));
+        pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        pass.setText("Password");
+        pass.setOpaque(false);
+        pass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                passMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jTextField4MouseEntered(evt);
+                passMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                jTextField4MouseExited(evt);
+                passMouseExited(evt);
             }
         });
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        pass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                passActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, 420, 51));
-
-        jLabel6.setText("Username:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 90, -1, -1));
+        jPanel1.add(pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, 420, 51));
 
         jTextField6.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField6.setOpaque(false);
@@ -182,7 +192,7 @@ public class LoginRegister extends javax.swing.JFrame {
         jLabel19.setFont(new java.awt.Font("Nirmala UI", 1, 24)); // NOI18N
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("LOG IN");
-        jPanel1.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 60, 301, -1));
+        jPanel1.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 60, 301, -1));
 
         jTextField7.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField7.setOpaque(false);
@@ -193,64 +203,58 @@ public class LoginRegister extends javax.swing.JFrame {
         });
         jPanel1.add(jTextField7, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 200, 420, 51));
 
-        jLabel22.setText("Username:");
-        jPanel1.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 90, -1, -1));
-
-        jLabel8.setText("Password:");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 180, -1, -1));
-
-        jLabel7.setText("Badge #");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, -1, -1));
-
-        jLabel9.setFont(new java.awt.Font("Nirmala UI", 1, 24)); // NOI18N
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("REGISTRATION");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, 301, -1));
-
         jLabel10.setFont(new java.awt.Font("Nirmala UI", 1, 24)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setText("REGISTRATION");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, 301, -1));
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 301, -1));
 
-        jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField3.setOpaque(false);
-        jTextField3.addMouseListener(new java.awt.event.MouseAdapter() {
+        name.setEditable(false);
+        name.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        name.setForeground(new java.awt.Color(153, 153, 153));
+        name.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        name.setText("Username");
+        name.setOpaque(false);
+        name.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nameMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jTextField3MouseEntered(evt);
+                nameMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                jTextField3MouseExited(evt);
+                nameMouseExited(evt);
             }
         });
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                nameActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 420, 50));
+        jPanel1.add(name, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 420, 50));
 
-        jTextField5.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField5.setOpaque(false);
-        jTextField5.addMouseListener(new java.awt.event.MouseAdapter() {
+        badge.setEditable(false);
+        badge.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        badge.setForeground(new java.awt.Color(153, 153, 153));
+        badge.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        badge.setText("Badge");
+        badge.setOpaque(false);
+        badge.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                badgeMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jTextField5MouseEntered(evt);
+                badgeMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                jTextField5MouseExited(evt);
+                badgeMouseExited(evt);
             }
         });
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+        badge.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
+                badgeActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 420, 51));
-
-        jLabel11.setText("Username:");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, -1, -1));
-
-        jLabel12.setText("Password:");
-        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 260, -1, -1));
+        jPanel1.add(badge, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 420, 51));
 
         jLabel14.setBackground(new java.awt.Color(0, 51, 204));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -298,6 +302,9 @@ public class LoginRegister extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("LOG IN");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel5MouseEntered(evt);
             }
@@ -317,6 +324,9 @@ public class LoginRegister extends javax.swing.JFrame {
         jLabel13.setText("CREATE ACCOUNT");
         jLabel13.setOpaque(true);
         jLabel13.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel13MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jLabel13MouseEntered(evt);
             }
@@ -354,13 +364,9 @@ public class LoginRegister extends javax.swing.JFrame {
         jLabel14.setForeground(new Color(0,51,204));        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel14MouseEntered
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void badgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_badgeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
-
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_badgeActionPerformed
 
     private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
   // TODO add your handling code here:
@@ -376,13 +382,13 @@ public class LoginRegister extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void log_passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_log_passActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_log_passActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void log_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_log_nameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_log_nameActionPerformed
 
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
         // TODO add your handling code here:
@@ -479,109 +485,127 @@ public class LoginRegister extends javax.swing.JFrame {
         jLabel5.setBackground(new Color(153,153,153));        
     }//GEN-LAST:event_jLabel5MouseExited
 
-    private void jTextField3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField3MouseEntered
-        animateTextFieldCenter((javax.swing.JTextField) evt.getSource(), true);// TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3MouseEntered
+    private void badgeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_badgeMouseEntered
+        animation ani = new animation();
+        
+        ani.attachHoverEffect(badge);        // TODO add your handling code here:
+    }//GEN-LAST:event_badgeMouseEntered
 
-    private void jTextField3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField3MouseExited
-        animateTextFieldCenter((javax.swing.JTextField) evt.getSource(), false);      // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3MouseExited
+    private void badgeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_badgeMouseExited
+        animation ani = new animation();
+        
+        ani.attachHoverEffect(badge);        // TODO add your handling code here:
+    }//GEN-LAST:event_badgeMouseExited
 
-    private void jTextField5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField5MouseEntered
-        animateTextFieldCenter((javax.swing.JTextField) evt.getSource(), true);        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5MouseEntered
-
-    private void jTextField5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField5MouseExited
-        animateTextFieldCenter((javax.swing.JTextField) evt.getSource(), false);        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5MouseExited
-
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_passActionPerformed
 
-    private void jTextField4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField4MouseEntered
-        animateTextFieldCenter((javax.swing.JTextField) evt.getSource(), true);        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4MouseEntered
+    private void passMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_passMouseEntered
+       animation ani = new animation();
+        
+        ani.attachHoverEffect(pass);        // TODO add your handling code here:
+    }//GEN-LAST:event_passMouseEntered
 
-    private void jTextField4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField4MouseExited
-        animateTextFieldCenter((javax.swing.JTextField) evt.getSource(), false);        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4MouseExited
+    private void passMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_passMouseExited
+        animation ani = new animation();
+        
+        ani.attachHoverEffect(pass);          // TODO add your handling code here:
+    }//GEN-LAST:event_passMouseExited
 
-    private void jTextField1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseEntered
-        animateTextFieldCenter((javax.swing.JTextField) evt.getSource(), true);        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1MouseEntered
+    private void log_nameMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_log_nameMouseEntered
+        animation ani = new animation();
+        
+        ani.attachHoverEffect(log_name);        // TODO add your handling code here:
+    }//GEN-LAST:event_log_nameMouseEntered
 
-    private void jTextField1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseExited
-        animateTextFieldCenter((javax.swing.JTextField) evt.getSource(), false);        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1MouseExited
+    private void log_nameMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_log_nameMouseExited
+        animation ani = new animation();
+        
+        ani.attachHoverEffect(log_name);           // TODO add your handling code here:
+    }//GEN-LAST:event_log_nameMouseExited
 
-    private void jTextField2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField2MouseEntered
-        animateTextFieldCenter((javax.swing.JTextField) evt.getSource(), true);        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2MouseEntered
+    private void log_passMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_log_passMouseEntered
+        animation ani = new animation();
+        
+        ani.attachHoverEffect(log_pass);        // TODO add your handling code here:
+    }//GEN-LAST:event_log_passMouseEntered
 
-    private void jTextField2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField2MouseExited
-        animateTextFieldCenter((javax.swing.JTextField) evt.getSource(), false);        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2MouseExited
-    
-    private static final int GROW_W = 8;    
-    private static final int GROW_H = 3;      
-    private static final int TIMER_DELAY = 30; 
-    private static final int STEP = 1;
-    
-    private java.util.Map<JTextField, java.awt.Rectangle> originalBounds = new java.util.HashMap<>();
-    private javax.swing.Timer hoverTimer;
-    
-    private int moveToward(int current, int target) {
-    if (current == target) return current;
+    private void log_passMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_log_passMouseExited
+        animation ani = new animation();
+        
+        ani.attachHoverEffect(log_pass);          // TODO add your handling code here:
+    }//GEN-LAST:event_log_passMouseExited
 
-    int delta = target - current;
-    int step = Math.min(Math.abs(delta), STEP);
+    private void jLabel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MouseClicked
+        LogReg_config log_conf = new LogReg_config();
+        config conf = new config();
+        
+        String nm = name.getText();
+        String bdg = badge.getText();
+        String ps = pass.getText();
+        
+        log_conf.Register(nm, bdg, ps);
+    }//GEN-LAST:event_jLabel13MouseClicked
 
-    return current + Integer.signum(delta) * step;
-}
+    private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nameActionPerformed
 
-    private void animateTextFieldCenter(JTextField tf, boolean grow) {
-    originalBounds.putIfAbsent(tf, tf.getBounds());
-    Rectangle base = originalBounds.get(tf);
+    private void nameMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nameMouseExited
+        animation ani = new animation();
+        
+        ani.attachHoverEffect(name);       // TODO add your handling code here:
+    }//GEN-LAST:event_nameMouseExited
 
-    int targetW = grow ? base.width + GROW_W : base.width;
-    int targetH = grow ? base.height + GROW_H : base.height;
-    int targetX = grow ? base.x - GROW_W / 2 : base.x;
-    int targetY = grow ? base.y - GROW_H / 2 : base.y;
+    private void nameMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nameMouseEntered
+        animation ani = new animation();
+        
+        ani.attachHoverEffect(name);  // TODO add your handling code here:
+    }//GEN-LAST:event_nameMouseEntered
 
-    if (hoverTimer != null && hoverTimer.isRunning()) {
-        hoverTimer.stop();
-    }
+    private void nameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nameMouseClicked
+        animation ani = new animation();
+        
+        ani.addPlaceholder(name, "Username");
+    }//GEN-LAST:event_nameMouseClicked
 
-    hoverTimer = new javax.swing.Timer(TIMER_DELAY, e -> {
-        Rectangle r = tf.getBounds();
+    private void badgeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_badgeMouseClicked
+        animation ani = new animation();
+        
+        ani.addPlaceholder(badge, "Badge");        // TODO add your handling code here:
+    }//GEN-LAST:event_badgeMouseClicked
 
-        boolean done =
-            r.width == targetW &&
-            r.height == targetH &&
-            r.x == targetX &&
-            r.y == targetY;
+    private void passMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_passMouseClicked
+        animation ani = new animation();
+        
+        ani.addPlaceholder(pass, "Password");        // TODO add your handling code here:
+    }//GEN-LAST:event_passMouseClicked
 
-        if (done) {
-            tf.setBounds(targetX, targetY, targetW, targetH);
-            ((javax.swing.Timer) e.getSource()).stop();
-            return;
-        }
+    private void log_nameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_log_nameMouseClicked
+        animation ani = new animation();
+        
+        ani.addPlaceholder(log_name, "Username");        // TODO add your handling code here:
+    }//GEN-LAST:event_log_nameMouseClicked
 
-        tf.setBounds(
-            moveToward(r.x, targetX),
-            moveToward(r.y, targetY),
-            moveToward(r.width, targetW),
-            moveToward(r.height, targetH)
-        );
+    private void log_passMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_log_passMouseClicked
+        animation ani = new animation();
+        
+        ani.addPlaceholder(log_pass, "Password");
+    }//GEN-LAST:event_log_passMouseClicked
 
-        tf.revalidate();
-        tf.repaint();
-    });
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        LogReg_config log_conf = new LogReg_config();
+        
+        String nm = log_name.getText();
+        String ps = log_pass.getText();
+        
+        log_conf.LogIn(nm, ps, this);
+    }//GEN-LAST:event_jLabel5MouseClicked
 
-    hoverTimer.start();
-}
-
+    private void jLabelImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelImageMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabelImageMouseClicked
 
 
     /**
@@ -620,10 +644,8 @@ public class LoginRegister extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JTextField badge;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -631,22 +653,16 @@ public class LoginRegister extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelImage;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField log_name;
+    private javax.swing.JTextField log_pass;
+    private javax.swing.JTextField name;
+    private javax.swing.JTextField pass;
     // End of variables declaration//GEN-END:variables
 }
