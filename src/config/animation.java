@@ -2,6 +2,7 @@ package config;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.MouseAdapter;
@@ -10,6 +11,8 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.event.WindowAdapter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class animation {
     
@@ -156,6 +159,83 @@ public class animation {
         }
     }.execute();
 }
+    
+    public static void StyleToggleButtons(JToggleButton button) {
+        button.setFocusPainted(false);     
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(true); 
+        button.setOpaque(true);        
+
+        Color defaultBg = new Color(240, 240, 240);
+        Color selectedBg = new Color(30, 144, 255);
+
+        button.setBackground(defaultBg);
+        button.setForeground(Color.BLACK);
+
+        button.addChangeListener(e -> {
+            if (button.isSelected()) {
+                button.setBackground(selectedBg);
+                button.setForeground(Color.WHITE);
+            } else {
+                button.setBackground(defaultBg);
+                button.setForeground(Color.BLACK);
+            }
+        });
+
+        button.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+    }
+    
+    public static final void BtnStyle(JButton btn){
+        Font customFont = new Font("Arial", Font.BOLD, 14);
+        btn.setFont(customFont);
+        btn.setForeground(Color.BLUE);
+        btn.setBackground(Color.LIGHT_GRAY);
+        btn.setOpaque(true);
+        btn.setFocusPainted(false);
+    }
+
+    public void setupCategoryPopup(JButton triggerButton, List<String> categories) {
+        JPopupMenu categoryPopup = new JPopupMenu();
+
+        List<JCheckBoxMenuItem> menuItems = new ArrayList<>();
+
+        for (String cat : categories) {
+            JCheckBoxMenuItem item = new JCheckBoxMenuItem(cat);
+
+            item.setFont(new Font("Arial", Font.PLAIN, 14));
+            item.setOpaque(true);
+            item.setBackground(Color.WHITE);
+            item.setForeground(Color.BLACK);
+
+            item.addActionListener(e -> {
+                updateButtonLabel(triggerButton, menuItems);
+            });
+
+            categoryPopup.add(item);
+            menuItems.add(item);
+        }
+
+        triggerButton.addActionListener(e -> {
+            categoryPopup.show(triggerButton, 0, triggerButton.getHeight());
+        });
+
+        BtnStyle(triggerButton);
+    }
+
+    private void updateButtonLabel(JButton triggerButton, List<JCheckBoxMenuItem> menuItems) {
+        List<String> selected = new ArrayList<>();
+        for (JCheckBoxMenuItem item : menuItems) {
+            if (item.isSelected()) {
+                selected.add(item.getText());
+            }
+        }
+
+        if (selected.isEmpty()) {
+            triggerButton.setText("Select Categories");
+        } else {
+            triggerButton.setText(String.join(", ", selected));
+        }
+    }
 
 
 }
