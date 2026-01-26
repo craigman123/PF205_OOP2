@@ -16,6 +16,10 @@ import java.util.List;
 
 public class animation {
     
+    private Map<JButton, List<JCheckBoxMenuItem>> buttonMenuItemsMap = new HashMap<>();
+    
+    private List<JCheckBoxMenuItem> allItems = new ArrayList<>();
+    
     public int addPlaceholder(JTextField field, String placeholder) {
         
     Color placeholderColor = Color.GRAY;
@@ -188,18 +192,21 @@ public class animation {
     public static final void BtnStyle(JButton btn){
         Font customFont = new Font("Arial", Font.BOLD, 14);
         btn.setFont(customFont);
-        btn.setForeground(Color.BLUE);
+        btn.setForeground(Color.BLACK);
         btn.setBackground(Color.LIGHT_GRAY);
         btn.setOpaque(true);
         btn.setFocusPainted(false);
     }
+    
+    private List<JCheckBoxMenuItem> menuItems = new ArrayList<>();
 
     public void setupCategoryPopup(JButton triggerButton, List<String> categories) {
         JPopupMenu categoryPopup = new JPopupMenu();
-
-        List<JCheckBoxMenuItem> menuItems = new ArrayList<>();
+        
+        
 
         for (String cat : categories) {
+            
             JCheckBoxMenuItem item = new JCheckBoxMenuItem(cat);
 
             item.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -214,6 +221,8 @@ public class animation {
             categoryPopup.add(item);
             menuItems.add(item);
         }
+        
+        buttonMenuItemsMap.put(triggerButton, menuItems);
 
         triggerButton.addActionListener(e -> {
             categoryPopup.show(triggerButton, 0, triggerButton.getHeight());
@@ -236,6 +245,34 @@ public class animation {
             triggerButton.setText(String.join(", ", selected));
         }
     }
+    
+    public void resetAllButtons() {
+    for (Map.Entry<JButton, List<JCheckBoxMenuItem>> entry : buttonMenuItemsMap.entrySet()) {
+        JButton btn = entry.getKey();
+        List<JCheckBoxMenuItem> menuItem = entry.getValue();
+
+        // Uncheck all checkboxes
+        for (JCheckBoxMenuItem item : menuItem) {
+            item.setSelected(false);
+        }
+
+        // Reset button text to original (you can customize this)
+        btn.setText(getOriginalLabelForButton(btn));
+    }
+}
+    
+    private Map<JButton, String> originalLabels = new HashMap<>();
+
+    public void storeOriginalLabels(JButton... buttons) {
+        for (JButton btn : buttons) {
+            originalLabels.put(btn, btn.getText());
+        }
+    }
+
+    private String getOriginalLabelForButton(JButton btn) {
+        return originalLabels.getOrDefault(btn, "Select Categories");
+    }
+
 
 
 }
