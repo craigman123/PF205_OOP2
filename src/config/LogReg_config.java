@@ -7,9 +7,11 @@ package config;
 
 import Admin.AdminDashboard;
 import User.UserDashboard;
+import User.User_Details;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.*;
+import main.LandingPage;
 import main.LoginRegister;
 
 /**
@@ -23,6 +25,7 @@ public class LogReg_config {
         StringBuilder errors = new StringBuilder();
         int Finalbadge = 0;
         
+        try{
             if (nm == null || nm.trim().isEmpty() || nm.equals("Username")) {
                 errors.append("• Username cannot be empty.\n");
             }
@@ -36,6 +39,23 @@ public class LogReg_config {
             if (ps == null || ps.trim().isEmpty() || ps.equals("Password")) {
                 errors.append("• Password cannot be empty.\n");
             }
+        }catch(NumberFormatException e){
+            errors.append("• Warning at Badge\n");
+            errors.append("• Minimum 10 Items\n");
+            errors.append("• Should be Digits\n");
+            
+            JOptionPane.showMessageDialog(
+                null,
+                errors.toString(),
+                "Validation Errors",
+                JOptionPane.ERROR_MESSAGE
+            );
+            
+            return 0;
+        }
+            
+        
+            
             
         if(errors.length() > 0) {
             JOptionPane.showMessageDialog(
@@ -45,7 +65,10 @@ public class LogReg_config {
                 JOptionPane.ERROR_MESSAGE
             );
         }else{
-        
+            
+            User_Details details = new User_Details();
+            details.setVisible(true);
+
         String FinalPass = conf.hashPassword(ps);
 
         String qry = "SELECT * FROM users WHERE user_badge = ?";
@@ -105,7 +128,6 @@ public class LogReg_config {
     
     public static int LogIn(String nm, String ps, JFrame currentFrame){
         config conf = new config();
-        StringBuilder errors = new StringBuilder();
         
         String hashPass = conf.hashPassword(ps);
 
@@ -141,7 +163,7 @@ public class LogReg_config {
                         break;
                     case "User":
                         int enabilability = 1;
-                        Dashboard = new UserDashboard();
+                        Dashboard = new User_Details();
                         
                         break;
                 }

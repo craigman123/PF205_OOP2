@@ -6,6 +6,7 @@
 package config;
 
 import java.sql.*;
+import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -73,7 +74,7 @@ public class config {
     public java.util.List<java.util.Map<String, Object>> fetchRecords(String sqlQuery, Object... values) {
     java.util.List<java.util.Map<String, Object>> records = new java.util.ArrayList<>();
 
-        try (Connection conn = this.connectDB();
+        try (Connection conn = config.connectDB();
              PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
 
             for (int i = 0; i < values.length; i++) {
@@ -97,6 +98,19 @@ public class config {
         }
 
         return records;
+    }
+    
+    public void displayData(String sql, javax.swing.JTable table) {
+        try (Connection conn = connectDB();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            // This line automatically maps the Resultset to your JTable
+            table.setModel(DbUtils.resultSetToTableModel(rs));
+
+        } catch (SQLException e) {
+            System.out.println("Error displaying data: " + e.getMessage());
+        }
     }
 
 }
