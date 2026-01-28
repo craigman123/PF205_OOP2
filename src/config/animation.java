@@ -2,6 +2,7 @@ package config;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.*;
@@ -270,6 +271,38 @@ public class animation {
     private String getOriginalLabelForButton(JButton btn) {
         return originalLabels.getOrDefault(btn, "Select Categories");
     }
+    
+    public static void BuyTimeLoaddingFrame() {
+    JFrame loadingFrame = new JFrame();
+    loadingFrame.setSize(300, 150);
+    loadingFrame.setUndecorated(true);
+    loadingFrame.setLocationRelativeTo(null);
+    loadingFrame.setLayout(new BorderLayout());
+
+    JLabel iconLabel = new JLabel(new ImageIcon(LogReg_config.class.getResource("/images/loading.gif")));
+    iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    loadingFrame.add(iconLabel, BorderLayout.CENTER);
+
+    JLabel loadingText = new JLabel("Loading Inputs...");
+    loadingText.setHorizontalAlignment(SwingConstants.CENTER);
+    loadingFrame.add(loadingText, BorderLayout.NORTH);
+
+    loadingFrame.setVisible(true);
+
+    new SwingWorker<Void, Void>() {
+        @Override
+        protected Void doInBackground() throws Exception {
+            Thread.sleep(4000); 
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            loadingFrame.dispose();      
+          
+        }
+    }.execute();
+}
 
 
 

@@ -6,13 +6,13 @@
 package config;
 
 import Admin.AdminDashboard;
-import User.UserDashboard;
 import User.User_Details;
+import static config.animation.BuyTimeLoaddingFrame;
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.*;
-import main.LandingPage;
-import main.LoginRegister;
 
 /**
  *
@@ -24,38 +24,40 @@ public class LogReg_config {
         config conf = new config();
         StringBuilder errors = new StringBuilder();
         int Finalbadge = 0;
+        boolean loop = true;
         
-        try{
-            if (nm == null || nm.trim().isEmpty() || nm.equals("Username")) {
-                errors.append("• Username cannot be empty.\n");
-            }
+        while(loop){
+            try{
+                if (nm == null || nm.trim().isEmpty() || nm.equals("Username")) {
+                    errors.append("• Username cannot be empty.\n");
+                }
 
-            if (bdg == null || bdg.trim().isEmpty() || bdg.equals("Badge")) {
-                errors.append("• Badge cannot be empty.\n");
-            }else{
-                Finalbadge = Integer.parseInt(bdg);
-            }
+                if (bdg == null || bdg.trim().isEmpty() || bdg.equals("Badge")) {
+                    errors.append("• Badge cannot be empty.\n");
+                }else{
+                    Finalbadge = Integer.parseInt(bdg);
+                }
 
-            if (ps == null || ps.trim().isEmpty() || ps.equals("Password")) {
-                errors.append("• Password cannot be empty.\n");
+                if (ps == null || ps.trim().isEmpty() || ps.equals("Password")) {
+                    errors.append("• Password cannot be empty.\n");
+                }
+
+                loop = false;
+            }catch(NumberFormatException e){
+                errors.append("• Warning at Badge\n");
+                errors.append("• Minimum 10 Items\n");
+                errors.append("• Should be Digits\n");
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    errors.toString(),
+                    "Validation Errors",
+                    JOptionPane.ERROR_MESSAGE
+                );
+
+                return 0;
             }
-        }catch(NumberFormatException e){
-            errors.append("• Warning at Badge\n");
-            errors.append("• Minimum 10 Items\n");
-            errors.append("• Should be Digits\n");
-            
-            JOptionPane.showMessageDialog(
-                null,
-                errors.toString(),
-                "Validation Errors",
-                JOptionPane.ERROR_MESSAGE
-            );
-            
-            return 0;
         }
-            
-        
-            
             
         if(errors.length() > 0) {
             JOptionPane.showMessageDialog(
@@ -65,11 +67,6 @@ public class LogReg_config {
                 JOptionPane.ERROR_MESSAGE
             );
         }else{
-            
-            User_Details details = new User_Details();
-            details.setVisible(true);
-
-        String FinalPass = conf.hashPassword(ps);
 
         String qry = "SELECT * FROM users WHERE user_badge = ?";
         java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, bdg);
@@ -99,30 +96,44 @@ public class LogReg_config {
             );
      
         }else{
-            String sql = "INSERT INTO users(user_name, user_hashpass, user_badge, user_access, user_ussage) VALUES (?,?,?,?,?)";
-            conf.addRecordAndReturnId(sql, nm, FinalPass, Finalbadge, "User", "Enable");
             
-            JFrame successFrame = new JFrame("Success");
-            successFrame.setSize(350, 200);
-            successFrame.setLocationRelativeTo(null);
-            successFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-            JLabel label = new JLabel("Account created successfully!", SwingConstants.CENTER);
-            label.setFont(new Font("Arial", Font.BOLD, 14));
-
-            JButton okButton = new JButton("OK");
-            okButton.addActionListener(e -> successFrame.dispose());
-
-            JPanel panel = new JPanel(new BorderLayout());
-            panel.add(label, BorderLayout.CENTER);
-            panel.add(okButton, BorderLayout.SOUTH);
-
-            successFrame.add(panel);
-            successFrame.setVisible(true);
+            User_Details details = new User_Details(nm, Finalbadge, ps);
+            details.setVisible(true);
+            
+            BuyTimeLoaddingFrame();
+           
         }
         
                 return 0;
             }
+        return 0;
+    }
+    
+    public static int DetailsCompleted(){
+        config conf = new config();
+
+        JFrame successFrame = new JFrame("Success");
+        successFrame.setSize(350, 200);
+        successFrame.setLocationRelativeTo(null);
+        successFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JLabel label = new JLabel("Account created successfully!", SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 14));
+
+        JButton okButton = new JButton("OK");
+        okButton.addActionListener(e -> successFrame.dispose());
+
+        JPanel panel = new JPanel(new BorderLayout());
+        okButton.setSize(300, 20);
+        panel.add(label, BorderLayout.CENTER);
+        panel.add(okButton, BorderLayout.SOUTH);
+
+        String sql = "INSERT INTO users(user_name, user_hashpass, user_badge, user_access, user_ussage) VALUES (?,?,?,?,?)";
+        int id = conf.addRecordAndReturnId(sql, nm, FinalPass, Finalbadge, "User", "Enable");
+
+        successFrame.add(panel);
+        successFrame.setVisible(true);
+
         return 0;
     }
     
@@ -163,7 +174,6 @@ public class LogReg_config {
                         break;
                     case "User":
                         int enabilability = 1;
-                        Dashboard = new User_Details();
                         
                         break;
                 }
