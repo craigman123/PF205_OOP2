@@ -5,7 +5,7 @@
  */
 package User;
 
-import config.animation;
+import configuration.animation;
 import java.awt.Dimension;
 import java.util.*;
 import javax.swing.*;

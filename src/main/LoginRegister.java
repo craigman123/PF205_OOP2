@@ -5,12 +5,14 @@
  */
 package main;
 
-import config.LogReg_config;
-import config.animation;
-import config.config;
+import configuration.Validations;
+import configuration.LogReg_config;
+import configuration.animation;
+import configuration.config;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.border.Border;
 import main.LandingPage;
 
 /**
@@ -25,8 +27,18 @@ public class LoginRegister extends javax.swing.JFrame {
     public LoginRegister() {
         
         initComponents();
+        setBorder();;
         
+    }
+    
+    Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
+    Border orangeBorder = BorderFactory.createLineBorder(Color.ORANGE, 2);
+    
+    private void setBorder(){
         
+        name.setBorder(redBorder);
+        badge.setBorder(redBorder);
+        pass.setBorder(redBorder);
     }
     
     private java.awt.Dimension originalSize;
@@ -178,6 +190,11 @@ public class LoginRegister extends javax.swing.JFrame {
                 passActionPerformed(evt);
             }
         });
+        pass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                passKeyReleased(evt);
+            }
+        });
         jPanel1.add(pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, 420, 51));
 
         jTextField6.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -230,6 +247,11 @@ public class LoginRegister extends javax.swing.JFrame {
                 nameActionPerformed(evt);
             }
         });
+        name.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                nameKeyReleased(evt);
+            }
+        });
         jPanel1.add(name, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 420, 50));
 
         badge.setEditable(false);
@@ -252,6 +274,11 @@ public class LoginRegister extends javax.swing.JFrame {
         badge.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 badgeActionPerformed(evt);
+            }
+        });
+        badge.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                badgeKeyReleased(evt);
             }
         });
         jPanel1.add(badge, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 420, 51));
@@ -604,6 +631,55 @@ public class LoginRegister extends javax.swing.JFrame {
     private void jLabelImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelImageMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabelImageMouseClicked
+
+    private void nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameKeyReleased
+        animation ani = new animation();
+        
+        String nm = name.getText();
+        
+        if(!nm.equals("Username")){
+            ani.validateRequired(name);   
+        }else{
+            name.setBorder(redBorder);
+        }
+    }//GEN-LAST:event_nameKeyReleased
+
+    private void badgeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_badgeKeyReleased
+        animation ani = new animation();
+        Validations validate = new Validations();
+        
+        String bdg = badge.getText();
+        
+        if(!bdg.equals("Badge")){
+        int valid = validate.BadgeValidate(bdg);
+        
+        switch (valid) {
+            case 1:
+                ani.validateRequired(badge);
+                break;
+            case 0:
+                badge.setBorder(redBorder);
+                break;
+            case 3:
+                badge.setBorder(orangeBorder);
+                break;
+            default:
+                break;
+            }
+        }else{
+            badge.setBorder(redBorder);
+        }
+    }//GEN-LAST:event_badgeKeyReleased
+
+    private void passKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passKeyReleased
+        animation ani = new animation();
+        
+        if(!pass.equals("Password")){
+            ani.validateRequired(pass);     
+        }else{
+            pass.setBorder(redBorder);
+        }
+    }//GEN-LAST:event_passKeyReleased
 
 
     /**

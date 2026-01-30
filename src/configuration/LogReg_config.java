@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package config;
+package configuration;
 
 import Admin.AdminDashboard;
 import User.User_Details;
-import static config.animation.BuyTimeLoaddingFrame;
+import static configuration.animation.BuyTimeLoaddingFrame;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.util.HashSet;
@@ -70,7 +70,6 @@ public class LogReg_config {
 
         String qry = "SELECT * FROM users WHERE user_badge = ?";
         java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, bdg);
-
         
         int valuebadge = bdg.length();
         int valuepass = ps.length();
@@ -109,7 +108,7 @@ public class LogReg_config {
         return 0;
     }
     
-    public static int DetailsCompleted(){
+    public static int DetailsCompleted(String nm, int Finalbadge, String FinalPass){
         config conf = new config();
 
         JFrame successFrame = new JFrame("Success");

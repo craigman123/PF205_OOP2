@@ -214,6 +214,20 @@ public class User_config {
     countryCombo.addItem("Zambia");
     countryCombo.addItem("Zimbabwe");
 }
+    
+    public void Education(JComboBox<String> educationCombo) {
+    educationCombo.removeAllItems();
+            
+        educationCombo.addItem("No Formal Education");
+        educationCombo.addItem("Early Childhood Education");
+        educationCombo.addItem("Primary Education");
+        educationCombo.addItem("Lower Secondary Education");
+        educationCombo.addItem("Upper Secondary Education");
+        educationCombo.addItem("Post-Secondary (Non-Tertiary)");
+        educationCombo.addItem("Tertiary Education – Undergraduate");
+        educationCombo.addItem("Tertiary Education – Postgraduate");
+        educationCombo.addItem("Doctoral or Equivalent");
+    }
 
 
 }

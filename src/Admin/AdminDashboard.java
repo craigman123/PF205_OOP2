@@ -5,8 +5,8 @@
  */
 package Admin;
 
-import config.animation;
-import config.config;
+import configuration.animation;
+import configuration.config;
 import java.awt.Color;
 import javax.swing.ButtonGroup;
 

@@ -6,7 +6,7 @@
 package testings;
 
 import User.*;
-import config.animation;
+import configuration.animation;
 import java.util.*;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;

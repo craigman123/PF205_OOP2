@@ -1,4 +1,4 @@
-package config;
+package configuration;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,6 +12,7 @@ import java.util.Map;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.border.Border;
 
 public class animation {
     
@@ -303,6 +304,49 @@ public class animation {
         }
     }.execute();
 }
+    
+    Border redBorder   = BorderFactory.createLineBorder(Color.RED, 2);
+    Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 2);
+    Border grayBorder  = BorderFactory.createLineBorder(Color.GRAY, 1);
+    Border orangeBorder = BorderFactory.createLineBorder(Color.ORANGE, 1);
+    
+    public boolean validateRequired(JTextField field) {
+        if (field.getText().trim().isEmpty()) {
+            field.setBorder(redBorder);
+            return false;
+        } else {
+            field.setBorder(greenBorder);
+            return true;
+        }
+    }
+    
+    public boolean validateEmail(JTextField field) {
+        String email = field.getText().trim();
+        if (email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            field.setBorder(greenBorder);
+            return true;
+        } else {
+            field.setBorder(redBorder);
+            return false;
+        }
+    }
+    
+    public int calculatePasswordStrength(String password, JProgressBar bar) {
+        int strength = 0;
+
+        if (password.length() >= 6) strength += 20; 
+        if (password.length() >= 10) strength += 20; 
+        if (password.matches(".*[a-z].*")) strength += 20; 
+        if (password.matches(".*[A-Z].*")) strength += 20; 
+        if (password.matches(".*[0-9].*")) strength += 10; 
+        if (password.matches(".*[!@#$%^&*()].*")) strength += 10; 
+        
+        if (strength > 100) strength = 100;
+        if (strength < 0) strength = 0;
+
+        bar.setValue(strength);
+        return strength;
+    }
 
 
 
