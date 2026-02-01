@@ -12,6 +12,18 @@ import javax.swing.JComboBox;
  * @author user
  */
 public class User_config {
+
+    public void Age(JComboBox<String> countryCombo) {
+    countryCombo.removeAllItems();
+    
+    countryCombo.addItem("Select Age");
+    
+    for (int i = 1; i <= 130; i++) {
+        countryCombo.addItem(String.valueOf(i));
+    }
+
+    }
+    
     public void loadAllCountries(JComboBox<String> countryCombo) {
     countryCombo.removeAllItems();
     
@@ -217,6 +229,8 @@ public class User_config {
     
     public void Education(JComboBox<String> educationCombo) {
     educationCombo.removeAllItems();
+    
+        educationCombo.addItem("Select Educational Attainment");
             
         educationCombo.addItem("No Formal Education");
         educationCombo.addItem("Early Childhood Education");
@@ -229,5 +243,8 @@ public class User_config {
         educationCombo.addItem("Doctoral or Equivalent");
     }
 
+    public final void GetAllUserInputs(){
+        
+    }
 
 }

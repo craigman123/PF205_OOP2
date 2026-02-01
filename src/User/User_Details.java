@@ -19,8 +19,14 @@ import com.toedter.calendar.JDateChooser;
 import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -45,12 +51,17 @@ public final class User_Details extends javax.swing.JFrame {
             
         initComponents();
         Gender();
-        Age();
+        userconf.Age(age);
         userconf.Education(educationBox);
         TextInput();
         userconf.loadAllCountries(country);
         setBorder();
         UpdateBar();
+        
+    }
+    
+    public void GetComboBoxItem(JComboBox box){
+        
     }
     
     private void UpdateBar(){
@@ -157,25 +168,14 @@ public final class User_Details extends javax.swing.JFrame {
         dialog.pack();
         dialog.setLocationRelativeTo(frame);
         dialog.setVisible(true);
+        
+        BirthPane.setBorder(greenBorder);
     }
     
     public void TextInput(){
         nm.setText(username);
         bdg.setText(String.valueOf(badge));
         pass.setText(hashedPassword);
-    }
-    
-    public void Age() {
-        
-        age.setFixedCellHeight(50);
-
-        DefaultListModel<String> model = new DefaultListModel<>();
-
-        for (int i = 18; i <= 100; i++) {
-            model.addElement(String.valueOf(i));
-        }
-
-        age.setModel(model);
     }
     
     public void Gender(){
@@ -194,6 +194,94 @@ public final class User_Details extends javax.swing.JFrame {
         }
         
     }
+    
+    private void updateBirthPaneBorder() {
+        String selected = BirthField.getText().trim();
+
+        if (selected.isEmpty() || selected.equals("Select Birthdate")) {
+
+            BirthPane.setBorder(redBorder);
+        } else {
+
+            String[] parts = selected.split("\\s*/\\s*"); 
+
+            if (parts.length != 3 || parts[0].isEmpty() || parts[1].isEmpty() || parts[2].isEmpty()) {
+                BirthPane.setBorder(orangeBorder);
+            } else {
+                try {
+                    int month = Integer.parseInt(parts[0]);
+                    int day = Integer.parseInt(parts[1]);
+                    int year = Integer.parseInt(parts[2]);
+
+
+                    if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900 || year > 2100) {
+                        BirthPane.setBorder(orangeBorder);
+                    } else {
+
+                        BirthPane.setBorder(greenBorder);
+                    }
+                } catch (NumberFormatException e) {
+
+                    BirthPane.setBorder(orangeBorder);
+                }
+            }
+        }
+    }
+    
+    private boolean CheckAllInputs() {
+        
+        Validations validation = new Validations();
+
+    // Username / Badge / Password
+        if (nm.getText() == null || nm.getText().trim().isEmpty() || nm.getText().equals("Username"))
+            return false;
+
+        if (bdg.getText() == null || bdg.getText().trim().isEmpty() || bdg.getText().equals("badge"))
+            return false;
+
+        if (pass.getText() == null || pass.getText().trim().isEmpty() || pass.getText().equals("Password"))
+            return false;
+
+        // Personal info
+        if (name.getText().trim().isEmpty())
+            return false;
+
+        if (number1.getText().equals("Valid ID Number") || number1.getText().trim().isEmpty())
+            return false;
+
+        if (number.getText().equals("Phone Number") || number.getText().trim().isEmpty())
+            return false;
+
+        if (email.getText().equals("Email") || email.getText().trim().isEmpty() || validation.validateEmailBoolean(email))
+            return false;
+
+        if (BirthField.getText().equals("Select Birthdate"))
+            return false;
+
+        // ComboBoxes
+        if (age.getSelectedItem().equals("Select Age"))
+            return false;
+
+        if (country.getSelectedItem().equals("Select Country"))
+            return false;
+
+        if (educationBox.getSelectedItem().equals("Select Educational Attainment"))
+            return false;
+
+        // Age logic (only AFTER safe checks)
+        int selectedAge = Integer.parseInt(age.getSelectedItem().toString());
+        if (selectedAge < 18)
+            return false;
+
+        // Gender
+        if (!jToggleButton1.isSelected() && !jToggleButton2.isSelected())
+            return false;
+
+        return true; // ✅ ALL INPUTS VALID
+    }
+    
+    
+
     
     
     /**
@@ -218,7 +306,6 @@ public final class User_Details extends javax.swing.JFrame {
         pass = new javax.swing.JTextField();
         number = new javax.swing.JTextField();
         email = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         number1 = new javax.swing.JTextField();
         BirthPane = new javax.swing.JPanel();
@@ -238,10 +325,8 @@ public final class User_Details extends javax.swing.JFrame {
         country = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         agePane = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        age = new javax.swing.JList<>();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        age = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -270,7 +355,7 @@ public final class User_Details extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
 
         name.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        name.setForeground(new java.awt.Color(204, 204, 204));
+        name.setForeground(new java.awt.Color(153, 153, 153));
         name.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         name.setText("Name");
         name.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -312,6 +397,7 @@ public final class User_Details extends javax.swing.JFrame {
         );
 
         nm.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        nm.setForeground(new java.awt.Color(153, 153, 153));
         nm.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         nm.setText("Username");
         nm.addActionListener(new java.awt.event.ActionListener() {
@@ -326,6 +412,7 @@ public final class User_Details extends javax.swing.JFrame {
         });
 
         bdg.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        bdg.setForeground(new java.awt.Color(153, 153, 153));
         bdg.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         bdg.setText("Badge");
         bdg.addActionListener(new java.awt.event.ActionListener() {
@@ -340,6 +427,7 @@ public final class User_Details extends javax.swing.JFrame {
         });
 
         pass.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        pass.setForeground(new java.awt.Color(153, 153, 153));
         pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         pass.setText("Password");
         pass.addActionListener(new java.awt.event.ActionListener() {
@@ -380,7 +468,7 @@ public final class User_Details extends javax.swing.JFrame {
         );
 
         number.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        number.setForeground(new java.awt.Color(204, 204, 204));
+        number.setForeground(new java.awt.Color(153, 153, 153));
         number.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         number.setText("Phone Number");
         number.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -400,7 +488,7 @@ public final class User_Details extends javax.swing.JFrame {
         });
 
         email.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        email.setForeground(new java.awt.Color(204, 204, 204));
+        email.setForeground(new java.awt.Color(153, 153, 153));
         email.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         email.setText("Email");
         email.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -419,21 +507,9 @@ public final class User_Details extends javax.swing.JFrame {
             }
         });
 
-        jCheckBox1.setBackground(new java.awt.Color(204, 204, 204));
-        jCheckBox1.setText("\"I agree to create this account and");
-        jCheckBox1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jCheckBox1MouseClicked(evt);
-            }
-        });
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
-            }
-        });
-
         jLabel3.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel3.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(51, 51, 51));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("COMPLETE");
         jLabel3.setOpaque(true);
@@ -450,7 +526,7 @@ public final class User_Details extends javax.swing.JFrame {
         });
 
         number1.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        number1.setForeground(new java.awt.Color(204, 204, 204));
+        number1.setForeground(new java.awt.Color(153, 153, 153));
         number1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         number1.setText("Valid ID Number");
         number1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -491,17 +567,22 @@ public final class User_Details extends javax.swing.JFrame {
                 jLabel10MouseExited(evt);
             }
         });
-        BirthPane.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 40, 80, 60));
+        BirthPane.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 40, 70, 60));
 
         BirthField.setEditable(false);
         BirthField.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        BirthField.setText("1 / 1 / 2026");
+        BirthField.setText("Select Birthdate");
         BirthField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BirthFieldActionPerformed(evt);
             }
         });
-        BirthPane.add(BirthField, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 46, 260, 50));
+        BirthField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                BirthFieldKeyTyped(evt);
+            }
+        });
+        BirthPane.add(BirthField, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 260, 50));
 
         passStrength.setForeground(new java.awt.Color(204, 204, 204));
         passStrength.setOpaque(true);
@@ -601,38 +682,38 @@ public final class User_Details extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        age.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        age.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        age.setToolTipText("");
-        jScrollPane2.setViewportView(age);
-
         jLabel8.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         jLabel8.setText("Age");
+
+        age.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        age.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ageActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout agePaneLayout = new javax.swing.GroupLayout(agePane);
         agePane.setLayout(agePaneLayout);
         agePaneLayout.setHorizontalGroup(
             agePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
             .addGroup(agePaneLayout.createSequentialGroup()
                 .addGap(176, 176, 176)
                 .addComponent(jLabel8)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(agePaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(age, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         agePaneLayout.setVerticalGroup(
             agePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, agePaneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(age, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                .addContainerGap())
         );
-
-        jLabel9.setText("accept the terms and agreement of this application");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -653,8 +734,8 @@ public final class User_Details extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(countryPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(BirthPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(agePane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(agePane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BirthPane, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -664,19 +745,12 @@ public final class User_Details extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(PassLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel9)))
+                                .addComponent(PassLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)))
                         .addContainerGap())
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(jCheckBox1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(128, 128, 128))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(115, 115, 115))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -712,12 +786,8 @@ public final class User_Details extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addComponent(PassLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jCheckBox1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel9)))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -735,7 +805,8 @@ public final class User_Details extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -746,7 +817,7 @@ public final class User_Details extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -795,52 +866,38 @@ public final class User_Details extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_emailActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
-
-    private void jCheckBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBox1MouseClicked
-        
-        
-        jCheckBox1.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-
-                jLabel3.setForeground(new Color(0,0,0));
-                enable = true; 
-            } else {
-
-                jLabel3.setForeground(new Color(204,204,204));
-                enable = false; 
-            }
-        });        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1MouseClicked
-
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-        if(enable == true){
+
+        if (CheckAllInputs() == true) {
             
-        }else{
             
-        }// TODO add your handling code here:
+            new UserDashboard().setVisible(true);
+            this.dispose();
+            
+        } else {
+            JOptionPane.showMessageDialog(
+                this,
+                "Some fields are invalid or Empty!. Please fix highlighted inputs.",
+                "Validation Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
-        if(enable == true){
-            jLabel3.setBackground(new Color(102,102,102));
-        }else{
-            
-        }       // TODO add your handling code here:
+
+            jLabel3.setBackground(new Color(102,102,102));   // TODO add your handling code here:
     }//GEN-LAST:event_jLabel3MouseEntered
 
     private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
-        if(enable == true){
-            jLabel3.setBackground(new Color(153,153,153));
-        }else{
-            
-        } // TODO add your handling code here:
+
+            jLabel3.setBackground(new Color(153,153,153)); // TODO add your handling code here:
     }//GEN-LAST:event_jLabel3MouseExited
 
     private void number1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_number1MouseClicked
-        // TODO add your handling code here:
+        animation ani = new animation();
+
+        ani.addPlaceholder(number1, "Valid ID Number");// TODO add your handling code here:
     }//GEN-LAST:event_number1MouseClicked
 
     private void number1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_number1ActionPerformed
@@ -916,11 +973,24 @@ public final class User_Details extends javax.swing.JFrame {
     }//GEN-LAST:event_bdgKeyReleased
 
     private void countryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_countryActionPerformed
-        // TODO add your handling code here:
+        Object selected = country.getSelectedItem();
+
+        if (selected == null || selected.toString().equals("Select Country")) {
+            countryPane.setBorder(redBorder);
+        } else {
+            countryPane.setBorder(greenBorder);
+        }       // TODO add your handling code here:
     }//GEN-LAST:event_countryActionPerformed
 
     private void educationBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_educationBoxActionPerformed
-        // TODO add your handling code here:
+        Object selected = educationBox.getSelectedItem();
+
+        if (selected == null || selected.toString().equals("Select Educational Attainment")) {
+            educationPane.setBorder(redBorder);
+        } else {
+            educationPane.setBorder(greenBorder);
+        }
+   // TODO add your handling code here:
     }//GEN-LAST:event_educationBoxActionPerformed
 
     private void jLabel10MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseEntered
@@ -936,7 +1006,13 @@ public final class User_Details extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel10MouseClicked
 
     private void BirthFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BirthFieldActionPerformed
-        // TODO add your handling code here:
+        String selected = BirthField.getText();
+
+        if (selected.equals("Select Birthdate")) {
+            BirthPane.setBorder(redBorder);
+        } else {
+            BirthPane.setBorder(greenBorder);
+        }       // TODO add your handling code here:
     }//GEN-LAST:event_BirthFieldActionPerformed
 
     private void jToggleButton1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jToggleButton1FocusGained
@@ -946,6 +1022,45 @@ public final class User_Details extends javax.swing.JFrame {
     private void jToggleButton2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jToggleButton2FocusGained
         gender.setBorder(greenBorder);        // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton2FocusGained
+
+    private void ageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ageActionPerformed
+        Object selected = age.getSelectedItem();
+
+        if (selected == null) {
+            return;
+        }
+
+        String selectedAge = selected.toString();
+        
+        if("Select Age".equals(selectedAge)){
+            return;
+        }
+        
+        int ageItem;
+        try {
+            ageItem = Integer.parseInt(selectedAge);
+        } catch (NumberFormatException e) {
+            return;
+        }
+
+        if (ageItem >= 18) {
+            agePane.setBorder(greenBorder);
+        } else {
+            agePane.setBorder(orangeBorder);
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ageActionPerformed
+
+    private void BirthFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BirthFieldKeyTyped
+        BirthField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { updateBirthPaneBorder(); }
+            public void removeUpdate(DocumentEvent e) { updateBirthPaneBorder(); }
+            public void changedUpdate(DocumentEvent e) { updateBirthPaneBorder(); }
+    });
+
+         // TODO add your handling code here:
+    }//GEN-LAST:event_BirthFieldKeyTyped
 
     /**
      * @param args the command line arguments
@@ -986,7 +1101,7 @@ public final class User_Details extends javax.swing.JFrame {
     private javax.swing.JTextField BirthField;
     private javax.swing.JPanel BirthPane;
     private javax.swing.JLabel PassLabel;
-    private javax.swing.JList<String> age;
+    private javax.swing.JComboBox<String> age;
     private javax.swing.JPanel agePane;
     private javax.swing.JTextField bdg;
     private javax.swing.JComboBox<String> country;
@@ -995,7 +1110,6 @@ public final class User_Details extends javax.swing.JFrame {
     private javax.swing.JPanel educationPane;
     private javax.swing.JTextField email;
     private javax.swing.JPanel gender;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -1005,13 +1119,11 @@ public final class User_Details extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JTextField name;

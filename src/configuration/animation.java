@@ -293,7 +293,7 @@ public class animation {
     new SwingWorker<Void, Void>() {
         @Override
         protected Void doInBackground() throws Exception {
-            Thread.sleep(4000); 
+            Thread.sleep(2000); 
             return null;
         }
 
@@ -322,14 +322,23 @@ public class animation {
     
     public boolean validateEmail(JTextField field) {
         String email = field.getText().trim();
-        if (email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+
+        if (email.isEmpty()) {
+            field.setBorder(orangeBorder);
+            return false;
+        }
+
+        String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+
+        if (email.matches(emailRegex)) {
             field.setBorder(greenBorder);
             return true;
         } else {
-            field.setBorder(redBorder);
+            field.setBorder(orangeBorder);
             return false;
         }
     }
+
     
     public int calculatePasswordStrength(String password, JProgressBar bar) {
         int strength = 0;

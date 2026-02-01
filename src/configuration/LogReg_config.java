@@ -7,6 +7,7 @@ package configuration;
 
 import Admin.AdminDashboard;
 import User.User_Details;
+import User.User_Permission;
 import static configuration.animation.BuyTimeLoaddingFrame;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -96,8 +97,8 @@ public class LogReg_config {
      
         }else{
             
-            User_Details details = new User_Details(nm, Finalbadge, ps);
-            details.setVisible(true);
+            User_Permission perms = new User_Permission(nm, Finalbadge, ps);
+            perms.setVisible(true);
             
             BuyTimeLoaddingFrame();
            
