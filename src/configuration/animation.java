@@ -1,10 +1,7 @@
 package configuration;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.HashMap;
@@ -12,6 +9,8 @@ import java.util.Map;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.border.Border;
 
 public class animation {
@@ -26,14 +25,14 @@ public class animation {
     Color textColor = Color.BLACK;
 
     final boolean[] showingPlaceholder = {true};
-
-    field.addHierarchyListener(e -> {
-        if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && field.isShowing()) {
-            field.setText(placeholder);
-            field.setForeground(placeholderColor);
-            showingPlaceholder[0] = true;
-        }
-    });
+//
+//    field.addHierarchyListener(e -> {
+//        if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && field.isShowing()) {        //LOADER (OPTIONAL)
+//            field.setText(placeholder);
+//            field.setForeground(placeholderColor);
+//            showingPlaceholder[0] = true;
+//        }
+//    });
     
         field.setEditable(true);
         field.setFocusable(true);
@@ -130,39 +129,43 @@ public class animation {
         });
     }
     
-    public static void showLoadingAndOpen(JFrame currentFrame, JFrame nextFrame) {
-    JFrame loadingFrame = new JFrame();
-    loadingFrame.setSize(300, 150);
-    loadingFrame.setUndecorated(true);
-    loadingFrame.setLocationRelativeTo(null);
-    loadingFrame.setLayout(new BorderLayout());
+    public static void showLoadingAndOpen(JFrame currentFrame, JFrame nextFrame, String getText) {
 
-    JLabel iconLabel = new JLabel(new ImageIcon(LogReg_config.class.getResource("/images/loading.gif")));
-    iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    loadingFrame.add(iconLabel, BorderLayout.CENTER);
+    JDialog loadingDialog = new JDialog(currentFrame, true);
+    loadingDialog.setSize(300, 150);
+    loadingDialog.setUndecorated(true);
+    loadingDialog.setLocationRelativeTo(currentFrame);
+    loadingDialog.setLayout(new BorderLayout());
+    loadingDialog.setAlwaysOnTop(true);
 
-    JLabel loadingText = new JLabel("Logging in, please wait...");
-    loadingText.setHorizontalAlignment(SwingConstants.CENTER);
-    loadingFrame.add(loadingText, BorderLayout.NORTH);
+    JLabel iconLabel = new JLabel(
+            new ImageIcon(LogReg_config.class.getResource("/images/loading.gif")),
+            SwingConstants.CENTER
+    );
+    loadingDialog.add(iconLabel, BorderLayout.CENTER);
 
-    loadingFrame.setVisible(true);
+    JLabel loadingText = new JLabel(getText, SwingConstants.CENTER);
+    loadingDialog.add(loadingText, BorderLayout.NORTH);
 
     new SwingWorker<Void, Void>() {
         @Override
         protected Void doInBackground() throws Exception {
-            Thread.sleep(2000); 
+            nextFrame.setLocationRelativeTo(null);
+            nextFrame.setVisible(true);
+            Thread.sleep(2000);
             return null;
         }
 
         @Override
         protected void done() {
-            loadingFrame.dispose();      
-            currentFrame.dispose();   
-            nextFrame.setLocationRelativeTo(null);
-            nextFrame.setVisible(true);  
+            loadingDialog.dispose();
+            currentFrame.dispose();
         }
     }.execute();
+    
+    loadingDialog.setVisible(true);
 }
+
     
     public static void StyleToggleButtons(JToggleButton button) {
         button.setFocusPainted(false);     
@@ -273,37 +276,61 @@ public class animation {
         return originalLabels.getOrDefault(btn, "Select Categories");
     }
     
-    public static void BuyTimeLoaddingFrame() {
-    JFrame loadingFrame = new JFrame();
-    loadingFrame.setSize(300, 150);
-    loadingFrame.setUndecorated(true);
-    loadingFrame.setLocationRelativeTo(null);
-    loadingFrame.setLayout(new BorderLayout());
+    JDialog loadingDialog;
 
-    JLabel iconLabel = new JLabel(new ImageIcon(LogReg_config.class.getResource("/images/loading.gif")));
-    iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    loadingFrame.add(iconLabel, BorderLayout.CENTER);
+public void BuyTimeLoaddingFrame() {
 
-    JLabel loadingText = new JLabel("Loading Inputs...");
-    loadingText.setHorizontalAlignment(SwingConstants.CENTER);
-    loadingFrame.add(loadingText, BorderLayout.NORTH);
+    SwingUtilities.invokeLater(() -> {
+        loadingDialog = new JDialog((Frame) null, true);
+        loadingDialog.setUndecorated(true);
+        loadingDialog.setLayout(new BorderLayout());
+        loadingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        loadingDialog.setAlwaysOnTop(true);
 
-    loadingFrame.setVisible(true);
+        JLabel iconLabel = new JLabel();
+        iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        ImageIcon icon = new ImageIcon(
+                LogReg_config.class.getResource("/images/loading.gif")
+        );
+        iconLabel.setIcon(icon);
+
+        JLabel loadingText = new JLabel("Loading Inputs...", SwingConstants.CENTER);
+
+        loadingDialog.add(loadingText, BorderLayout.NORTH);
+        loadingDialog.add(iconLabel, BorderLayout.CENTER);
+
+        loadingDialog.setSize(300, 100);
+        loadingDialog.setLocationRelativeTo(null);
+
+        loadingDialog.setVisible(true);
+    });
 
     new SwingWorker<Void, Void>() {
         @Override
         protected Void doInBackground() throws Exception {
-            Thread.sleep(2000); 
+            Thread.sleep(2000);
             return null;
         }
 
         @Override
         protected void done() {
-            loadingFrame.dispose();      
-          
+            SwingUtilities.invokeLater(() -> {
+                if (loadingDialog != null) {
+                    loadingDialog.dispose();
+                }
+            });
         }
     }.execute();
 }
+
+    public void DisposeLoadingFrame() {
+        SwingUtilities.invokeLater(() -> {
+            if (loadingDialog != null) {
+                loadingDialog.dispose();
+            }
+        });
+    }
     
     Border redBorder   = BorderFactory.createLineBorder(Color.RED, 2);
     Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 2);

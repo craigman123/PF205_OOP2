@@ -1,7 +1,6 @@
 
 package configuration;
 
-import java.time.LocalDate;
 import javax.swing.JTextField;
 
 public class Validations {
@@ -28,6 +27,55 @@ public class Validations {
             
         }
         return valid;
+    }
+    
+    public static int ConvertInts(Object bdg){
+        int badge;
+        
+        try{
+            badge = Integer.parseInt((String) bdg);
+        }catch(NumberFormatException e){
+            return 0;
+        }
+        
+        
+        return badge;
+        
+    }
+    
+    public static int ValidateInteger(String input){
+        
+        try{
+            int FinalInput = Integer.parseInt(input);
+        }catch(NumberFormatException e){
+            return 0;
+        }
+        
+        return 1;
+    }
+    
+    public static boolean ValidateIntegerBool(String input){
+        
+        try{
+            int FinalInput = Integer.parseInt(input);
+        }catch(NumberFormatException e){
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public boolean ValidBadge(String value){
+        boolean valid1 = false;
+        Validations validation = new Validations();
+        
+        int valid = validation.BadgeValidate(value);
+        
+        if(valid != 1){
+            valid1 = true;
+        }
+        
+        return valid1;
     }
     
     public boolean validateEmailBoolean(JTextField field) {

@@ -16,6 +16,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.border.Border;
 import com.toedter.calendar.JDateChooser;
+import configuration.config;
 import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -60,8 +61,19 @@ public final class User_Details extends javax.swing.JFrame {
         
     }
     
-    public void GetComboBoxItem(JComboBox box){
+    public void SendInputsToDatabase(String nm, String name, int bdg, String pass, String birth, 
+            String number, int Valid_Id, String email, String gender, String age, String education, String country){
         
+        config conf = new config();
+        
+        String hashpass = conf.hashPassword(pass);
+        
+        String sql = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
+        int userID = conf.addRecordAndReturnId(sql, nm, bdg, hashpass, "User", "Enable");
+        
+        sql = "INSERT INTO details(user_id, user_age, user_gender, user_number, user_email, user_name, user_education, "
+                + "user_ValidId, user_birthdate, user_country) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        conf.addRecordAndReturnId(sql, userID, age, gender, number, email, name, education, Valid_Id, birth, country);
     }
     
     private void UpdateBar(){
@@ -228,58 +240,90 @@ public final class User_Details extends javax.swing.JFrame {
         }
     }
     
-    private boolean CheckAllInputs() {
-        
-        Validations validation = new Validations();
+    public String checkAllInputs() {
 
-    // Username / Badge / Password
-        if (nm.getText() == null || nm.getText().trim().isEmpty() || nm.getText().equals("Username"))
-            return false;
+    StringBuilder errors = new StringBuilder();
+    Validations validation = new Validations();
 
-        if (bdg.getText() == null || bdg.getText().trim().isEmpty() || bdg.getText().equals("badge"))
-            return false;
+    String badgeValue = bdg.getText();
 
-        if (pass.getText() == null || pass.getText().trim().isEmpty() || pass.getText().equals("Password"))
-            return false;
-
-        // Personal info
-        if (name.getText().trim().isEmpty())
-            return false;
-
-        if (number1.getText().equals("Valid ID Number") || number1.getText().trim().isEmpty())
-            return false;
-
-        if (number.getText().equals("Phone Number") || number.getText().trim().isEmpty())
-            return false;
-
-        if (email.getText().equals("Email") || email.getText().trim().isEmpty() || validation.validateEmailBoolean(email))
-            return false;
-
-        if (BirthField.getText().equals("Select Birthdate"))
-            return false;
-
-        // ComboBoxes
-        if (age.getSelectedItem().equals("Select Age"))
-            return false;
-
-        if (country.getSelectedItem().equals("Select Country"))
-            return false;
-
-        if (educationBox.getSelectedItem().equals("Select Educational Attainment"))
-            return false;
-
-        // Age logic (only AFTER safe checks)
-        int selectedAge = Integer.parseInt(age.getSelectedItem().toString());
-        if (selectedAge < 18)
-            return false;
-
-        // Gender
-        if (!jToggleButton1.isSelected() && !jToggleButton2.isSelected())
-            return false;
-
-        return true; // ✅ ALL INPUTS VALID
+    // Username
+    if (nm.getText() == null || nm.getText().trim().isEmpty() || nm.getText().equals("Username")) {
+        errors.append("Username is required.\n");
     }
-    
+
+    // Badge
+    if (bdg.getText() == null || bdg.getText().trim().isEmpty() || bdg.getText().equals("badge")) {
+        errors.append("Badge is required.\n");
+    } else if (validation.ValidBadge(badgeValue)) {
+        errors.append("Badge is invalid.\n");
+    }
+
+    // Password
+    if (pass.getText() == null || pass.getText().trim().isEmpty() || pass.getText().equals("Password")) {
+        errors.append("Password is required.\n");
+    }
+
+    // Name
+    if (name.getText().trim().isEmpty()) {
+        errors.append("Full name is required.\n");
+    }
+
+    String value = number1.getText();
+    // ID Number
+    if (number1.getText().trim().isEmpty() || number1.getText().equals("Valid ID Number")) {
+        errors.append("Valid ID Number is required.\n");
+    }else if(validation.ValidateIntegerBool(value)){
+        errors.append("Valid ID Number should be Integer.\n");
+    }
+
+    String value2 = number.getText();
+    // Phone
+    if (number.getText().trim().isEmpty() || number.getText().equals("Phone Number")) {
+        errors.append("Phone number is required.\n");
+    }else if(validation.ValidateIntegerBool(value2)){
+        errors.append("Phone Number should be Integer.\n");
+    }
+
+    // Email
+    if (email.getText().trim().isEmpty() || email.getText().equals("Email")) {
+        errors.append("Email is required.\n");
+    } else if (!validation.validateEmailBoolean(email)) {
+        errors.append("Email format is invalid.\n");
+    }
+
+    // Birthdate
+    if (BirthField.getText().equals("Select Birthdate")) {
+        errors.append("Birthdate must be selected.\n");
+    }
+
+    // Age
+    if (age.getSelectedItem().equals("Select Age")) {
+        errors.append("Age must be selected.\n");
+    } else {
+        int selectedAge = Integer.parseInt(age.getSelectedItem().toString());
+        if (selectedAge < 18) {
+            errors.append("Must be at least 18 years old.\n");
+        }
+    }
+
+    // Country
+    if (country.getSelectedItem().equals("Select Country")) {
+        errors.append("Country must be selected.\n");
+    }
+
+    // Education
+    if (educationBox.getSelectedItem().equals("Select Educational Attainment")) {
+        errors.append("Educational attainment must be selected.\n");
+    }
+
+    // Gender
+    if (!jToggleButton1.isSelected() && !jToggleButton2.isSelected()) {
+        errors.append("Gender must be selected.\n");
+    }
+
+    return errors.toString(); // empty = valid
+}
     
 
     
@@ -867,21 +911,44 @@ public final class User_Details extends javax.swing.JFrame {
     }//GEN-LAST:event_emailActionPerformed
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-
-        if (CheckAllInputs() == true) {
-            
-            
-            new UserDashboard().setVisible(true);
-            this.dispose();
-            
-        } else {
-            JOptionPane.showMessageDialog(
-                this,
-                "Some fields are invalid or Empty!. Please fix highlighted inputs.",
-                "Validation Error",
-                JOptionPane.ERROR_MESSAGE
-            );
+        String value9 = "";
+        Validations validate = new Validations();
+        
+        String value1 = name.getText();
+        String value2 = nm.getText();
+        String Getbadge = bdg.getText();
+        String value4 = pass.getText();
+        String value5 = BirthField.getText();
+        String value6 = number.getText();
+        String GetValidID = number1.getText();
+        String value8 = email.getText();
+        
+        int value3 = validate.ConvertInts(Getbadge);
+        int value7 = validate.ConvertInts(GetValidID);
+        
+        if(jToggleButton2.isSelected() == true){
+            value9 = "male";
+        }else if(jToggleButton1.isSelected() == true){
+            value9 = "female";
         }
+        
+        String value10 = (String) age.getSelectedItem();
+        String value11 = (String) educationBox.getSelectedItem();
+        String value12 = (String) country.getSelectedItem();
+        
+        String errors = checkAllInputs();
+
+        if (!errors.isEmpty()) {
+            JOptionPane.showMessageDialog(null, errors, "Input Errors", JOptionPane.ERROR_MESSAGE);
+        } else {
+            SendInputsToDatabase(value1, value2, value3, value4, value5, value6, value7, value8, value9, value10, value11, value12);
+        
+            UserDashboard user = new UserDashboard();
+            animation ani = new animation();
+            
+            ani.showLoadingAndOpen(this, user, "Creating Account");
+        }
+       
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
@@ -910,8 +977,21 @@ public final class User_Details extends javax.swing.JFrame {
     }//GEN-LAST:event_nameKeyReleased
 
     private void numberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numberKeyReleased
-        animation ani = new animation();
-        ani.validateRequired(number);          // TODO add your handling code here:
+        Validations valid = new Validations();
+        
+        String value = number.getText();
+        
+        switch (valid.ValidateInteger(value)) {
+            case 1:
+                number.setBorder(greenBorder);
+                break;
+            case 0:
+                number.setBorder(orangeBorder);
+                break;
+            default:
+                number.setBorder(redBorder);
+                break;
+        }          // TODO add your handling code here:
     }//GEN-LAST:event_numberKeyReleased
 
     private void emailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emailKeyReleased
@@ -920,8 +1000,21 @@ public final class User_Details extends javax.swing.JFrame {
     }//GEN-LAST:event_emailKeyReleased
 
     private void number1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_number1KeyReleased
-        animation ani = new animation();
-        ani.validateRequired(number1);         // TODO add your handling code here:
+        Validations valid = new Validations();
+        
+        String value = number1.getText();
+        
+        switch (valid.ValidateInteger(value)) {
+            case 1:
+                number1.setBorder(greenBorder);
+                break;
+            case 0:
+                number1.setBorder(orangeBorder);
+                break;
+            default:
+                number1.setBorder(redBorder);
+                break;
+        }
     }//GEN-LAST:event_number1KeyReleased
 
     private void passKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passKeyReleased

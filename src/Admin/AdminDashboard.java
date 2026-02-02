@@ -23,6 +23,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         initComponents();
         DispTable();
         Toggle_Buttons();
+        StyleTable();
     }
     
     public final void Toggle_Buttons(){
@@ -45,10 +46,14 @@ public class AdminDashboard extends javax.swing.JFrame {
     }
     
     void DispTable(){
-        config conf = new config();
+        Admin_config admin = new Admin_config();
         
         String sql = "SELECT * FROM users";
-        conf.displayData(sql, table);
+        admin.displayData(sql, table);
+    }
+    
+    void StyleTable(){
+        table.setRowHeight(50);
     }
 
     /**
@@ -207,6 +212,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         jLabel6.setText("DELETE USER");
         jLabel6.setOpaque(true);
 
+        table.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},

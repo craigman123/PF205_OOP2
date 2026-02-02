@@ -8,7 +8,6 @@ package configuration;
 import Admin.AdminDashboard;
 import User.User_Details;
 import User.User_Permission;
-import static configuration.animation.BuyTimeLoaddingFrame;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.util.HashSet;
@@ -23,6 +22,7 @@ public class LogReg_config {
         
     public static int Register(String nm, String bdg, String ps){
         config conf = new config();
+        animation ani = new animation();
         StringBuilder errors = new StringBuilder();
         int Finalbadge = 0;
         boolean loop = true;
@@ -100,7 +100,7 @@ public class LogReg_config {
             User_Permission perms = new User_Permission(nm, Finalbadge, ps);
             perms.setVisible(true);
             
-            BuyTimeLoaddingFrame();
+            ani.BuyTimeLoaddingFrame();
            
         }
         
@@ -178,7 +178,7 @@ public class LogReg_config {
                         break;
                 }
                 
-                animation.showLoadingAndOpen(currentFrame, Dashboard);
+                animation.showLoadingAndOpen(currentFrame, Dashboard, "Logging In . . .");
         }
         
         return 0;

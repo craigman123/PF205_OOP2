@@ -5,7 +5,10 @@
  */
 package main;
 
+import configuration.animation;
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -87,10 +90,10 @@ public class LandingPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel2MouseExited
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-        LoginRegister login = new LoginRegister();
-        login.setVisible(true);
-        this.dispose(); 
-        
+            LoginRegister login = new LoginRegister();
+            animation ani = new animation();
+            
+            ani.showLoadingAndOpen(this, login, "Loading Inputs");
     }//GEN-LAST:event_jLabel2MouseClicked
 
     /**
