@@ -6,6 +6,7 @@
 package configuration;
 
 import Admin.AdminDashboard;
+import Profiles.session;
 import User.User_Details;
 import User.User_Permission;
 import java.awt.BorderLayout;
@@ -162,14 +163,16 @@ public class LogReg_config {
         } else {
             java.util.Map<String, Object> user = result.get(0);
             String access = user.get("user_access").toString();
-            String ussage = user.get("user_ussage").toString();
             int id = ((Number) user.get("user_id")).intValue();
             
             JFrame Dashboard = null;
             
                 switch(access){
                     case "Admin":
+                        session see = new session();
                         Dashboard = new AdminDashboard();
+                        
+                        see.SaveLogIn(id);
                         
                         break;
                     case "User":

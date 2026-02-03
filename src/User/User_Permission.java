@@ -5,6 +5,8 @@
  */
 package User;
 
+import Profiles.session;
+import configuration.config;
 import java.awt.Color;
 
 /**
@@ -26,10 +28,15 @@ public class User_Permission extends javax.swing.JFrame {
     private String pass;
     
     public User_Permission(String nm, int badge1, String password) {
+        config conf = new config();
+        
         initComponents();
         name = nm;
         badge = badge1;
-        pass = password;
+        
+        String sec = conf.hashPassword(password);
+        
+        pass = sec;
     }
     
     public int GetBadge(){
@@ -132,12 +139,18 @@ public class User_Permission extends javax.swing.JFrame {
     }//GEN-LAST:event_detailsActionPerformed
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
-
+            config conf = new config();
+        
             if(details.isSelected()){
                 User_Details det = new User_Details(GetName(), GetBadge(), GetPass());
                 det.setVisible(true);
                 this.dispose();
             }else{
+                String sql = "INSERT into users (user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
+                int id = conf.addRecordAndReturnId(sql, GetName(), GetBadge(), GetPass(), "User", "Enable");
+                
+                session.SaveLogIn(id);
+                
                 UserDashboard dash = new UserDashboard();
                 dash.setVisible(true);
                 this.dispose();

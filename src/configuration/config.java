@@ -103,20 +103,6 @@ public class config {
         return records;
     }
     
-//    public void displayData(String sql, javax.swing.JTable table) {
-//        try (Connection conn = connectDB();
-//             PreparedStatement pstmt = conn.prepareStatement(sql);
-//             ResultSet rs = pstmt.executeQuery()) {
-//
-//            // This line automatically maps the Resultset to your JTable
-//            table.setModel(DbUtils.resultSetToTableModel(rs));
-//
-//        } catch (SQLException e) {
-//            System.out.println("Error displaying data: " + e.getMessage());
-//        }
-//    }
-    
-    
     private void addDeleteButton(JTable table) {
 
     TableColumn actionColumn = table.getColumn("Action");
@@ -214,21 +200,21 @@ public class config {
         System.out.println("Error displaying data: " + e.getMessage());
     }
 }
-    
-//    public void hideHashColumn(JTable table, String columnName) {
-//        int colIndex = table.getColumnModel().getColumnIndex(columnName);
-//
-//        table.getColumnModel().getColumn(colIndex).setCellRenderer(new DefaultTableCellRenderer() {
-//            @Override
-//            public Component getTableCellRendererComponent(
-//                    JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-//
-//                super.getTableCellRendererComponent(table, "Hashed", isSelected, hasFocus, row, column);
-//                setHorizontalAlignment(SwingConstants.CENTER);
-//                return this;
-//            }
-//        });
-//    }
+
+   public void hideHashColumn(JTable table, String columnName) {
+       int colIndex = table.getColumnModel().getColumnIndex(columnName);
+
+       table.getColumnModel().getColumn(colIndex).setCellRenderer(new DefaultTableCellRenderer() {
+           @Override
+           public Component getTableCellRendererComponent(
+                   JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+               super.getTableCellRendererComponent(table, "Hashed", isSelected, hasFocus, row, column);
+               setHorizontalAlignment(SwingConstants.CENTER);
+               return this;
+         }
+       });
+   }
 
 
 }

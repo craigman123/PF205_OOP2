@@ -5,6 +5,7 @@
  */
 package User;
 
+import Profiles.profile;
 import configuration.animation;
 import java.awt.Dimension;
 import java.util.*;
@@ -299,7 +300,9 @@ public class UserDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleButton6ActionPerformed
 
     private void jToggleButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MouseClicked
-   // TODO add your handling code here:
+        profile prof = new profile();
+        prof.setVisible(true);
+        this.dispose();   // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton1MouseClicked
 
     private void jToggleButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton2MouseClicked
