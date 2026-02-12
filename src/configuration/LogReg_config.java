@@ -7,12 +7,10 @@ package configuration;
 
 import Admin.AdminDashboard;
 import Profiles.session;
-import User.User_Details;
+import User.UserDashboard;
 import User.User_Permission;
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.*;
 
 /**
@@ -138,13 +136,59 @@ public class LogReg_config {
         return 0;
     }
     
-    public static int LogIn(String nm, String ps, JFrame currentFrame){
+    public static int LogIn(String nm, String badge, String ps, JFrame currentFrame){
         config conf = new config();
+        session see = new session();
+        StringBuilder errors = new StringBuilder();
+        boolean loop = true;
+        int Finalbadge = 0;
         
         String hashPass = conf.hashPassword(ps);
+        
+        while(loop){
+            try{
+                if (nm == null || nm.trim().isEmpty() || nm.equals("Username")) {
+                    errors.append("• Username cannot be empty.\n");
+                }
 
-        String qry = "SELECT * FROM users WHERE user_name = ? AND user_hashpass = ?";
-        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, nm, hashPass); 
+                if (badge == null || badge.trim().isEmpty() || badge.equals("Badge")) {
+                    errors.append("• Badge cannot be empty.\n");
+                }else{
+                    Finalbadge = Integer.parseInt(badge);
+                }
+
+                if (ps == null || ps.trim().isEmpty() || ps.equals("Password")) {
+                    errors.append("• Password cannot be empty.\n");
+                }
+
+                loop = false;
+            }catch(NumberFormatException e){
+                errors.append("• Warning at Badge\n");
+                errors.append("• Minimum 10 Items\n");
+                errors.append("• Should be Digits\n");
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    errors.toString(),
+                    "Validation Errors",
+                    JOptionPane.ERROR_MESSAGE
+                );
+
+                return 0;
+            }
+        }
+        
+        if (errors.length() > 0) {
+            JOptionPane.showMessageDialog(
+                null, 
+                errors.toString(),
+                "Validation Errors", 
+                JOptionPane.ERROR_MESSAGE);
+            return 0;
+        }
+        
+        String qry = "SELECT * FROM users WHERE user_name = ? AND user_badge = ? AND user_hashpass = ?";
+        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, nm, badge, hashPass); 
         
         if(nm.equals("Username") || ps.equals("Password") || nm.equals("") || ps.equals("")){
             JOptionPane.showMessageDialog(
@@ -169,7 +213,6 @@ public class LogReg_config {
             
                 switch(access){
                     case "Admin":
-                        session see = new session();
                         Dashboard = new AdminDashboard();
                         
                         see.SaveLogIn(id);
@@ -178,6 +221,9 @@ public class LogReg_config {
                     case "User":
                         int enabilability = 1;
                         
+                        Dashboard = new UserDashboard();
+                        see.SaveLogIn(id);
+                        
                         break;
                 }
                 
@@ -185,6 +231,95 @@ public class LogReg_config {
         }
         
         return 0;
+    }
+    
+    public static void RegisterByAdmin(String nm, String bdg, String ps, String access, String ussage){
+        config conf = new config();
+        animation ani = new animation();
+        StringBuilder errors = new StringBuilder();
+        int Finalbadge = 0;
+        boolean loop = true;
+        
+        while(loop){
+            try{
+                if (nm == null || nm.trim().isEmpty() || nm.equals("Username")) {
+                    errors.append("• Username cannot be empty.\n");
+                }
+
+                if (bdg == null || bdg.trim().isEmpty() || bdg.equals("Badge")) {
+                    errors.append("• Badge cannot be empty.\n");
+                }else{
+                    Finalbadge = Integer.parseInt(bdg);
+                }
+
+                if (ps == null || ps.trim().isEmpty() || ps.equals("Password")) {
+                    errors.append("• Password cannot be empty.\n");
+                }
+
+                loop = false;
+            }catch(NumberFormatException e){
+                errors.append("• Warning at Badge\n");
+                errors.append("• Minimum 10 Items\n");
+                errors.append("• Should be Digits\n");
+
+                JOptionPane.showMessageDialog(
+                    null,
+                    errors.toString(),
+                    "Validation Errors",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+            
+        if(errors.length() > 0) {
+            JOptionPane.showMessageDialog(
+                null,
+                errors.toString(),
+                "Validation Errors",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }else{
+
+        String qry = "SELECT * FROM users WHERE user_badge = ?";
+        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, bdg);
+        
+        int valuebadge = bdg.length();
+        int valuepass = ps.length();
+
+        if (valuebadge < 4) {
+            errors.append("• Badge must be at least 4 digits long\n");
+        }
+
+        if (!result.isEmpty()) {
+            errors.append("• Badge already exists\n");
+        }
+
+        if (valuepass < 0) {
+            errors.append("• Invalid password\n");
+        }
+
+        if (errors.length() > 0) {
+            JOptionPane.showMessageDialog(
+                null,
+                errors.toString(),
+                "Validation Errors",
+                JOptionPane.ERROR_MESSAGE
+            );
+                }else{
+                    String hashpass = conf.hashPassword(ps);
+            
+                    qry = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES(?,?,?,?,?)";
+                    conf.addRecordAndReturnId(qry, nm, Finalbadge, hashpass, access, ussage);
+                    
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "User added successfully!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+
+            }
+        }
     }
     
     

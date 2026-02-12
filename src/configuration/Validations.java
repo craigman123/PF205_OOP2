@@ -1,6 +1,7 @@
 
 package configuration;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class Validations {
@@ -29,17 +30,23 @@ public class Validations {
         return valid;
     }
     
-    public static int ConvertInts(Object bdg){
-        int badge;
+    public static int ConvertInts(Object IDKdigit){
+        int RealDigit;
         
         try{
-            badge = Integer.parseInt((String) bdg);
+            RealDigit = Integer.parseInt((String) IDKdigit);
         }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(
+                null,
+                "Inout Should be Integer!",
+                "Error",
+                JOptionPane.WARNING_MESSAGE
+            );
             return 0;
         }
         
         
-        return badge;
+        return RealDigit;
         
     }
     
@@ -48,6 +55,7 @@ public class Validations {
         try{
             int FinalInput = Integer.parseInt(input);
         }catch(NumberFormatException e){
+            
             return 0;
         }
         

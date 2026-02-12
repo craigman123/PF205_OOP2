@@ -60,9 +60,8 @@ public class LoginRegister extends javax.swing.JFrame {
         log_pass = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         pass = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
+        log_badge = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         name = new javax.swing.JTextField();
         badge = new javax.swing.JTextField();
@@ -133,7 +132,7 @@ public class LoginRegister extends javax.swing.JFrame {
                 log_nameActionPerformed(evt);
             }
         });
-        jPanel1.add(log_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 110, 420, 50));
+        jPanel1.add(log_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 100, 420, 50));
 
         log_pass.setEditable(false);
         log_pass.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
@@ -157,7 +156,7 @@ public class LoginRegister extends javax.swing.JFrame {
                 log_passActionPerformed(evt);
             }
         });
-        jPanel1.add(log_pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 200, 420, 51));
+        jPanel1.add(log_pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 240, 420, 51));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel4.setText("<");
@@ -197,28 +196,27 @@ public class LoginRegister extends javax.swing.JFrame {
         });
         jPanel1.add(pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, 420, 51));
 
-        jTextField6.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField6.setOpaque(false);
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
+        log_badge.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        log_badge.setForeground(new java.awt.Color(153, 153, 153));
+        log_badge.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        log_badge.setText("Badge");
+        log_badge.setOpaque(false);
+        log_badge.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                log_badgeMouseClicked(evt);
             }
         });
-        jPanel1.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 110, 420, 50));
+        log_badge.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                log_badgeActionPerformed(evt);
+            }
+        });
+        jPanel1.add(log_badge, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 170, 420, 50));
 
         jLabel19.setFont(new java.awt.Font("Nirmala UI", 1, 24)); // NOI18N
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("LOG IN");
         jPanel1.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 60, 301, -1));
-
-        jTextField7.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField7.setOpaque(false);
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jTextField7, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 200, 420, 51));
 
         jLabel10.setFont(new java.awt.Font("Nirmala UI", 1, 24)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -250,6 +248,9 @@ public class LoginRegister extends javax.swing.JFrame {
         name.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 nameKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nameKeyTyped(evt);
             }
         });
         jPanel1.add(name, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 420, 50));
@@ -339,7 +340,7 @@ public class LoginRegister extends javax.swing.JFrame {
                 jLabel5MouseExited(evt);
             }
         });
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 280, 290, 40));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 300, 290, 40));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Departenst Logo with bg.png"))); // NOI18N
         jLabel2.setText("jLabel2");
@@ -417,9 +418,9 @@ public class LoginRegister extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_log_nameActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+    private void log_badgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_log_badgeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
+    }//GEN-LAST:event_log_badgeActionPerformed
 
     private void jLabel17MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel17MouseEntered
         // TODO add your handling code here:
@@ -428,10 +429,6 @@ public class LoginRegister extends javax.swing.JFrame {
     private void jLabel17MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel17MouseExited
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel17MouseExited
-
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
 
     private void jLabel14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel14MouseClicked
         int startX = jLabelImage.getX();
@@ -624,8 +621,9 @@ public class LoginRegister extends javax.swing.JFrame {
         
         String nm = log_name.getText();
         String ps = log_pass.getText();
+        String bdg = log_badge.getText();
         
-        log_conf.LogIn(nm, ps, this);
+        log_conf.LogIn(nm, bdg, ps, this);
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabelImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelImageMouseClicked
@@ -681,6 +679,16 @@ public class LoginRegister extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_passKeyReleased
 
+    private void log_badgeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_log_badgeMouseClicked
+        animation ani = new animation();
+        
+        ani.addPlaceholder(log_badge, "Badge");// TODO add your handling code here:
+    }//GEN-LAST:event_log_badgeMouseClicked
+
+    private void nameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nameKeyTyped
+
 
     /**
      * @param args the command line arguments
@@ -732,8 +740,7 @@ public class LoginRegister extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabelImage;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField log_badge;
     private javax.swing.JTextField log_name;
     private javax.swing.JTextField log_pass;
     private javax.swing.JTextField name;

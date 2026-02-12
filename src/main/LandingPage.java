@@ -90,10 +90,10 @@ public class LandingPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel2MouseExited
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-            LoginRegister login = new LoginRegister();
-            animation ani = new animation();
-            
-            ani.showLoadingAndOpen(this, login, "Loading Inputs");
+        LoginRegister login = new LoginRegister();
+        animation ani = new animation();
+
+        ani.showLoadingAndOpen(this, login, "Loading Inputs");
     }//GEN-LAST:event_jLabel2MouseClicked
 
     /**
