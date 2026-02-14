@@ -62,7 +62,20 @@ public class Edit_User extends javax.swing.JInternalFrame {
         miniPane = new javax.swing.JDesktopPane();
         jPanel7 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
+        removeuser = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jInternalFrame1 = new javax.swing.JInternalFrame();
+        jPanel8 = new javax.swing.JPanel();
+        jPanel9 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        table1 = new javax.swing.JTable();
+        miniPane1 = new javax.swing.JDesktopPane();
+        jPanel10 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        removeuser1 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
 
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -70,7 +83,7 @@ public class Edit_User extends javax.swing.JInternalFrame {
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel5.setFont(new java.awt.Font("Yu Gothic UI", 1, 36)); // NOI18N
-        jLabel5.setText("REFACTOR USER");
+        jLabel5.setText("MANAGE USER");
         jPanel6.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Trebuchet MS", 1, 32)); // NOI18N
@@ -125,25 +138,174 @@ public class Edit_User extends javax.swing.JInternalFrame {
                 jLabel7MouseExited(evt);
             }
         });
-        jPanel7.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 10, 160, 20));
+        jPanel7.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, 150, 20));
 
-        jLabel8.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel8.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("ADD USER");
-        jLabel8.setOpaque(true);
-        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+        removeuser.setBackground(new java.awt.Color(153, 153, 153));
+        removeuser.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        removeuser.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        removeuser.setText("ADD USER");
+        removeuser.setOpaque(true);
+        removeuser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel8MouseClicked(evt);
+                removeuserMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jLabel8MouseEntered(evt);
+                removeuserMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                jLabel8MouseExited(evt);
+                removeuserMouseExited(evt);
             }
         });
-        jPanel7.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 95, -1));
+        jPanel7.add(removeuser, new org.netbeans.lib.awtextra.AbsoluteConstraints(295, 10, 100, 20));
+
+        jLabel9.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel9.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("REMOVE USER");
+        jLabel9.setOpaque(true);
+        jLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel9MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel9MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel9MouseExited(evt);
+            }
+        });
+        jPanel7.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 120, -1));
+
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel9.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setFont(new java.awt.Font("Yu Gothic UI", 1, 36)); // NOI18N
+        jLabel8.setText("REFACTOR USER");
+        jPanel9.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, -1, -1));
+
+        jLabel10.setFont(new java.awt.Font("Trebuchet MS", 1, 32)); // NOI18N
+        jLabel10.setText("X");
+        jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel10MouseClicked(evt);
+            }
+        });
+        jPanel9.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        table1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(table1);
+
+        javax.swing.GroupLayout miniPane1Layout = new javax.swing.GroupLayout(miniPane1);
+        miniPane1.setLayout(miniPane1Layout);
+        miniPane1Layout.setHorizontalGroup(
+            miniPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        miniPane1Layout.setVerticalGroup(
+            miniPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jPanel10.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel11.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel11.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("REFACTORATION");
+        jLabel11.setOpaque(true);
+        jLabel11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel11MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel11MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel11MouseExited(evt);
+            }
+        });
+        jPanel10.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 140, 20));
+
+        removeuser1.setBackground(new java.awt.Color(153, 153, 153));
+        removeuser1.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        removeuser1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        removeuser1.setText("ADD USER");
+        removeuser1.setOpaque(true);
+        removeuser1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeuser1MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                removeuser1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                removeuser1MouseExited(evt);
+            }
+        });
+        jPanel10.add(removeuser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(305, 10, 80, -1));
+
+        jLabel12.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel12.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("REMOVE USER");
+        jLabel12.setOpaque(true);
+        jLabel12.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel12MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel12MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel12MouseExited(evt);
+            }
+        });
+        jPanel10.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 120, -1));
+
+        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
+        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
+        jInternalFrame1Layout.setHorizontalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jInternalFrame1Layout.createSequentialGroup()
+                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(miniPane1)
+                            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 927, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jInternalFrame1Layout.setVerticalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(miniPane1)))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -161,6 +323,11 @@ public class Edit_User extends javax.swing.JInternalFrame {
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 927, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,12 +336,17 @@ public class Edit_User extends javax.swing.JInternalFrame {
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(miniPane)))
                 .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         pack();
@@ -188,25 +360,25 @@ public class Edit_User extends javax.swing.JInternalFrame {
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel6MouseClicked
 
-    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+    private void removeuserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeuserMouseClicked
         Add_user add = new Add_user();
         miniPane.removeAll();
         
         miniPane.add(add).setVisible(true);
         // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel8MouseClicked
+    }//GEN-LAST:event_removeuserMouseClicked
 
     private void jLabel7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseEntered
         jLabel7.setBackground(new Color(102,102,102));// TODO add your handling code here:
     }//GEN-LAST:event_jLabel7MouseEntered
 
-    private void jLabel8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseEntered
-        jLabel8.setBackground(new Color(102,102,102));        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel8MouseEntered
+    private void removeuserMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeuserMouseEntered
+        removeuser.setBackground(new Color(102,102,102));        // TODO add your handling code here:
+    }//GEN-LAST:event_removeuserMouseEntered
 
-    private void jLabel8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseExited
-        jLabel8.setBackground(new Color(153,153,153));  // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel8MouseExited
+    private void removeuserMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeuserMouseExited
+        removeuser.setBackground(new Color(153,153,153));  // TODO add your handling code here:
+    }//GEN-LAST:event_removeuserMouseExited
 
     private void jLabel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseExited
         jLabel7.setBackground(new Color(153,153,153));        // TODO add your handling code here:
@@ -219,25 +391,85 @@ public class Edit_User extends javax.swing.JInternalFrame {
         miniPane.add(factor).setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel7MouseClicked
 
+    private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
+        miniPane.removeAll();
+        Remove_User remove = new Remove_User();
+        
+        miniPane.add(remove).setVisible(true);// TODO add your handling code here:
+    }//GEN-LAST:event_jLabel9MouseClicked
+
+    private void jLabel9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseEntered
+        jLabel9.setBackground(new Color(102,102,102));// TODO add your handling code here:
+    }//GEN-LAST:event_jLabel9MouseEntered
+
+    private void jLabel9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseExited
+        jLabel9.setBackground(new Color(153,153,153));// TODO add your handling code here:
+    }//GEN-LAST:event_jLabel9MouseExited
+
+    private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel10MouseClicked
+
+    private void jLabel11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel11MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel11MouseClicked
+
+    private void jLabel11MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel11MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel11MouseEntered
+
+    private void jLabel11MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel11MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel11MouseExited
+
+    private void removeuser1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeuser1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removeuser1MouseClicked
+
+    private void removeuser1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeuser1MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removeuser1MouseEntered
+
+    private void removeuser1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeuser1MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removeuser1MouseExited
+
+    private void jLabel12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel12MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel12MouseClicked
+
+    private void jLabel12MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel12MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel12MouseEntered
+
+    private void jLabel12MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel12MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel12MouseExited
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JDesktopPane miniPane;
+    private javax.swing.JDesktopPane miniPane1;
+    private javax.swing.JLabel removeuser;
+    private javax.swing.JLabel removeuser1;
     private javax.swing.JTable table;
+    private javax.swing.JTable table1;
     // End of variables declaration//GEN-END:variables
 }

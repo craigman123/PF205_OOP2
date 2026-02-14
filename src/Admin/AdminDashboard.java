@@ -12,6 +12,7 @@ import configuration.config;
 import java.awt.Color;
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -22,9 +23,33 @@ public class AdminDashboard extends javax.swing.JFrame {
     /**
      * Creates new form AdminDashboard
      */
+    
     public AdminDashboard() {
         initComponents();
         Toggle_Buttons();
+        GetSession();
+    }
+    
+    private Integer ID;
+    
+    public int GetSession(){
+        session see = new session();
+        
+        ID = see.GetID();
+        
+        System.out.println(ID);
+        
+        if(ID == 0){
+            JOptionPane.showMessageDialog(
+                null,
+                "Overiding file not Allowed, Login User First!",
+                "Overiding Disabled",
+                JOptionPane.ERROR_MESSAGE
+            );
+            System.exit(0);
+        }
+        
+        return 0;
     }
 
     public AdminDashboard(int id) {
@@ -94,7 +119,22 @@ public class AdminDashboard extends javax.swing.JFrame {
         });
         jPanel2.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, 204, 60));
 
-        jToggleButton3.setText("Add Product");
+        jToggleButton3.setText("Manage Product");
+        jToggleButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jToggleButton3MouseClicked(evt);
+            }
+        });
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton3ActionPerformed(evt);
+            }
+        });
+        jToggleButton3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jToggleButton3KeyPressed(evt);
+            }
+        });
         jPanel2.add(jToggleButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, 204, 60));
 
         jToggleButton4.setText("Sales");
@@ -208,6 +248,24 @@ public class AdminDashboard extends javax.swing.JFrame {
         jDesktopPane1.add(prof).setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel7MouseClicked
+
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
+
+    private void jToggleButton3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jToggleButton3KeyPressed
+        jDesktopPane1.removeAll();
+        
+        Mng_Product mProd = new Mng_Product();
+        jDesktopPane1.add(mProd).setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton3KeyPressed
+
+    private void jToggleButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton3MouseClicked
+        jDesktopPane1.removeAll();
+        
+        Mng_Product mProd = new Mng_Product();
+        jDesktopPane1.add(mProd).setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton3MouseClicked
 
     /**
      * @param args the command line arguments

@@ -22,12 +22,32 @@ public class UserDashboard extends javax.swing.JFrame {
      * Creates new form UserDashboard
      */
     
-    
+    private Integer ID;
     
     public UserDashboard() {
         initComponents();
         Toggle_Buttons();
-       
+        GetSession();
+    }
+    
+    public int GetSession(){
+        session see = new session();
+        
+        ID = see.GetID();
+        
+        System.out.println(ID);
+        
+        if(ID == 0){
+            JOptionPane.showMessageDialog(
+                null,
+                "Overiding file not Allowed, Login User First!",
+                "Overiding Disabled",
+                JOptionPane.ERROR_MESSAGE
+            );
+            System.exit(0);
+        }
+        
+        return 0;
     }
     
     public final void Toggle_Buttons(){

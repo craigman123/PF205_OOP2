@@ -213,9 +213,8 @@ public class LogReg_config {
             
                 switch(access){
                     case "Admin":
-                        Dashboard = new AdminDashboard();
-                        
                         see.SaveLogIn(id);
+                        Dashboard = new AdminDashboard();
                         
                         break;
                     case "User":

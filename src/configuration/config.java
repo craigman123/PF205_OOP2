@@ -271,6 +271,31 @@ public class config {
             System.out.println("Error deleting record: " + e.getMessage());
         }
     }
+   
+   public void searchProduct(String qry, String status, String input, JTable table) {
+        try (Connection conn = connectDB();
+             PreparedStatement pstmt = conn.prepareStatement(qry)) {
+
+            // Set the parameters
+            pstmt.setString(1, status); // prod_status
+
+            try {
+                int id = Integer.parseInt(input);
+                pstmt.setInt(2, id); // prod_id
+            } catch (NumberFormatException e) {
+                pstmt.setNull(2, Types.INTEGER); // skip if not a number
+            }
+
+            pstmt.setString(3, "%" + input + "%"); // prod_name LIKE
+
+            ResultSet rs = pstmt.executeQuery();
+            table.setModel(DbUtils.resultSetToTableModel(rs));
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
 
 }

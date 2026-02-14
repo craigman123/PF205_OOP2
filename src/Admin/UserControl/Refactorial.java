@@ -7,7 +7,6 @@ package Admin.UserControl;
 
 import configuration.LogReg_config;
 import configuration.Validations;
-import static configuration.Validations.ValidateInteger;
 import configuration.animation;
 import configuration.config;
 import java.awt.Color;
@@ -113,15 +112,22 @@ public class Refactorial extends javax.swing.JInternalFrame {
         int finalID = 0;
         
         String id = userid.getText();
+        String nm = name4.getText();
+        String bdg = badge4.getText();
+        String ps = pass4.getText();
+        String ussage = ussageToggle.getText();
         
-        if(id.isEmpty() || id.equals("User ID")){
+        if(id.isEmpty() || id.equals("User ID") || nm.isEmpty() || bdg.isEmpty() || ps.isEmpty()
+                || nm.equals("Username") || bdg.equals("Badge") || ps.equals("Password")){
             JOptionPane.showMessageDialog(
                 null,
                 "Empty Fields!",
                 "Error",
                 JOptionPane.WARNING_MESSAGE
             );
-        }else{
+        }
+        
+        if(!id.isEmpty() || !id.equals("User ID")){
         
             try{
                 finalID = Integer.parseInt((String) id);
@@ -133,11 +139,6 @@ public class Refactorial extends javax.swing.JInternalFrame {
                     JOptionPane.WARNING_MESSAGE
                 );
             }
-
-            String nm = name4.getText();
-            String bdg = badge4.getText();
-            String ps = pass4.getText();
-            String ussage = ussageToggle.getText();
 
             String hashpass = confer.hashPassword(ps);
 
@@ -179,14 +180,16 @@ public class Refactorial extends javax.swing.JInternalFrame {
         
         String id = userid.getText();
         
-        if(id.isEmpty() || id.equals("User ID")){
+        if(id.isEmpty() && id.equals("User ID")){
             JOptionPane.showMessageDialog(
                 null,
                 "Empty Fields!",
                 "Error",
                 JOptionPane.WARNING_MESSAGE
             );
-        }else{
+        }
+        
+        if(!id.isEmpty() && !id.equals("User ID")){
         
         try{
             finalID = Integer.parseInt((String) id);
@@ -215,8 +218,13 @@ public class Refactorial extends javax.swing.JInternalFrame {
             String pass = conf.hashPassword(ps);
             
             name4.setText(name);
+            name4.setBackground(new Color(102,102,102));
             badge4.setText(bdg);
-            pass4.setText(pass);
+            badge4.setBackground(new Color(102,102,102));
+            pass4.setText("HASHED");
+            name4.setForeground(new Color(0,0,0));
+            badge4.setForeground(new Color(0,0,0));
+            pass4.setForeground(new Color(0,0,0));
             
             if(access.equals("User")){
                 userbtn.setSelected(true);
@@ -334,7 +342,9 @@ public class Refactorial extends javax.swing.JInternalFrame {
 
         pass4.setEditable(false);
         pass4.setBackground(new java.awt.Color(204, 204, 204));
+        pass4.setFont(new java.awt.Font("Tahoma", 2, 16)); // NOI18N
         pass4.setForeground(new java.awt.Color(153, 153, 153));
+        pass4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         pass4.setText("Password");
         pass4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -373,7 +383,7 @@ public class Refactorial extends javax.swing.JInternalFrame {
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(userbtn, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                .addComponent(userbtn, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(admin, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -512,29 +522,33 @@ public class Refactorial extends javax.swing.JInternalFrame {
                         .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(pass4))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(name4)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(name4, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(badge4, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(passStrength4, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel29)
-                                        .addGap(7, 7, 7)
-                                        .addComponent(PassLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addComponent(badge4, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel29)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(PassLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pass4))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 15, Short.MAX_VALUE)
+                        .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(passStrength4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -563,12 +577,12 @@ public class Refactorial extends javax.swing.JInternalFrame {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(passStrength4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel29)
-                    .addComponent(PassLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(PassLabel4)
+                    .addComponent(jLabel29))
                 .addContainerGap())
         );
 
@@ -586,41 +600,93 @@ public class Refactorial extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void useridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useridActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_useridActionPerformed
+    private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
+        jLabel3.setBackground(new Color(153,153,153));// TODO add your handling code here:
+    }//GEN-LAST:event_jLabel3MouseExited
 
-    private void name4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_name4MouseClicked
-        animation ani = new animation();
+    private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
+        jLabel3.setBackground(new Color(102,102,102));// TODO add your handling code here:
+    }//GEN-LAST:event_jLabel3MouseEntered
 
-        ani.addPlaceholder(name4, "Username");         // TODO add your handling code here:
-    }//GEN-LAST:event_name4MouseClicked
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        UpdateUser();// TODO add your handling code here:
+    }//GEN-LAST:event_jLabel3MouseClicked
 
-    private void name4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_name4ActionPerformed
+    private void jLabel2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseExited
+        jLabel2.setBackground(new Color(153,153,153));        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel2MouseExited
 
-    private void name4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_name4KeyReleased
-        animation ani = new animation();
+    private void jLabel2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseEntered
+        jLabel2.setBackground(new Color(102,102,102));        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel2MouseEntered
 
-        String nm = name4.getText();
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        GetInfo();// TODO add your handling code here:
+    }//GEN-LAST:event_jLabel2MouseClicked
 
-        if(!nm.equals("Username")){
-            ani.validateRequired(name4);
+    private void jLabel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseExited
+        jLabel5.setBackground(new Color(153,153,153));// TODO add your handling code here:
+    }//GEN-LAST:event_jLabel5MouseExited
+
+    private void jLabel5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseEntered
+        jLabel5.setBackground(new Color(102,102,102)); // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel5MouseEntered
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        EraseText();        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel5MouseClicked
+
+    private void ussageToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ussageToggleActionPerformed
+        if(ussageToggle.isSelected()){
+            String ussage = "Enable";
+            ussageToggle.setText("Enable");
         }else{
-            name4.setBorder(redBorder);
-        }// TODO add your handling code here:
-    }//GEN-LAST:event_name4KeyReleased
-
-    private void badge4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_badge4MouseClicked
-        animation ani = new animation();
-
-        ani.addPlaceholder(badge4, "Badge");         // TODO add your handling code here:
-    }//GEN-LAST:event_badge4MouseClicked
-
-    private void badge4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_badge4ActionPerformed
+            String ussage = "Disable";
+            ussageToggle.setText("Disable");
+        }
         // TODO add your handling code here:
-    }//GEN-LAST:event_badge4ActionPerformed
+    }//GEN-LAST:event_ussageToggleActionPerformed
+
+    private void userbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userbtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_userbtnActionPerformed
+
+    private void pass4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pass4KeyReleased
+        animation ani = new animation();
+        ani.validateRequired(pass4);
+
+        pass4.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { updateStrength(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { updateStrength(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { updateStrength(); }
+
+            private void updateStrength() {
+                String password = pass4.getText();
+
+                if(!password.equals("Password") || !password.equals("HASHED")){
+                    int strength = ani.calculatePasswordStrength(password, passStrength4);
+                    ChangeBarLabel(strength);
+                }
+            }
+        }); // TODO add your handling code here:
+    }//GEN-LAST:event_pass4KeyReleased
+
+    private void pass4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pass4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pass4ActionPerformed
+
+    private void pass4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pass4MouseClicked
+        animation ani = new animation();
+        
+        String pass = pass4.getText();
+        
+        if(pass.equals("Password")){
+            ani.addPlaceholder(badge4, pass);// TODO add your handling code here:
+        }
+    }//GEN-LAST:event_pass4MouseClicked
 
     private void badge4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_badge4KeyReleased
         animation ani = new animation();
@@ -646,89 +712,41 @@ public class Refactorial extends javax.swing.JInternalFrame {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_badge4KeyReleased
 
-    private void pass4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pass4MouseClicked
+    private void badge4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_badge4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_badge4ActionPerformed
+
+    private void badge4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_badge4MouseClicked
         animation ani = new animation();
 
-        ani.addPlaceholder(pass4, "Password");         // TODO add your handling code here:
-    }//GEN-LAST:event_pass4MouseClicked
+        ani.addPlaceholder(badge4, "Badge");         // TODO add your handling code here:
+    }//GEN-LAST:event_badge4MouseClicked
 
-    private void pass4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pass4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_pass4ActionPerformed
-
-    private void pass4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pass4KeyReleased
+    private void name4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_name4KeyReleased
         animation ani = new animation();
-        ani.validateRequired(pass4);
 
-        pass4.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { updateStrength(); }
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { updateStrength(); }
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { updateStrength(); }
+        String nm = name4.getText();
 
-            private void updateStrength() {
-                String password = pass4.getText();
-
-                if(!password.equals("Password")){
-                    int strength = ani.calculatePasswordStrength(password, passStrength4);
-                    ChangeBarLabel(strength);
-                }
-            }
-        }); // TODO add your handling code here:
-    }//GEN-LAST:event_pass4KeyReleased
-
-    private void userbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userbtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_userbtnActionPerformed
-
-    private void ussageToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ussageToggleActionPerformed
-        if(ussageToggle.isSelected()){
-            String ussage = "Enable";
-            ussageToggle.setText("Enable");
+        if(!nm.equals("Username")){
+            ani.validateRequired(name4);
         }else{
-            String ussage = "Disable";
-            ussageToggle.setText("Disable");
-        }
+            name4.setBorder(redBorder);
+        }// TODO add your handling code here:
+    }//GEN-LAST:event_name4KeyReleased
+
+    private void name4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name4ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ussageToggleActionPerformed
+    }//GEN-LAST:event_name4ActionPerformed
 
-    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-        EraseText();        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel5MouseClicked
+    private void name4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_name4MouseClicked
+        animation ani = new animation();
 
-    private void jLabel5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseEntered
-        jLabel5.setBackground(new Color(102,102,102)); // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel5MouseEntered
+        ani.addPlaceholder(name4, "Username");         // TODO add your handling code here:
+    }//GEN-LAST:event_name4MouseClicked
 
-    private void jLabel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseExited
-        jLabel5.setBackground(new Color(153,153,153));// TODO add your handling code here:
-    }//GEN-LAST:event_jLabel5MouseExited
-
-    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-        GetInfo();// TODO add your handling code here:
-    }//GEN-LAST:event_jLabel2MouseClicked
-
-    private void jLabel2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseEntered
-        jLabel2.setBackground(new Color(102,102,102));        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel2MouseEntered
-
-    private void jLabel2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseExited
-        jLabel2.setBackground(new Color(153,153,153));        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel2MouseExited
-
-    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-        UpdateUser();// TODO add your handling code here:
-    }//GEN-LAST:event_jLabel3MouseClicked
-
-    private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
-        jLabel3.setBackground(new Color(102,102,102));// TODO add your handling code here:
-    }//GEN-LAST:event_jLabel3MouseEntered
-
-    private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
-        jLabel3.setBackground(new Color(153,153,153));// TODO add your handling code here:
-    }//GEN-LAST:event_jLabel3MouseExited
+    private void useridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useridActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_useridActionPerformed
 
     private void useridMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_useridMouseClicked
         animation ani = new animation();
