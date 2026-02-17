@@ -9,7 +9,9 @@ import Admin.TableUser;
 import Admin.UserControl.Add_user;
 import Admin.UserControl.Refactorial;
 import Admin.UserControl.Remove_User;
+import configuration.config;
 import java.awt.Color;
+import javax.swing.JDesktopPane;
 
 /**
  *
@@ -22,8 +24,20 @@ public class Edit_Product extends javax.swing.JInternalFrame {
      */
     public Edit_Product() {
         initComponents();
+        StyleFrame();
+        DispTableandRefresh();
     }
-
+    
+    public void DispTableandRefresh(){
+        miniTable_product table = new miniTable_product();
+        ProductPane.remove(table);
+        ProductPane.add(table).setVisible(true);
+    }
+    
+    public void StyleFrame(){
+        this.setBorder(null);
+        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,20 +50,20 @@ public class Edit_Product extends javax.swing.JInternalFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         removeuser = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         miniPane = new javax.swing.JDesktopPane();
+        ProductPane = new javax.swing.JDesktopPane();
+        jLabel1 = new javax.swing.JLabel();
 
         jPanel6.setBackground(new java.awt.Color(153, 153, 153));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel5.setFont(new java.awt.Font("Yu Gothic UI", 1, 36)); // NOI18N
-        jLabel5.setText("MANAGE USER");
-        jPanel6.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, -1, -1));
+        jLabel5.setText("MANAGE PRODUCT");
+        jPanel6.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Trebuchet MS", 1, 32)); // NOI18N
         jLabel6.setText("X");
@@ -59,19 +73,6 @@ public class Edit_Product extends javax.swing.JInternalFrame {
             }
         });
         jPanel6.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
-
-        table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(table);
 
         jPanel7.setBackground(new java.awt.Color(204, 204, 204));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -92,12 +93,12 @@ public class Edit_Product extends javax.swing.JInternalFrame {
                 jLabel7MouseExited(evt);
             }
         });
-        jPanel7.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, 150, 20));
+        jPanel7.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 10, 180, 20));
 
         removeuser.setBackground(new java.awt.Color(153, 153, 153));
-        removeuser.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        removeuser.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         removeuser.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        removeuser.setText("ADD USER");
+        removeuser.setText("ADD PRODUCT");
         removeuser.setOpaque(true);
         removeuser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -110,12 +111,12 @@ public class Edit_Product extends javax.swing.JInternalFrame {
                 removeuserMouseExited(evt);
             }
         });
-        jPanel7.add(removeuser, new org.netbeans.lib.awtextra.AbsoluteConstraints(295, 10, 100, 20));
+        jPanel7.add(removeuser, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, 140, 20));
 
         jLabel9.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel9.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("REMOVE USER");
+        jLabel9.setText("ERASE PRODUCT");
         jLabel9.setOpaque(true);
         jLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -128,7 +129,7 @@ public class Edit_Product extends javax.swing.JInternalFrame {
                 jLabel9MouseExited(evt);
             }
         });
-        jPanel7.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 120, -1));
+        jPanel7.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 170, -1));
 
         javax.swing.GroupLayout miniPaneLayout = new javax.swing.GroupLayout(miniPane);
         miniPane.setLayout(miniPaneLayout);
@@ -138,8 +139,31 @@ public class Edit_Product extends javax.swing.JInternalFrame {
         );
         miniPaneLayout.setVerticalGroup(
             miniPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 489, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout ProductPaneLayout = new javax.swing.GroupLayout(ProductPane);
+        ProductPane.setLayout(ProductPaneLayout);
+        ProductPaneLayout.setHorizontalGroup(
+            ProductPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 375, Short.MAX_VALUE)
+        );
+        ProductPaneLayout.setVerticalGroup(
+            ProductPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
+
+        jLabel1.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("REFRESH");
+        jLabel1.setToolTipText("");
+        jLabel1.setOpaque(true);
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,11 +171,13 @@ public class Edit_Product extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ProductPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
-                    .addComponent(miniPane))
+                    .addComponent(miniPane)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -160,15 +186,17 @@ public class Edit_Product extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(miniPane)
+                        .addGap(11, 11, 11))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(miniPane)))
-                .addGap(11, 11, 11))
+                        .addComponent(ProductPane)
+                        .addContainerGap())))
         );
 
         pack();
@@ -183,7 +211,7 @@ public class Edit_Product extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        Refactorial factor = new Refactorial();
+        Refactor_Product factor = new Refactor_Product();
         miniPane.removeAll();
 
         miniPane.add(factor).setVisible(true);        // TODO add your handling code here:
@@ -198,7 +226,7 @@ public class Edit_Product extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jLabel7MouseExited
 
     private void removeuserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeuserMouseClicked
-        Add_user add = new Add_user();
+        Add_Product add = new Add_Product();
         miniPane.removeAll();
 
         miniPane.add(add).setVisible(true);
@@ -215,7 +243,7 @@ public class Edit_Product extends javax.swing.JInternalFrame {
 
     private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
         miniPane.removeAll();
-        Remove_User remove = new Remove_User();
+        Remove_Product remove = new Remove_Product();
 
         miniPane.add(remove).setVisible(true);// TODO add your handling code here:
     }//GEN-LAST:event_jLabel9MouseClicked
@@ -228,17 +256,21 @@ public class Edit_Product extends javax.swing.JInternalFrame {
         jLabel9.setBackground(new Color(153,153,153));// TODO add your handling code here:
     }//GEN-LAST:event_jLabel9MouseExited
 
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        DispTableandRefresh();        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel1MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDesktopPane ProductPane;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JDesktopPane miniPane;
     private javax.swing.JLabel removeuser;
-    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

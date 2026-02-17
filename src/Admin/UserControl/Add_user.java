@@ -5,6 +5,7 @@
  */
 package Admin.UserControl;
 
+import Admin.ProductControl.Edit_Product;
 import configuration.LogReg_config;
 import configuration.Validations;
 import configuration.animation;
@@ -12,6 +13,7 @@ import configuration.config;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
 import javax.swing.border.Border;
 
 /**
@@ -62,6 +64,14 @@ public final class Add_user extends javax.swing.JInternalFrame {
        
         conf.RegisterByAdmin(nm, bdg, ps, access, ussage);
         
+        JOptionPane.showMessageDialog(
+            null,
+            "User Successfully Created!",
+            "Success",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+        
+        EraseText();
     }
         
     Border grayBorder = BorderFactory.createLineBorder(Color.GRAY, 2);
@@ -140,7 +150,6 @@ public final class Add_user extends javax.swing.JInternalFrame {
         jLabel29 = new javax.swing.JLabel();
         PassLabel4 = new javax.swing.JLabel();
         passStrength4 = new javax.swing.JProgressBar();
-        jLabel30 = new javax.swing.JLabel();
         jPanel16 = new javax.swing.JPanel();
         user = new javax.swing.JToggleButton();
         admin = new javax.swing.JToggleButton();
@@ -152,15 +161,14 @@ public final class Add_user extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
 
         jPanel15.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel15.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel27.setText("------------------------------------------------------------------------------------------------------------------------------");
-        jPanel15.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, -1, -1));
+        jLabel27.setText("---------------------------------------------------------------");
+        jLabel27.setToolTipText("");
+        jLabel27.setAutoscrolls(true);
 
         jLabel28.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel28.setText("ADD USER");
-        jPanel15.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 16, -1, -1));
 
         name4.setEditable(false);
         name4.setBackground(new java.awt.Color(204, 204, 204));
@@ -181,7 +189,6 @@ public final class Add_user extends javax.swing.JInternalFrame {
                 name4KeyReleased(evt);
             }
         });
-        jPanel15.add(name4, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 46, 183, 44));
 
         pass4.setEditable(false);
         pass4.setBackground(new java.awt.Color(204, 204, 204));
@@ -202,7 +209,6 @@ public final class Add_user extends javax.swing.JInternalFrame {
                 pass4KeyReleased(evt);
             }
         });
-        jPanel15.add(pass4, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 99, 370, 44));
 
         badge4.setEditable(false);
         badge4.setBackground(new java.awt.Color(204, 204, 204));
@@ -223,10 +229,8 @@ public final class Add_user extends javax.swing.JInternalFrame {
                 badge4KeyReleased(evt);
             }
         });
-        jPanel15.add(badge4, new org.netbeans.lib.awtextra.AbsoluteConstraints(207, 46, 183, 44));
 
         jLabel29.setText("Account password strength: ");
-        jPanel15.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, -1, -1));
 
         PassLabel4.setBackground(new java.awt.Color(153, 153, 153));
         PassLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
@@ -234,23 +238,9 @@ public final class Add_user extends javax.swing.JInternalFrame {
         PassLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         PassLabel4.setText("Null");
         PassLabel4.setOpaque(true);
-        jPanel15.add(PassLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 370, 166, -1));
 
         passStrength4.setForeground(new java.awt.Color(204, 204, 204));
         passStrength4.setOpaque(true);
-        jPanel15.add(passStrength4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 380, -1));
-
-        jLabel30.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel30.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel30.setText("CONFIRM");
-        jLabel30.setToolTipText("");
-        jLabel30.setOpaque(true);
-        jLabel30.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel30MouseClicked(evt);
-            }
-        });
-        jPanel15.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(588, 237, 183, 38));
 
         user.setSelected(true);
         user.setText("USER");
@@ -271,7 +261,7 @@ public final class Add_user extends javax.swing.JInternalFrame {
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(user, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                .addComponent(user, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(admin, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -292,8 +282,6 @@ public final class Add_user extends javax.swing.JInternalFrame {
                 .addGap(1, 1, 1))
         );
 
-        jPanel15.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 380, 60));
-
         ussageToggle.setText("Disable");
         ussageToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -310,10 +298,10 @@ public final class Add_user extends javax.swing.JInternalFrame {
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ussageToggle, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                .addComponent(ussageToggle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel17Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(68, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(59, 59, 59))
         );
@@ -322,12 +310,10 @@ public final class Add_user extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel17Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(ussageToggle)
                 .addContainerGap())
         );
-
-        jPanel15.add(jPanel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 190, 90));
 
         jLabel2.setBackground(new java.awt.Color(153, 153, 153));
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
@@ -346,7 +332,6 @@ public final class Add_user extends javax.swing.JInternalFrame {
                 jLabel2MouseExited(evt);
             }
         });
-        jPanel15.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 410, 220, 40));
 
         jLabel3.setBackground(new java.awt.Color(153, 153, 153));
         jLabel3.setForeground(new java.awt.Color(204, 0, 0));
@@ -364,17 +349,93 @@ public final class Add_user extends javax.swing.JInternalFrame {
                 jLabel3MouseExited(evt);
             }
         });
-        jPanel15.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 80, 40));
+
+        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+        jPanel15.setLayout(jPanel15Layout);
+        jPanel15Layout.setHorizontalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel15Layout.createSequentialGroup()
+                                .addComponent(jLabel29)
+                                .addGap(7, 7, 7)
+                                .addComponent(PassLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))))
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGap(172, 172, 172)
+                        .addComponent(jLabel28)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(70, 70, 70)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pass4)
+                            .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(name4, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(badge4))
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel15Layout.createSequentialGroup()
+                                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(passStrength4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        jPanel15Layout.setVerticalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel28)
+                .addGap(9, 9, 9)
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(name4, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(badge4, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addComponent(pass4, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
+                .addComponent(passStrength4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel29)
+                            .addComponent(PassLabel4)))
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(jLabel27)))
+                .addGap(60, 60, 60))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
+            .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -397,6 +458,8 @@ public final class Add_user extends javax.swing.JInternalFrame {
 
         if(!nm.equals("Username")){
             ani.validateRequired(name4);
+        }else if(nm.isEmpty()){
+            name4.setBorder(grayBorder);
         }else{
             name4.setBorder(redBorder);
         }// TODO add your handling code here:
@@ -469,17 +532,6 @@ public final class Add_user extends javax.swing.JInternalFrame {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_badge4KeyReleased
 
-    private void jLabel30MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel30MouseClicked
-        LogReg_config logreg = new LogReg_config();
-
-        String nm = name4.getText();
-        String bdg = badge4.getText();
-        String ps = pass4.getText();
-
-        logreg.Register(nm, bdg, ps);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel30MouseClicked
-
     private void userActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_userActionPerformed
@@ -530,7 +582,6 @@ public final class Add_user extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;

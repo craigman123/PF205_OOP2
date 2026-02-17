@@ -13,6 +13,7 @@ import java.awt.Color;
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import main.LoginRegister;
 
 /**
  *
@@ -31,6 +32,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     }
     
     private Integer ID;
+    private static boolean run = true;
     
     public int GetSession(){
         session see = new session();
@@ -46,9 +48,11 @@ public class AdminDashboard extends javax.swing.JFrame {
                 "Overiding Disabled",
                 JOptionPane.ERROR_MESSAGE
             );
-            System.exit(0);
+            run = false;
+            
+            LoginRegister logreg = new LoginRegister();
+            logreg.setVisible(true);
         }
-        
         return 0;
     }
 
@@ -297,7 +301,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AdminDashboard().setVisible(true);
+                new AdminDashboard().setVisible(run);
             }
         });
     }

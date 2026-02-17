@@ -65,6 +65,52 @@ public class animation {
         return 0;
 }
     
+    public int addPlaceholderTextArea(JTextArea area, String placeholder) {
+        
+    Color placeholderColor = Color.GRAY;
+    Color textColor = Color.BLACK;
+
+    final boolean[] showingPlaceholder = {true};
+//
+//    field.addHierarchyListener(e -> {
+//        if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && field.isShowing()) {        //LOADER (OPTIONAL)
+//            field.setText(placeholder);
+//            field.setForeground(placeholderColor);
+//            showingPlaceholder[0] = true;
+//        }
+//    });
+    
+        area.setEditable(true);
+        area.setFocusable(true);
+
+    area.addFocusListener(new java.awt.event.FocusAdapter() {
+        @Override
+        public void focusGained(java.awt.event.FocusEvent e) {
+            String FieldHolder = area.getText();
+            if(!placeholder.equals(FieldHolder)){
+                return;
+            }
+            if (showingPlaceholder[0]) {
+                area.setText("");
+                area.setForeground(textColor);
+                showingPlaceholder[0] = false;
+            }
+        }
+
+        @Override
+        public void focusLost(java.awt.event.FocusEvent e) {
+            if (area.getText().trim().isEmpty()) {
+                area.setText(placeholder);
+                area.setForeground(placeholderColor);
+                showingPlaceholder[0] = true;
+            }
+        }
+    });
+        
+        area.setEnabled(true);
+        return 0;
+}
+    
     private static final int GROW_W = 8;
     private static final int GROW_H = 3;
     private static final int TIMER_DELAY = 10;

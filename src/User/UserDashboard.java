@@ -11,12 +11,13 @@ import configuration.animation;
 import java.awt.Dimension;
 import java.util.*;
 import javax.swing.*;
+import main.LoginRegister;
 
 /**
  *
  * @author user
  */
-public class UserDashboard extends javax.swing.JFrame {
+public final class UserDashboard extends javax.swing.JFrame {
 
     /**
      * Creates new form UserDashboard
@@ -30,7 +31,9 @@ public class UserDashboard extends javax.swing.JFrame {
         GetSession();
     }
     
-    public int GetSession(){
+    private static boolean run = true;
+    
+    public void GetSession(){
         session see = new session();
         
         ID = see.GetID();
@@ -44,10 +47,13 @@ public class UserDashboard extends javax.swing.JFrame {
                 "Overiding Disabled",
                 JOptionPane.ERROR_MESSAGE
             );
-            System.exit(0);
+            
+            run = false;
+            
+            LoginRegister logreg = new LoginRegister();
+            logreg.setVisible(true);
+            
         }
-        
-        return 0;
     }
     
     public final void Toggle_Buttons(){
@@ -112,6 +118,11 @@ public class UserDashboard extends javax.swing.JFrame {
         jPanel2.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 204, 60));
 
         jToggleButton3.setText("Cart");
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton3ActionPerformed(evt);
+            }
+        });
         jPanel2.add(jToggleButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 204, 60));
 
         jToggleButton4.setText("Promo");
@@ -196,6 +207,10 @@ public class UserDashboard extends javax.swing.JFrame {
       // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton2MouseClicked
 
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -226,7 +241,7 @@ public class UserDashboard extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UserDashboard().setVisible(true);
+                new UserDashboard().setVisible(run);
             }
         });
     }

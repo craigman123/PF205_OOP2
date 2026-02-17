@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -36,6 +37,48 @@ public class Admin_config {
         statusCombo.removeAllItems();
     
         statusCombo.addItem("All");
+        statusCombo.addItem("Active");
+        statusCombo.addItem("Inactive");
+        statusCombo.addItem("Pending");
+        statusCombo.addItem("Suspended");
+        statusCombo.addItem("Sold Out");
+        statusCombo.addItem("Archived");
+    }
+    
+    public static void DisplayAccess(JComboBox<String> statusCombo){
+        statusCombo.removeAllItems();
+        
+        statusCombo.addItem("All");
+        statusCombo.addItem("Admin");
+        statusCombo.addItem("User");
+    }
+    
+    public static void DisplayCategory(JComboBox<String> statusCombo){
+        statusCombo.removeAllItems();
+        
+        statusCombo.addItem("Pistol");
+        statusCombo.addItem("Rifle");
+        statusCombo.addItem("Sniper Rifle");
+        statusCombo.addItem("Shotgun");
+        statusCombo.addItem("Sub Machine Gun");
+        statusCombo.addItem("Machine Gun");
+    }
+    
+    public static void DisplayRarity(JComboBox<String> statusCombo){
+        statusCombo.removeAllItems();
+        
+        statusCombo.addItem("Common");
+        statusCombo.addItem("Uncommon");
+        statusCombo.addItem("Rare");
+        statusCombo.addItem("Exquisite");
+        statusCombo.addItem("Unique");
+        statusCombo.addItem("Collectors Choice");
+        statusCombo.addItem("Antique");
+    }
+    
+    public static void DisplayProdStatus(JComboBox<String> statusCombo){
+        statusCombo.removeAllItems();
+        
         statusCombo.addItem("Active");
         statusCombo.addItem("Inactive");
         statusCombo.addItem("Pending");

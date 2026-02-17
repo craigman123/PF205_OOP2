@@ -103,103 +103,24 @@ public class config {
         return records;
     }
     
-    private void addDeleteButton(JTable table) {
+    public void displayData(String sql, javax.swing.JTable table, Object... values) {
+        try (Connection conn = this.connectDB();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-    TableColumn actionColumn = table.getColumn("Action");
+            // Set the parameters for the search
+            for (int i = 0; i < values.length; i++) {
+                pstmt.setObject(i + 1, values[i]);
+            }
 
-    actionColumn.setCellRenderer((tbl, value, isSelected, hasFocus, row, col) -> {
-        JButton btn = new JButton("Delete");
-        btn.setBackground(Color.RED);
-        btn.setForeground(Color.WHITE);
-        return btn;
-    });
-
-    actionColumn.setCellEditor(new DefaultCellEditor(new JCheckBox()) {
-
-        private final JButton button = new JButton("Delete");
-        private int row;
-
-        {
-            button.setBackground(Color.RED);
-            button.setForeground(Color.WHITE);
-
-            button.addActionListener(e -> {
-                int id = Integer.parseInt(
-                        table.getValueAt(row, 0).toString() 
-                );
-
-                int confirm = JOptionPane.showConfirmDialog(
-                        table,
-                        "Delete this user?",
-                        "Confirm",
-                        JOptionPane.YES_NO_OPTION
-                );
-
-                if (confirm == JOptionPane.YES_OPTION) {
-                    deleteUserFromDatabase(id);
-                    ((DefaultTableModel) table.getModel()).removeRow(row);
-                }
-            });
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(
-                JTable table, Object value, boolean isSelected, int row, int column) {
-            this.row = row;
-            return button;
-        }
-    });
-}
-    
-    private void deleteUserFromDatabase(int id) {
-        try (Connection conn = connectDB();
-             PreparedStatement ps = conn.prepareStatement(
-                 "DELETE FROM users WHERE user_id = ?")) {
-
-            ps.setInt(1, id);
-            ps.executeUpdate();
+            try (ResultSet rs = pstmt.executeQuery()) {
+                // Automatically maps the filtered ResultSet to your JTable
+                table.setModel(DbUtils.resultSetToTableModel(rs));
+            }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error filtering data: " + e.getMessage());
         }
     }
-    
-    public void displayData(String sql, JTable table) {
-    try (Connection conn = connectDB();
-         PreparedStatement pstmt = conn.prepareStatement(sql);
-         ResultSet rs = pstmt.executeQuery()) {
-
-        TableModel dbModel = DbUtils.resultSetToTableModel(rs);
-
-        DefaultTableModel model = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return column == getColumnCount() - 1;
-            }
-        };
-
-        for (int i = 0; i < dbModel.getColumnCount(); i++) {
-            model.addColumn(dbModel.getColumnName(i));
-        }
-
-        model.addColumn("Action");
-
-        for (int row = 0; row < dbModel.getRowCount(); row++) {
-            Object[] rowData = new Object[model.getColumnCount()];
-            for (int col = 0; col < dbModel.getColumnCount(); col++) {
-                rowData[col] = dbModel.getValueAt(row, col);
-            }
-            rowData[rowData.length - 1] = "Delete";
-            model.addRow(rowData);
-        }
-
-        table.setModel(model);
-        addDeleteButton(table);
-
-    } catch (SQLException e) {
-        System.out.println("Error displaying data: " + e.getMessage());
-    }
-}
 
    public void hideHashColumn(JTable table, String columnName) {
        int colIndex = table.getColumnModel().getColumnIndex(columnName);
@@ -291,11 +212,37 @@ public class config {
             ResultSet rs = pstmt.executeQuery();
             table.setModel(DbUtils.resultSetToTableModel(rs));
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error deleting record: " + e.getMessage());
         }
+    }
+   
+   public void searchProductDynamic(String[] qry, String status, String input, JTable table) {
+        if (table == null) return;
+        input = (input == null) ? "" : input.trim();
+
+        try (Connection conn = this.connectDB()) {
+            ResultSet rs;
+            PreparedStatement pstmt = conn.prepareStatement(qry[0]);
+
+            if ("All".equalsIgnoreCase(status)) {
+                pstmt.setString(1, "%" + input + "%");
+            } else {
+                pstmt.setString(1, status);
+                pstmt.setString(2, "%" + input + "%");
+            }
+
+            rs = pstmt.executeQuery();
+            table.setModel(DbUtils.resultSetToTableModel(rs));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     }
 
 
 
-}
+
+

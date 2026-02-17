@@ -6,7 +6,11 @@
 package Admin;
 
 import Admin.Admin_config;
+import Admin.ProductControl.tableProduct;
 import Admin.UserControl.Edit_User;
+import Admin.UserControl.tableUser;
+import configuration.animation;
+import configuration.config;
 import java.awt.Color;
 import javax.swing.JDesktopPane;
 
@@ -20,29 +24,36 @@ public class TableUser extends javax.swing.JInternalFrame {
      * Creates new form TableUser
      */
     public TableUser() {
+        Admin_config adminconf = new Admin_config();
+        
         initComponents();
-        DispTable();
-        StyleTable();
         StyleFrame();
-    }
-    
-    void DispTable(){
-        Admin_config admin = new Admin_config();
-        
-        String sql = "SELECT * FROM users";
-        admin.displayData(sql, table);
-    }
-    
-    public void StyleTable(){
-        table.setRowHeight(50);
-        
+        GetTable();
+        adminconf.DisplayAccess(statusBox);
     }
     
     public void StyleFrame(){
         this.setBorder(null);
         ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
     }
-
+    
+    public void GetTable(){
+        String text = searchUser.getText();
+        String stat = statusBox.getSelectedItem().toString();
+        
+        tableUser table = new tableUser(stat, text);
+        
+        TablePane.add(table).setVisible(true);
+    }
+    
+    public void RefreshTable(){
+        String text = searchUser.getText();
+        String stat = statusBox.getSelectedItem().toString(); 
+        
+        tableUser table = new tableUser(stat, text);
+        TablePane.remove(table); 
+        TablePane.add(table).setVisible(true);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -54,10 +65,11 @@ public class TableUser extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        searchUser = new javax.swing.JTextField();
+        TablePane = new javax.swing.JDesktopPane();
+        statusBox = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jInternalFrame1 = new javax.swing.JInternalFrame();
@@ -68,21 +80,6 @@ public class TableUser extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(table);
-
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 910, 470));
 
         jLabel7.setBackground(new java.awt.Color(153, 153, 153));
         jLabel7.setFont(new java.awt.Font("Yu Gothic UI", 1, 18)); // NOI18N
@@ -102,14 +99,58 @@ public class TableUser extends javax.swing.JInternalFrame {
         });
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 180, 40));
 
-        jTextField1.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField1.setText("Search Products . . .");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+        searchUser.setForeground(new java.awt.Color(153, 153, 153));
+        searchUser.setText("Search Users . . .");
+        searchUser.setToolTipText("");
+        searchUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchUserMouseClicked(evt);
             }
         });
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 720, -1));
+        searchUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchUserActionPerformed(evt);
+            }
+        });
+        jPanel1.add(searchUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 430, -1));
+
+        javax.swing.GroupLayout TablePaneLayout = new javax.swing.GroupLayout(TablePane);
+        TablePane.setLayout(TablePaneLayout);
+        TablePaneLayout.setHorizontalGroup(
+            TablePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 910, Short.MAX_VALUE)
+        );
+        TablePaneLayout.setVerticalGroup(
+            TablePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 480, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(TablePane, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 910, 480));
+
+        statusBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Item 2", "Item 3", "Item 4" }));
+        statusBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statusBoxActionPerformed(evt);
+            }
+        });
+        jPanel1.add(statusBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 0, 140, 40));
+
+        jLabel3.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("SEARCH");
+        jLabel3.setOpaque(true);
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel3MouseExited(evt);
+            }
+        });
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 0, 130, 40));
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
@@ -128,7 +169,7 @@ public class TableUser extends javax.swing.JInternalFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
+                .addContainerGap(25, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(30, 30, 30))
         );
@@ -196,19 +237,19 @@ public class TableUser extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 932, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 468, Short.MAX_VALUE)
+                    .addGap(0, 466, Short.MAX_VALUE)
                     .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 468, Short.MAX_VALUE)))
+                    .addGap(0, 466, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 535, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -238,24 +279,48 @@ public class TableUser extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel7MouseClicked
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void searchUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchUserActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_searchUserActionPerformed
+
+    private void statusBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_statusBoxActionPerformed
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+
+        RefreshTable();        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void searchUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchUserMouseClicked
+        animation ani = new animation();
+
+        ani.addPlaceholder(searchUser, "Search Users . . .");     // TODO add your handling code here:
+    }//GEN-LAST:event_searchUserMouseClicked
+
+    private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
+        jLabel3.setBackground(new Color(102,102,102));        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel3MouseEntered
+
+    private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
+        jLabel3.setBackground(new Color(153,153,153));        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel3MouseExited
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDesktopPane TablePane;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTable table;
+    private javax.swing.JTextField searchUser;
+    private javax.swing.JComboBox<String> statusBox;
     // End of variables declaration//GEN-END:variables
 }

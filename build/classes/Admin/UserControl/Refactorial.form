@@ -37,11 +37,6 @@
               <Component id="jSeparator1" alignment="1" max="32767" attributes="0"/>
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="148" max="-2" attributes="0"/>
-                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="userid" min="-2" pref="205" max="-2" attributes="0"/>
@@ -91,6 +86,11 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="151" max="-2" attributes="0"/>
+              </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -123,7 +123,7 @@
                           <Component id="jLabel3" min="-2" pref="40" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="47" max="32767" attributes="0"/>
+                  <EmptySpace pref="51" max="32767" attributes="0"/>
                   <Component id="passStrength4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">

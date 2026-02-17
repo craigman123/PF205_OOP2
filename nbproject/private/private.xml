@@ -3,14 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/tableProduct.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/Admin_config.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Refactor_Product.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/Mng_Product.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Remove_Product.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/User_Details.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/User_Permission.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/Remove_User.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Edit_Product.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/config.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/Add_user.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/tableUser.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/UserDashboard.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/LogReg_config.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/Refactorial.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Add_Product.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/TableUser.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Profiles/profile.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Profiles/session.java</file>
@@ -19,7 +27,6 @@
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/Edit_User.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/main/LoginRegister.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/Validations.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/testings/lineargradeint.java</file>
         </group>
     </open-files>
 </project-private>
