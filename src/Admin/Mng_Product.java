@@ -31,7 +31,7 @@ public class Mng_Product extends javax.swing.JInternalFrame {
         GetTable();
     }
     
-    public void GetTable(){
+    public final void GetTable(){
         String text = searchProd.getText();
         String stat = statusBox.getSelectedItem().toString(); 
         
@@ -44,9 +44,12 @@ public class Mng_Product extends javax.swing.JInternalFrame {
         TablePane.add(table).setVisible(true);
     }
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
     }
 
     public void RefreshTable(){
@@ -98,7 +101,7 @@ public class Mng_Product extends javax.swing.JInternalFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(352, 352, 352)
                 .addComponent(jLabel1)
-                .addContainerGap(358, Short.MAX_VALUE))
+                .addContainerGap(368, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,7 +111,7 @@ public class Mng_Product extends javax.swing.JInternalFrame {
                 .addGap(27, 27, 27))
         );
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, -1));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, -1));
 
         jLabel2.setBackground(new java.awt.Color(153, 153, 153));
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
@@ -165,20 +168,20 @@ public class Mng_Product extends javax.swing.JInternalFrame {
                 jLabel3MouseExited(evt);
             }
         });
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 100, 130, 40));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 100, 140, 40));
 
         javax.swing.GroupLayout TablePaneLayout = new javax.swing.GroupLayout(TablePane);
         TablePane.setLayout(TablePaneLayout);
         TablePaneLayout.setHorizontalGroup(
             TablePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 910, Short.MAX_VALUE)
+            .addGap(0, 920, Short.MAX_VALUE)
         );
         TablePaneLayout.setVerticalGroup(
             TablePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 450, Short.MAX_VALUE)
         );
 
-        jPanel1.add(TablePane, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 910, 450));
+        jPanel1.add(TablePane, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 920, 450));
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -288,9 +291,9 @@ public class Mng_Product extends javax.swing.JInternalFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGap(0, 470, Short.MAX_VALUE)
                     .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(0, 470, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

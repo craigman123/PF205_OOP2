@@ -5,10 +5,13 @@
  */
 package Profiles;
 
+import configuration.LogReg_config;
 import configuration.animation;
 import configuration.config;
 import java.awt.Color;
+import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import main.LoginRegister;
 
 /**
  *
@@ -21,9 +24,11 @@ public final class profile extends javax.swing.JInternalFrame {
      */
     private final int ID;
     private static String unique_pass;
+    private JFrame fr;
     
-    public profile(int id) {
+    public profile(int id, JFrame frame) {
         this.ID = id;
+        this.fr = frame;
         
         initComponents();
         SetTextUser();
@@ -31,9 +36,12 @@ public final class profile extends javax.swing.JInternalFrame {
         StyleFrame();
     }
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
     }
     
     public void SetTextUser(){
@@ -127,6 +135,7 @@ public final class profile extends javax.swing.JInternalFrame {
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -312,6 +321,17 @@ public final class profile extends javax.swing.JInternalFrame {
         jLabel18.setOpaque(true);
         jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 0, 480, 190));
 
+        jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("LOG OUT");
+        jLabel2.setOpaque(true);
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(808, 390, 100, 30));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -392,6 +412,15 @@ public final class profile extends javax.swing.JInternalFrame {
                // TODO add your handling code here:
     }//GEN-LAST:event_jLabel1MouseClicked
 
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        LoginRegister regis = new LoginRegister();
+        regis.setVisible(true);
+        this.dispose();
+        fr.dispose();
+        
+                // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel2MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Username;
@@ -412,6 +441,7 @@ public final class profile extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

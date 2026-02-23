@@ -29,27 +29,28 @@ public class tableUser extends javax.swing.JInternalFrame {
         StyleTable();
     }
     
-    public void StyleTable(){
+    public final void StyleTable(){
         table.setRowHeight(50);
         
     }
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
     }
     
-    public void DispTable() {
+    public final void DispTable() {
     config conf = new config();
 
-    // Trim inputs to avoid whitespace issues
     String status = stat != null ? stat.trim() : "All";
     String text = txt != null ? txt.trim() : "";
 
     System.out.println("Status: " + status);
     System.out.println("Text: " + text);
 
-    // Case 1: Show all users when default text or empty
     if (status.equals("All") && (text.isEmpty() || text.equalsIgnoreCase("Search Users . . ."))) {
         String qry = "SELECT * FROM users ORDER BY user_name";
         conf.displayData(qry, table);
@@ -57,7 +58,6 @@ public class tableUser extends javax.swing.JInternalFrame {
     }
 
     try {
-        // Try interpreting the text as a numeric user ID
         int id = Integer.parseInt(text);
 
         if (status.equals("All")) {
@@ -69,7 +69,6 @@ public class tableUser extends javax.swing.JInternalFrame {
         }
 
     } catch (NumberFormatException e) {
-        // If text is not a number, do a name search
         if (status.equals("All")) {
             String qry = "SELECT * FROM users WHERE user_name LIKE ? ORDER BY user_name";
             conf.displayData(qry, table, "%" + text + "%");

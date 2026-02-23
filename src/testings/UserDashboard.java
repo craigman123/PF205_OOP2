@@ -70,7 +70,13 @@ public class UserDashboard extends javax.swing.JFrame {
         jLabel9.setText("All rights reserved 2025");
         jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 635, -1, 20));
 
+        jToggleButton2.setForeground(new java.awt.Color(102, 102, 0));
         jToggleButton2.setText("Market");
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
         jPanel2.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 204, 60));
 
         jToggleButton3.setText("Cart");
@@ -178,6 +184,10 @@ public class UserDashboard extends javax.swing.JFrame {
     private void jToggleButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton6ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton6ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     /**
      * @param args the command line arguments

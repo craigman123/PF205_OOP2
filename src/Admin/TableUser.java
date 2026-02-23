@@ -32,12 +32,15 @@ public class TableUser extends javax.swing.JInternalFrame {
         adminconf.DisplayAccess(statusBox);
     }
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
     }
     
-    public void GetTable(){
+    public final void GetTable(){
         String text = searchUser.getText();
         String stat = statusBox.getSelectedItem().toString();
         

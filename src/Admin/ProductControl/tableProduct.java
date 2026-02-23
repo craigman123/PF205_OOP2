@@ -33,87 +33,49 @@ public class tableProduct extends javax.swing.JInternalFrame {
         StyleTable();
     }
     
-    public void StyleTable(){
+    public final void StyleTable(){
         table.setRowHeight(50);
         
     }
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
     }
     
-    public void RefreshTable(){
-        
-    }
-    
-    public void DispTable() {
+    public final void DispTable() {
+        config conf = new config();
 
-    config conf = new config();
+        String status = stat;
+        String text = txt;
 
-    String status = stat;
-    String text = txt;
-
-    System.out.println(status);
-    System.out.println(text);
+        System.out.println(status);
+        System.out.println(text);
 
 
-    if (status.equals("All") && 
-        (text.equals("Search Products . . .") || text.trim().isEmpty())) {
+        if (status.equals("All") && 
+            (text.equals("Search Products . . .") || text.trim().isEmpty())) {
 
-        String qry = "SELECT * FROM products ORDER BY prod_name";
-        conf.displayData(qry, table);
-        return;
-    }
-
-    try {
-        int id = Integer.parseInt(text);
-
-        if (status.equals("All")) {
-
-            String qry =
-                "SELECT * FROM products " +
-                "ORDER BY CASE " +
-                "WHEN prod_id = ? THEN 0 " +
-                "ELSE 1 END, prod_name";
-
-            conf.displayData(qry, table, id);
-
-        } else {
-
-            String qry =
-                "SELECT * FROM products " +
-                "WHERE prod_status = ? " +
-                "ORDER BY CASE " +
-                "WHEN prod_id = ? THEN 0 " +
-                "ELSE 1 END, prod_name";
-
-            conf.displayData(qry, table, status, id);
+            String qry = "SELECT * FROM products ORDER BY prod_name";
+            conf.displayData(qry, table);
+            return;
         }
 
-    } catch (NumberFormatException e) {
-
-        if (text.equals("Search Products . . .") || text.trim().isEmpty()) {
-
-            if (status.equals("All")) {
-                String qry = "SELECT * FROM products ORDER BY prod_name";
-                conf.displayData(qry, table);
-            } else {
-                String qry = "SELECT * FROM products WHERE prod_status = ? ORDER BY prod_name";
-                conf.displayData(qry, table, status);
-            }
-
-        } else {
+        try {
+            int id = Integer.parseInt(text);
 
             if (status.equals("All")) {
 
                 String qry =
                     "SELECT * FROM products " +
                     "ORDER BY CASE " +
-                    "WHEN prod_name LIKE ? THEN 0 " +
+                    "WHEN prod_id = ? THEN 0 " +
                     "ELSE 1 END, prod_name";
 
-                conf.displayData(qry, table, "%" + text + "%");
+                conf.displayData(qry, table, id);
 
             } else {
 
@@ -121,14 +83,50 @@ public class tableProduct extends javax.swing.JInternalFrame {
                     "SELECT * FROM products " +
                     "WHERE prod_status = ? " +
                     "ORDER BY CASE " +
-                    "WHEN prod_name LIKE ? THEN 0 " +
+                    "WHEN prod_id = ? THEN 0 " +
                     "ELSE 1 END, prod_name";
 
-                conf.displayData(qry, table, status, "%" + text + "%");
+                conf.displayData(qry, table, status, id);
+            }
+
+        } catch (NumberFormatException e) {
+
+            if (text.equals("Search Products . . .") || text.trim().isEmpty()) {
+
+                if (status.equals("All")) {
+                    String qry = "SELECT * FROM products ORDER BY prod_name";
+                    conf.displayData(qry, table);
+                } else {
+                    String qry = "SELECT * FROM products WHERE prod_status = ? ORDER BY prod_name";
+                    conf.displayData(qry, table, status);
+                }
+
+            } else {
+
+                if (status.equals("All")) {
+
+                    String qry =
+                        "SELECT * FROM products " +
+                        "ORDER BY CASE " +
+                        "WHEN prod_name LIKE ? THEN 0 " +
+                        "ELSE 1 END, prod_name";
+
+                    conf.displayData(qry, table, "%" + text + "%");
+
+                } else {
+
+                    String qry =
+                        "SELECT * FROM products " +
+                        "WHERE prod_status = ? " +
+                        "ORDER BY CASE " +
+                        "WHEN prod_name LIKE ? THEN 0 " +
+                        "ELSE 1 END, prod_name";
+
+                    conf.displayData(qry, table, status, "%" + text + "%");
+                }
             }
         }
     }
-}
 
 
 

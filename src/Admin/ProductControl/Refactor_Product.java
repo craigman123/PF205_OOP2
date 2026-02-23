@@ -5,10 +5,18 @@
  */
 package Admin.ProductControl;
 
+import Admin.Admin_config;
 import configuration.animation;
 import configuration.config;
-import java.awt.Color;
-import javax.swing.JOptionPane;
+import java.awt.*;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -20,47 +28,438 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
      * Creates new form Refactor_Product
      */
     public Refactor_Product() {
+        Admin_config adminconf = new Admin_config();
+        
         initComponents();
         StyleFrame();
+        adminconf.DisplayCategory(category);
+        adminconf.DisplayRarity(rarity);
+        adminconf.DisplayProdStatus(status);
+        Renderer();
     }
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public void Renderer(){
+        status.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list,
+                    Object value,
+                    int index,
+                    boolean isSelected,
+                    boolean cellHasFocus) {
+
+                Component c = super.getListCellRendererComponent(
+                        list, value, index, isSelected, cellHasFocus);
+
+                if (value != null) {
+                    String text = value.toString();
+                    switch (text) {
+                        case "Active": c.setForeground(Color.GREEN); break;
+                        case "Inactive": c.setForeground(Color.GRAY); break;
+                        case "Pending": c.setForeground(Color.ORANGE); break;
+                        case "Suspended": c.setForeground(Color.RED); break;
+                        case "Sold Out": c.setForeground(Color.MAGENTA); break;
+                        case "Archived": c.setForeground(Color.BLUE); break;
+                        default: c.setForeground(Color.BLACK);
+                    }
+                }
+
+                return c;
+            }
+        });
+        
+        category.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list,
+                    Object value,
+                    int index,
+                    boolean isSelected,
+                    boolean cellHasFocus) {
+
+                Component c = super.getListCellRendererComponent(
+                        list, value, index, isSelected, cellHasFocus);
+
+                if (value != null) {
+                    String text = value.toString();
+                    switch (text) {
+                        case "Pistol": c.setForeground(Color.GREEN); break;
+                        case "Rifle": c.setForeground(new Color(102,102,0)); break;
+                        case "Sniper Rifle": c.setForeground(Color.ORANGE); break;
+                        case "Shotgun": c.setForeground(Color.RED); break;
+                        case "Sub Machine Gun": c.setForeground(Color.MAGENTA); break;
+                        case "Machine Gun": c.setForeground(Color.BLUE); break;
+                        default: c.setForeground(Color.BLACK);
+                    }
+                }
+
+                return c;
+            }
+        });
+        
+        rarity.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list,
+                    Object value,
+                    int index,
+                    boolean isSelected,
+                    boolean cellHasFocus) {
+
+                Component c = super.getListCellRendererComponent(
+                        list, value, index, isSelected, cellHasFocus);
+
+                if (value != null) {
+                    String text = value.toString();
+                    switch (text) {
+                        case "Common": c.setForeground(Color.GRAY); break;
+                        case "Uncommon": c.setForeground(Color.GREEN); break;
+                        case "Rare": c.setForeground(Color.BLUE); break;
+                        case "Exquisite": c.setForeground(Color.CYAN); break;
+                        case "Unique": c.setForeground(Color.decode("#E6E6FA")); break;
+                        case "Collectors Choice": c.setForeground(Color.decode("#FFD700")); break;
+                        case "Antique": c.setForeground(Color.RED); break;
+                        default: c.setForeground(Color.BLACK);
+                    }
+                }
+
+                return c;
+            }
+        });
+
     }
+    
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
+    }
+    
+    private static String imgPath;
     
     public void GetInfo(){
         config conf = new config();
         
         int FinalId = 0;
-        String Userid = id.getText();
+        String Prodid = id.getText();
         
         try{
-            FinalId = Integer.parseInt(Userid);
+            FinalId = Integer.parseInt(Prodid);
             
-            String qry = "SELECT * FROM product WHERE prod_id = ?";
+            String qry = "SELECT * FROM products WHERE prod_id = ?";
             java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, FinalId); 
             
             if(!result.isEmpty()){
+                java.util.Map<String, Object> prod = result.get(0);
+                String name = prod.get("prod_name").toString();
+                String cat = prod.get("prod_category").toString();
+                String rare = prod.get("prod_rarity").toString();
+                String cash = prod.get("prod_price").toString();
+                String desc = prod.get("prod_descript").toString();
+                String stock = prod.get("prod_stock").toString();
+                String stat = prod.get("prod_status").toString();
+                String DataBaseimagePath = "";
+                
+                try {
+                DataBaseimagePath = prod.get("prod_image").toString();
+
+                File file = new File(
+                    System.getProperty("user.dir") + File.separator +
+                    "Input_Images" + File.separator +
+                    DataBaseimagePath
+                );
+
+                System.out.println(file.getAbsolutePath());
+                System.out.println("Exists: " + file.exists());
+
+                ImageIcon originalIcon = new ImageIcon(file.getAbsolutePath());
+                Image img = originalIcon.getImage();
+                
+                int imgWidth = originalIcon.getIconWidth();
+                int imgHeight = originalIcon.getIconHeight();
+                
+                int labelWidth = imageUpload.getSize().width;
+                int labelHeight = imageUpload.getSize().height;
+                
+                System.out.println("Width: " + labelWidth + "Height: " + labelHeight);
+                System.out.println("Width: " + imgWidth + "Height: " + imgHeight);
+
+                double widthRatio = (double) labelWidth / imgWidth;
+                double heightRatio = (double) labelHeight / imgHeight;
+                double ratio = Math.min(widthRatio, heightRatio);
+
+                if (ratio > 1.0) {
+                    ratio = 1.0;
+                }
+
+                int newWidth = (int) (imgWidth * ratio);
+                int newHeight = (int) (imgHeight * ratio);
+
+                Image scaledImage = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+
+                imageUpload.setIcon(new ImageIcon(scaledImage));
+                imageUpload.setText("");
+
+            } catch (Exception e) {
+                 e.printStackTrace();
+                imageUpload.setIcon(null);
+                imageUpload.setText("No Image");
+            }
+                imgPath = DataBaseimagePath;
+                currentImagePathFromDatabase = imgPath;
+                imageChanged = false;
+                selectedImageFile = null;
+                
+                prodName.setText(name);
+                ProdStock.setText(stock);
+                price.setText(cash);
+                rarity.setSelectedItem(rare);
+                category.setSelectedItem(cat);
+                status.setSelectedItem(stat);
+                Descript.setText(desc);
+                
                 
             }else{
                 JOptionPane.showMessageDialog(
-                null,
-                "ID does not exist!",
-                "ID not found",
-                JOptionPane.ERROR_MESSAGE
-            );
+                    null,
+                    "ID does not exist!",
+                    "ID not found",
+                    JOptionPane.ERROR_MESSAGE
+                );
             }
         }catch(NumberFormatException e){
-            JOptionPane.showMessageDialog(
-                null,
-                "ID should be Integer!",
-                "Input error",
-                JOptionPane.ERROR_MESSAGE
-            );
+            if(Prodid.equals("Enter ID . . .") || Prodid.isEmpty()){
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Enter Valid Product ID",
+                    "Empty Fields",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }else{
+                JOptionPane.showMessageDialog(
+                    null,
+                    "ID should be Integer!",
+                    "Input error",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
         }
+    }
         
+    public void ResetInputs() {
+
+        id.setText("Enter ID . . .");
+        prodName.setText("Product Name");
+        ProdStock.setText("Stock");
+        price.setText("Price");
+        Descript.setText("Description . . .");
+
+        if (category.getItemCount() > 0) {
+            category.setSelectedIndex(0);
+        }
+
+        if (rarity.getItemCount() > 0) {
+            rarity.setSelectedIndex(0);
+        }
+
+        if (status.getItemCount() > 0) {
+            status.setSelectedIndex(0);
+        }
+
+        imageUpload.setIcon(null);
+        imageUpload.setText("No Image");
+        imageUpload.setBorder(grayBorder);
+    }
+    
+    private boolean validateInputs() {
+        StringBuilder error = new StringBuilder();
+        config conf = new config();
+
+        String idText = id.getText().trim();
+        String name = prodName.getText().trim();
+        String priceText = price.getText().trim();
+        String stockText = ProdStock.getText().trim();
+        String desc = Descript.getText().trim();
+
+        if (idText.isEmpty() || idText.equals("Enter ID . . .")) {
+            error.append("• Product ID is required.\n");
+        } else {
+            try {
+                int Userid = Integer.parseInt(idText);
+                
+                String qry = "SELECT * FROM products WHERE prod_id = ?";
+                java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, Userid); 
+                
+                if(result.isEmpty()){
+                   error.append("User ID not found!\n"); 
+                }
+                
+            } catch (NumberFormatException e) {
+                error.append("• Product ID must be a valid integer.\n");
+            }
+        }
+
+        if (name.isEmpty()) {
+            error.append("• Product Name cannot be empty.\n");
+        }
+
+        if (priceText.isEmpty()) {
+            error.append("• Price cannot be empty.\n");
+        } else {
+            try {
+                double priceValue = Double.parseDouble(priceText);
+                if (priceValue < 0) {
+                    error.append("• Price cannot be negative.\n");
+                }
+            } catch (NumberFormatException e) {
+                error.append("• Price must be a valid number.\n");
+            }
+        }
+
+        if (stockText.isEmpty()) {
+            error.append("• Stock cannot be empty.\n");
+        } else {
+            try {
+                int stockValue = Integer.parseInt(stockText);
+                if (stockValue < 0) {
+                    error.append("• Stock cannot be negative.\n");
+                }
+            } catch (NumberFormatException e) {
+                error.append("• Stock must be a valid integer.\n");
+            }
+        }
+
+        if (desc.isEmpty()) {
+            error.append("• Description cannot be empty.\n");
+        }
+
+        if (error.length() > 0) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    error.toString(),
+                    "Validation Errors",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return false;
+        }
+
+        return true;
+    }
+    
+    private File selectedImageFile = null;
+    private boolean imageChanged = false;
+    private String currentImagePathFromDatabase = "";
+    
+    public void saveChanges() throws Exception {
+        config conf = new config();
+
+        String prodId = id.getText().trim();
+        String name = prodName.getText().trim();
+        String cat = category.getSelectedItem().toString();
+        String rare = rarity.getSelectedItem().toString();
+        String cash = price.getText().trim();
+        String desc = Descript.getText().trim();
+        String stock = ProdStock.getText().trim();
+        String stat = status.getSelectedItem().toString();
+        String finalFileName = currentImagePathFromDatabase;
+
+        if (imageChanged && selectedImageFile != null) {
+
+            String extension = selectedImageFile.getName().substring(selectedImageFile.getName().lastIndexOf(".")).toLowerCase();
+            String uniqueName = conf.generateHashedName(); 
+            String uniqueFileName = uniqueName + extension;    
+            finalFileName = uniqueFileName;
+            saveImageToFolder(selectedImageFile, uniqueName, extension); 
+            System.out.println("Image changed: " + finalFileName);
+        }      
         
+        if (finalFileName == null || !finalFileName.contains(".")) {
+            System.out.println(finalFileName);
+            JOptionPane.showMessageDialog(null, "Invalid image path!");
+            return;
+        }
+
+        String extension = finalFileName.substring(finalFileName.lastIndexOf(".")).toLowerCase();
+        if (!extension.equals(".jpg") && !extension.equals(".jpeg") && !extension.equals(".png") && !extension.equals(".webp")) {
+            JOptionPane.showMessageDialog(null, "Invalid image type!");
+            return;
+        }
+
+            String qry = "UPDATE products SET prod_name = ?, prod_category = ?, prod_price = ?, prod_rarity = ?, "
+                    + "prod_descript = ?, prod_stock = ?, prod_status = ?, prod_image = ? WHERE prod_id = ?";
+
+            int rowsAffected = conf.updateRecord(qry, name, cat, cash, rare, desc, stock, stat, finalFileName, prodId);
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Product updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                ResetInputs();
+            } else {
+                JOptionPane.showMessageDialog(null, "No changes were made.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            }
+    }
+    
+    
+    public String saveImageToFolder(File sourceFile, String uniqueName, String extension) {
+        try {
+            String projectPath = System.getProperty("user.dir");
+            File folder = new File(projectPath + "/Input_Images");
+
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+
+            String newFileName = uniqueName + extension;
+            File destinationFile = new File(folder, newFileName);
+
+            Files.copy(sourceFile.toPath(),
+                       destinationFile.toPath(),
+                       StandardCopyOption.REPLACE_EXISTING);
+        
+            return newFileName;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return currentImagePathFromDatabase; 
+        }
+    }
+    
+    Border grayBorder = BorderFactory.createLineBorder(Color.GRAY, 2);
+    Border orangeBorder = BorderFactory.createLineBorder(Color.ORANGE, 2);
+    Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 2);
+    Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
+    
+    private static String imagePath;
+    private static Image scaledImg;
+    
+    private void FileChooser() {
+        JFileChooser fileChooser = new JFileChooser();
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "jpg", "png", "jpeg", "webp");
+        fileChooser.addChoosableFileFilter(filter);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+
+        int result = fileChooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            selectedImageFile = fileChooser.getSelectedFile();
+            imagePath = selectedImageFile.getAbsolutePath();
+            imageChanged = true;
+
+            ImageIcon icon = new ImageIcon(imagePath);
+            
+            System.out.println("ImagePath: " + imagePath);
+            
+            Image img = icon.getImage();
+            scaledImg = img.getScaledInstance(
+                    imageUpload.getWidth(),
+                    imageUpload.getHeight(),
+                    Image.SCALE_SMOOTH);
+
+            imageUpload.setIcon(new ImageIcon(scaledImg));
+            imageUpload.setText("");
+        }
     }
 
     /**
@@ -86,10 +485,11 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         price = new javax.swing.JTextField();
-        Descript = new javax.swing.JTextArea();
         imageUpload = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Descript = new javax.swing.JTextArea();
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
@@ -103,7 +503,7 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(175, 175, 175)
                 .addComponent(jLabel1)
-                .addContainerGap(190, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,6 +516,11 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
         id.setEditable(false);
         id.setForeground(new java.awt.Color(102, 102, 102));
         id.setText("Enter ID . . .");
+        id.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                idMouseClicked(evt);
+            }
+        });
         id.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 idActionPerformed(evt);
@@ -132,17 +537,29 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel2MouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel2MouseExited(evt);
+            }
         });
 
         prodName.setEditable(false);
         prodName.setForeground(new java.awt.Color(153, 153, 153));
         prodName.setText("Product Name");
+        prodName.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                prodNameMouseClicked(evt);
+            }
+        });
         prodName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 prodNameActionPerformed(evt);
             }
         });
 
+        rarity.setBackground(new java.awt.Color(204, 204, 204));
         rarity.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         rarity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -150,6 +567,7 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
             }
         });
 
+        category.setBackground(new java.awt.Color(153, 153, 153));
         category.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         category.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -222,32 +640,52 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
 
         price.setForeground(new java.awt.Color(153, 153, 153));
         price.setText("Price");
-
-        Descript.setColumns(20);
-        Descript.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        Descript.setForeground(new java.awt.Color(153, 153, 153));
-        Descript.setRows(5);
-        Descript.setText("Description . . .");
-        Descript.setAutoscrolls(false);
+        price.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                priceMouseClicked(evt);
+            }
+        });
 
         imageUpload.setBackground(new java.awt.Color(153, 153, 153));
         imageUpload.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         imageUpload.setForeground(new java.awt.Color(102, 102, 102));
         imageUpload.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        imageUpload.setText("Image");
+        imageUpload.setText("No Image");
         imageUpload.setOpaque(true);
+        imageUpload.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageUploadMouseClicked(evt);
+            }
+        });
 
         jLabel6.setBackground(new java.awt.Color(153, 153, 153));
         jLabel6.setForeground(new java.awt.Color(0, 255, 102));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("CONFIRM");
         jLabel6.setOpaque(true);
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
 
         jLabel7.setBackground(new java.awt.Color(153, 153, 153));
         jLabel7.setForeground(new java.awt.Color(255, 51, 51));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("RESET");
         jLabel7.setOpaque(true);
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
+        });
+
+        Descript.setColumns(20);
+        Descript.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        Descript.setForeground(new java.awt.Color(153, 153, 153));
+        Descript.setRows(5);
+        Descript.setText("Description . . .");
+        jScrollPane1.setViewportView(Descript);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -272,13 +710,14 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(price)
                             .addComponent(imageUpload, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Descript, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 10, Short.MAX_VALUE)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -287,7 +726,7 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(status, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(8, 8, 8))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -322,10 +761,10 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(imageUpload, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(Descript, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -448,6 +887,52 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
         GetInfo();        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel2MouseClicked
 
+    private void idMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_idMouseClicked
+        animation ani = new animation();
+
+        ani.addPlaceholder(id, "Enter ID . . .");        // TODO add your handling code here:
+    }//GEN-LAST:event_idMouseClicked
+
+    private void prodNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prodNameMouseClicked
+        animation ani = new animation();
+
+        ani.addPlaceholder(prodName, "Product Name");      // TODO add your handling code here:
+    }//GEN-LAST:event_prodNameMouseClicked
+
+    private void priceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_priceMouseClicked
+        animation ani =  new animation();
+
+        ani.addPlaceholder(price, "Price");        // TODO add your handling code here:
+    }//GEN-LAST:event_priceMouseClicked
+
+    private void jLabel2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseEntered
+        jLabel2.setBackground(new Color(102,102,102));        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel2MouseEntered
+
+    private void jLabel2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseExited
+        jLabel2.setBackground(new Color(153,153,153));        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel2MouseExited
+
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
+        ResetInputs();        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel7MouseClicked
+
+    private void imageUploadMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageUploadMouseClicked
+        FileChooser();        // TODO add your handling code here:
+    }//GEN-LAST:event_imageUploadMouseClicked
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        boolean valid = validateInputs();
+
+        if(valid == true){        
+            try {
+                saveChanges();
+            } catch (Exception ex) {
+                Logger.getLogger(Refactor_Product.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jLabel6MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea Descript;
@@ -463,6 +948,7 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField price;
     private javax.swing.JTextField prodName;

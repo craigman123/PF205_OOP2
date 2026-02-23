@@ -6,6 +6,7 @@
 package User;
 
 import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
 
 /**
  *
@@ -28,6 +29,7 @@ public class User_config {
     countryCombo.removeAllItems();
     
     countryCombo.addItem("Select Country");
+    
     countryCombo.addItem("Afghanistan");
     countryCombo.addItem("Albania");
     countryCombo.addItem("Algeria");
@@ -227,6 +229,8 @@ public class User_config {
     countryCombo.addItem("Zimbabwe");
 }
     
+    
+    
     public void Education(JComboBox<String> educationCombo) {
     educationCombo.removeAllItems();
     
@@ -243,8 +247,47 @@ public class User_config {
         educationCombo.addItem("Doctoral or Equivalent");
     }
 
-    public final void GetAllUserInputs(){
+    public static void DisplayProdStatus(JComboBox<String> statusCombo){
+        statusCombo.removeAllItems();
         
+        statusCombo.addItem("Active");
+        statusCombo.addItem("Inactive");
+        statusCombo.addItem("Pending");
+        statusCombo.addItem("Suspended");
+        statusCombo.addItem("Sold Out");
+        statusCombo.addItem("Archived");
     }
-
+    
+    public static void DisplayCategory(JComboBox<String> statusCombo){
+        statusCombo.removeAllItems();
+        
+        statusCombo.addItem("Pistol");
+        statusCombo.addItem("Rifle");
+        statusCombo.addItem("Sniper Rifle");
+        statusCombo.addItem("Shotgun");
+        statusCombo.addItem("Sub Machine Gun");
+        statusCombo.addItem("Machine Gun");
+    }
+    
+    public static void DisplayRarity(JComboBox<String> statusCombo){
+        statusCombo.removeAllItems();
+        
+        statusCombo.addItem("Common");
+        statusCombo.addItem("Uncommon");
+        statusCombo.addItem("Rare");
+        statusCombo.addItem("Exquisite");
+        statusCombo.addItem("Unique");
+        statusCombo.addItem("Collectors Choice");
+        statusCombo.addItem("Antique");
+    }
+    
+    private JDesktopPane Panel;
+    
+    public void SendPane(JDesktopPane pane){
+        this.Panel = pane;
+    }
+    
+    public JDesktopPane GetPane(){
+        return Panel;
+    }
 }

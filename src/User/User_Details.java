@@ -8,24 +8,13 @@ package User;
 import configuration.Validations;
 import configuration.animation;
 import java.awt.Color;
-import java.awt.event.ItemEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
 import javax.swing.border.Border;
 import com.toedter.calendar.JDateChooser;
 import configuration.config;
 import java.awt.event.ActionEvent;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.border.LineBorder;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -69,7 +58,7 @@ public final class User_Details extends javax.swing.JFrame {
         String hashpass = conf.hashPassword(pass);
         
         String sql = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
-        int userID = conf.addRecordAndReturnId(sql, nm, bdg, hashpass, "User", "Enable");
+        int userID = conf.addRecordAndReturnId(sql, nm, bdg, hashpass, "User", "Disable");
         
         sql = "INSERT INTO details(user_id, user_age, user_gender, user_number, user_email, user_name, user_education, "
                 + "user_ValidId, user_birthdate, user_country) VALUES (?,?,?,?,?,?,?,?,?,?)";

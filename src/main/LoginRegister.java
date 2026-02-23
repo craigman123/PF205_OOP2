@@ -33,12 +33,13 @@ public class LoginRegister extends javax.swing.JFrame {
     
     Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
     Border orangeBorder = BorderFactory.createLineBorder(Color.ORANGE, 2);
+    Border grayBorder = BorderFactory.createLineBorder(Color.GRAY, 2);
     
     private void setBorder(){
         
-        name.setBorder(redBorder);
-        badge.setBorder(redBorder);
-        pass.setBorder(redBorder);
+        name.setBorder(grayBorder);
+        badge.setBorder(grayBorder);
+        pass.setBorder(grayBorder);
     }
     
     private java.awt.Dimension originalSize;
@@ -562,12 +563,12 @@ public class LoginRegister extends javax.swing.JFrame {
     }//GEN-LAST:event_log_passMouseExited
 
     private void jLabel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MouseClicked
-        
+    
         String nm = name.getText();
         String bdg = badge.getText();
         String ps = pass.getText();
         
-        LogReg_config.Register(nm, bdg, ps);
+        LogReg_config.Register(nm, bdg, ps, this);
     }//GEN-LAST:event_jLabel13MouseClicked
 
     private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
@@ -635,10 +636,10 @@ public class LoginRegister extends javax.swing.JFrame {
         
         String nm = name.getText();
         
-        if(!nm.equals("Username")){
+        if(!nm.equals("Username") || !nm.isEmpty()){
             ani.validateRequired(name);   
         }else{
-            name.setBorder(redBorder);
+            name.setBorder(grayBorder);
         }
     }//GEN-LAST:event_nameKeyReleased
 
@@ -648,7 +649,7 @@ public class LoginRegister extends javax.swing.JFrame {
         
         String bdg = badge.getText();
         
-        if(!bdg.equals("Badge")){
+        if(!bdg.equals("Badge") || !bdg.isEmpty()){
         int valid = validate.BadgeValidate(bdg);
         
         switch (valid) {
@@ -656,7 +657,11 @@ public class LoginRegister extends javax.swing.JFrame {
                 ani.validateRequired(badge);
                 break;
             case 0:
-                badge.setBorder(redBorder);
+                if(bdg.length() == 0){
+                    badge.setBorder(grayBorder);
+                }else{
+                    badge.setBorder(redBorder);
+                }
                 break;
             case 3:
                 badge.setBorder(orangeBorder);
@@ -665,7 +670,7 @@ public class LoginRegister extends javax.swing.JFrame {
                 break;
             }
         }else{
-            badge.setBorder(redBorder);
+            badge.setBorder(grayBorder);
         }
     }//GEN-LAST:event_badgeKeyReleased
 
@@ -675,7 +680,7 @@ public class LoginRegister extends javax.swing.JFrame {
         if(!pass.equals("Password")){
             ani.validateRequired(pass);     
         }else{
-            pass.setBorder(redBorder);
+            pass.setBorder(grayBorder);
         }
     }//GEN-LAST:event_passKeyReleased
 

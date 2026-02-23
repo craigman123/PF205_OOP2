@@ -8,6 +8,8 @@ package User;
 import Profiles.session;
 import configuration.config;
 import java.awt.Color;
+import javax.swing.JFrame;
+import main.LoginRegister;
 
 /**
  *
@@ -26,9 +28,12 @@ public class User_Permission extends javax.swing.JFrame {
     private String name;
     private int badge;
     private String pass;
+    private JFrame frame;
     
-    public User_Permission(String nm, int badge1, String password) {
+    public User_Permission(String nm, int badge1, String password, JFrame fr) {
         config conf = new config();
+        
+        frame = fr;
         
         initComponents();
         name = nm;
@@ -143,13 +148,19 @@ public class User_Permission extends javax.swing.JFrame {
         
             if(details.isSelected()){
                 User_Details det = new User_Details(GetName(), GetBadge(), GetPass());
+                LoginRegister log = new LoginRegister();
                 det.setVisible(true);
+                log.setVisible(false);
                 this.dispose();
             }else{
                 String sql = "INSERT into users (user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
                 int id = conf.addRecordAndReturnId(sql, GetName(), GetBadge(), GetPass(), "User", "Enable");
                 
                 session.SaveLogIn(id);
+                
+                LoginRegister log = new LoginRegister();
+                log.setVisible(false);
+                frame.dispose();
                 
                 UserDashboard dash = new UserDashboard();
                 dash.setVisible(true);

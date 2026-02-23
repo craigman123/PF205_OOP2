@@ -19,7 +19,7 @@ import javax.swing.*;
  */
 public class LogReg_config {
         
-    public static int Register(String nm, String bdg, String ps){
+    public static int Register(String nm, String bdg, String ps, JFrame frame){
         config conf = new config();
         animation ani = new animation();
         StringBuilder errors = new StringBuilder();
@@ -96,7 +96,7 @@ public class LogReg_config {
      
         }else{
             
-            User_Permission perms = new User_Permission(nm, Finalbadge, ps);
+            User_Permission perms = new User_Permission(nm, Finalbadge, ps, frame);
             perms.setVisible(true);
             
             ani.BuyTimeLoaddingFrame();
@@ -128,7 +128,7 @@ public class LogReg_config {
         panel.add(okButton, BorderLayout.SOUTH);
 
         String sql = "INSERT INTO users(user_name, user_hashpass, user_badge, user_access, user_ussage) VALUES (?,?,?,?,?)";
-        int id = conf.addRecordAndReturnId(sql, nm, FinalPass, Finalbadge, "User", "Enable");
+        int id = conf.addRecordAndReturnId(sql, nm, FinalPass, Finalbadge, "User", "Disable");
 
         successFrame.add(panel);
         successFrame.setVisible(true);
@@ -219,9 +219,9 @@ public class LogReg_config {
                         break;
                     case "User":
                         int enabilability = 1;
-                        
-                        Dashboard = new UserDashboard();
                         see.SaveLogIn(id);
+                        Dashboard = new UserDashboard();
+                        
                         
                         break;
                 }

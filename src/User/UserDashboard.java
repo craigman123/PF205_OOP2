@@ -7,6 +7,7 @@ package User;
 
 import Profiles.profile;
 import Profiles.session;
+import User.Market.MarketMain;
 import configuration.animation;
 import java.awt.Dimension;
 import java.util.*;
@@ -26,14 +27,17 @@ public final class UserDashboard extends javax.swing.JFrame {
     private Integer ID;
     
     public UserDashboard() {
+        User_config conf = new User_config();
+        
         initComponents();
         Toggle_Buttons();
         GetSession();
+        conf.SendPane(MainPane);
     }
     
     private static boolean run = true;
     
-    public void GetSession(){
+    public int GetSession(){
         session see = new session();
         
         ID = see.GetID();
@@ -47,13 +51,12 @@ public final class UserDashboard extends javax.swing.JFrame {
                 "Overiding Disabled",
                 JOptionPane.ERROR_MESSAGE
             );
-            
             run = false;
             
             LoginRegister logreg = new LoginRegister();
             logreg.setVisible(true);
-            
         }
+        return 0;
     }
     
     public final void Toggle_Buttons(){
@@ -96,10 +99,9 @@ public final class UserDashboard extends javax.swing.JFrame {
         jToggleButton7 = new javax.swing.JToggleButton();
         jToggleButton1 = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
-        UserDesktop = new javax.swing.JDesktopPane();
+        MainPane = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -115,6 +117,11 @@ public final class UserDashboard extends javax.swing.JFrame {
                 jToggleButton2MouseClicked(evt);
             }
         });
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
         jPanel2.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 204, 60));
 
         jToggleButton3.setText("Cart");
@@ -125,13 +132,13 @@ public final class UserDashboard extends javax.swing.JFrame {
         });
         jPanel2.add(jToggleButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 204, 60));
 
-        jToggleButton4.setText("Promo");
+        jToggleButton4.setText("Orders");
         jPanel2.add(jToggleButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 204, 60));
 
-        jToggleButton5.setText("Completed");
+        jToggleButton5.setText("Auction");
         jPanel2.add(jToggleButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 204, 60));
 
-        jToggleButton6.setText("Online Pay");
+        jToggleButton6.setText("Notifications");
         jToggleButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton6ActionPerformed(evt);
@@ -171,20 +178,33 @@ public final class UserDashboard extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, -1));
-
-        javax.swing.GroupLayout UserDesktopLayout = new javax.swing.GroupLayout(UserDesktop);
-        UserDesktop.setLayout(UserDesktopLayout);
-        UserDesktopLayout.setHorizontalGroup(
-            UserDesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout MainPaneLayout = new javax.swing.GroupLayout(MainPane);
+        MainPane.setLayout(MainPaneLayout);
+        MainPaneLayout.setHorizontalGroup(
+            MainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 950, Short.MAX_VALUE)
         );
-        UserDesktopLayout.setVerticalGroup(
-            UserDesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        MainPaneLayout.setVerticalGroup(
+            MainPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 640, Short.MAX_VALUE)
         );
 
-        getContentPane().add(UserDesktop, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 950, 640));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(MainPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(MainPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -198,18 +218,24 @@ public final class UserDashboard extends javax.swing.JFrame {
         
         int id = see.GetID();
         
-        UserDesktop.removeAll();
-        profile prof = new profile(id);
-        UserDesktop.add(prof).setVisible(true);   // TODO add your handling code here:
+        MainPane.removeAll();
+        profile prof = new profile(id, this);
+        MainPane.add(prof).setVisible(true);   // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton1MouseClicked
 
     private void jToggleButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton2MouseClicked
-      // TODO add your handling code here:
+        MarketMain main = new MarketMain(MainPane);
+        MainPane.removeAll();
+        MainPane.add(main).setVisible(true);// TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton2MouseClicked
 
     private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton3ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -247,7 +273,7 @@ public final class UserDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JDesktopPane UserDesktop;
+    private javax.swing.JDesktopPane MainPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;

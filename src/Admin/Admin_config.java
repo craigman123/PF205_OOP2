@@ -84,6 +84,8 @@ public class Admin_config {
         statusCombo.addItem("Pending");
         statusCombo.addItem("Suspended");
         statusCombo.addItem("Sold Out");
+        statusCombo.addItem("Out of Stock"); 
         statusCombo.addItem("Archived");
+        statusCombo.addItem("Discontinued");
     }
 }

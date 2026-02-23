@@ -248,7 +248,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         
         int id = see.GetID();
         
-        profile prof = new profile(id);
+        profile prof = new profile(id, this);
         jDesktopPane1.add(prof).setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel7MouseClicked

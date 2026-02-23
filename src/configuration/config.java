@@ -10,6 +10,7 @@ import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import net.proteanit.sql.DbUtils;
+import java.security.*;
 
 /**
  *
@@ -239,8 +240,24 @@ public class config {
             e.printStackTrace();
         }
     }
+   
+   public static String generateHashedName() throws Exception {
+        SecureRandom random = new SecureRandom();
+        byte[] bytes = new byte[16];
+        random.nextBytes(bytes);
 
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hash = md.digest(bytes);
+
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hash) {
+            sb.append(String.format("%02x", b));
+        }
+
+        return sb.toString();
     }
+
+}
 
 
 

@@ -5,6 +5,7 @@
  */
 package Admin.ProductControl;
 
+import Admin.Mng_Product;
 import Admin.TableUser;
 import Admin.UserControl.Add_user;
 import Admin.UserControl.Refactorial;
@@ -28,15 +29,18 @@ public class Edit_Product extends javax.swing.JInternalFrame {
         DispTableandRefresh();
     }
     
-    public void DispTableandRefresh(){
+    public final void DispTableandRefresh(){
         miniTable_product table = new miniTable_product();
         ProductPane.remove(table);
         ProductPane.add(table).setVisible(true);
     }
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -158,7 +162,10 @@ public class Edit_Product extends javax.swing.JInternalFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("REFRESH");
         jLabel1.setToolTipText("");
+        jLabel1.setMaximumSize(new java.awt.Dimension(10, 2));
+        jLabel1.setMinimumSize(new java.awt.Dimension(9, 2));
         jLabel1.setOpaque(true);
+        jLabel1.setPreferredSize(new java.awt.Dimension(10, 2));
         jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel1MouseClicked(evt);
@@ -175,10 +182,10 @@ public class Edit_Product extends javax.swing.JInternalFrame {
                     .addComponent(ProductPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(miniPane)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
+                    .addComponent(miniPane))
+                .addContainerGap())
             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -203,10 +210,10 @@ public class Edit_Product extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
-        TableUser tableuser = new TableUser();
+        Mng_Product pdt = new Mng_Product();
         JDesktopPane desktop = this.getDesktopPane();
         desktop.removeAll();
-        desktop.add(tableuser).setVisible(true);
+        desktop.add(pdt).setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel6MouseClicked
 

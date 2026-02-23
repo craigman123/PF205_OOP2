@@ -26,15 +26,18 @@ public class Edit_User extends javax.swing.JInternalFrame {
         StyleFrame();
     }
     
-    public void DispTableandRefresh(){
+    public final void DispTableandRefresh(){
         miniTable_User table = new miniTable_User();
         UserPane.remove(table);
         UserPane.add(table).setVisible(true);
     }
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
     }
     
  

@@ -7,9 +7,7 @@ package Admin.ProductControl;
 
 import Admin.Admin_config;
 import Profiles.session;
-import configuration.Validations;
-import configuration.animation;
-import configuration.config;
+import configuration.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +44,101 @@ public class Add_Product extends javax.swing.JInternalFrame {
         admin.DisplayProdStatus(status);
         setBorder();
         Constructor();
+        Renderer();
+    }
+    
+    public void Renderer(){
+        status.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list,
+                    Object value,
+                    int index,
+                    boolean isSelected,
+                    boolean cellHasFocus) {
+
+                Component c = super.getListCellRendererComponent(
+                        list, value, index, isSelected, cellHasFocus);
+
+                if (value != null) {
+                    String text = value.toString();
+                    switch (text) {
+                        case "Active": c.setForeground(Color.GREEN); break;
+                        case "Inactive": c.setForeground(Color.GRAY); break;
+                        case "Pending": c.setForeground(Color.ORANGE); break;
+                        case "Suspended": c.setForeground(Color.RED); break;
+                        case "Sold Out": c.setForeground(Color.MAGENTA); break;
+                        case "Out of Stock": c.setBackground(new Color(255, 182, 193)); break;
+                        case "Archived": c.setBackground(new Color(200, 200, 200)); break;
+                        case "Discontinued": c.setBackground(new Color(139, 0, 0));
+                                                c.setForeground(Color.WHITE); break;
+                        default: c.setForeground(Color.BLACK);
+                    }
+                }
+
+                return c;
+            }
+        });
+        
+        category.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list,
+                    Object value,
+                    int index,
+                    boolean isSelected,
+                    boolean cellHasFocus) {
+
+                Component c = super.getListCellRendererComponent(
+                        list, value, index, isSelected, cellHasFocus);
+
+                if (value != null) {
+                    String text = value.toString();
+                    switch (text) {
+                        case "Pistol": c.setForeground(Color.GREEN); break;
+                        case "Rifle": c.setForeground(new Color(102,102,0)); break;
+                        case "Sniper Rifle": c.setForeground(Color.ORANGE); break;
+                        case "Shotgun": c.setForeground(Color.RED); break;
+                        case "Sub Machine Gun": c.setForeground(Color.MAGENTA); break;
+                        case "Machine Gun": c.setForeground(Color.BLUE); break;
+                        default: c.setForeground(Color.BLACK);
+                    }
+                }
+
+                return c;
+            }
+        });
+        
+        rarity.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list,
+                    Object value,
+                    int index,
+                    boolean isSelected,
+                    boolean cellHasFocus) {
+
+                Component c = super.getListCellRendererComponent(
+                        list, value, index, isSelected, cellHasFocus);
+
+                if (value != null) {
+                    String text = value.toString();
+                    switch (text) {
+                        case "Common": c.setForeground(Color.GRAY); break;
+                        case "Uncommon": c.setForeground(Color.GREEN); break;
+                        case "Rare": c.setForeground(Color.BLUE); break;
+                        case "Exquisite": c.setForeground(Color.CYAN); break;
+                        case "Unique": c.setForeground(Color.decode("#E6E6FA")); break;
+                        case "Collectors Choice": c.setForeground(Color.decode("#FFD700")); break;
+                        case "Antique": c.setForeground(Color.RED); break;
+                        default: c.setForeground(Color.BLACK);
+                    }
+                }
+
+                return c;
+            }
+        });
+
     }
     
     public void Constructor(){
@@ -76,9 +169,12 @@ public class Add_Product extends javax.swing.JInternalFrame {
     Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 2);
     Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
     }
     
     private File selectedImageFile;
@@ -112,15 +208,37 @@ public class Add_Product extends javax.swing.JInternalFrame {
         }
     }
 
-    public void saveImageFileandInputs(File selectedImageFile) throws IOException {
+    public void saveImageFileandInputs(File selectedImageFile) throws IOException, Exception {
+        session see = new session();
+        config conf = new config();
+        String finalFileName = null;
+        
         if (selectedImageFile != null && selectedImageFile.exists()) {
             File destFolder = new File("Input_Images");
 
             if (!destFolder.exists()) {
                 destFolder.mkdirs();
             }
+            
+            String imagePathForDB = (selectedImageFile != null) ? "Input_Images/" + selectedImageFile.getName() : null;
+            
+            String extension = imagePathForDB.substring(imagePathForDB.lastIndexOf("."));
+        
+            String ext = extension.toLowerCase();
 
-            File destFile = new File(destFolder, selectedImageFile.getName());
+                if(!ext.equals(".jpg") &&
+                   !ext.equals(".jpeg") &&
+                   !ext.equals(".png") &&
+                   !ext.equals(".webp")) {
+
+                    JOptionPane.showMessageDialog(null, "Invalid image type!");
+                    return;
+                }
+
+            String uniqueImageName = conf.generateHashedName();
+            finalFileName = uniqueImageName + extension;
+
+            File destFile = new File(destFolder, finalFileName);
             Files.copy(selectedImageFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
             System.out.println("Image saved to: " + destFile.getAbsolutePath());
@@ -135,10 +253,6 @@ public class Add_Product extends javax.swing.JInternalFrame {
         String cash = price.getText();
         String stock = ProdStock.getText();
         String descrip = Descript.getText();
-        String imagePathForDB = (selectedImageFile != null) ? "Input_Images/" + selectedImageFile.getName() : null;
-        
-        session see = new session();
-        config conf = new config();
         
         int id = see.GetID();
         
@@ -150,7 +264,10 @@ public class Add_Product extends javax.swing.JInternalFrame {
 
         String sql = "INSERT INTO products(prod_name, prod_category, prod_price, prod_rarity,"
                 + " prod_descript, prod_stock, prod_addedBy, prod_status, prod_image) VALUES(?,?,?,?,?,?,?,?,?)";
-        conf.addRecordAndReturnId(sql, Prname, cat, cash, rare, descrip, stock, getAddedBy, stat, imagePathForDB);
+        
+        
+        
+        conf.addRecordAndReturnId(sql, Prname, cat, cash, rare, descrip, stock, getAddedBy, stat, finalFileName);
         
         ResetInputs();
         
@@ -216,7 +333,7 @@ public class Add_Product extends javax.swing.JInternalFrame {
 
         if (stock.equals("Stock") || stock.isEmpty()) {
             error.append("- Please enter stock quantity.\n");
-        } else if (!stock.matches("\\d+")) { // must be integer
+        } else if (!stock.matches("\\d+")) {
             error.append("- Stock must be a valid integer.\n");
         }
 
@@ -716,6 +833,8 @@ public class Add_Product extends javax.swing.JInternalFrame {
                 saveImageFileandInputs(selectedImageFile);
             }// TODO add your handling code here:
         } catch (IOException ex) {
+            Logger.getLogger(Add_Product.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(Add_Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jLabel4MouseClicked

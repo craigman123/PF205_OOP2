@@ -23,20 +23,23 @@ public class miniTable_product extends javax.swing.JInternalFrame {
         StyleFrame();
     }
     
-    public void StyleTable(){
+    public final void StyleTable(){
         table.setRowHeight(50);
         
     }
 
-    public void DispTable(){
+    public final void DispTable(){
         config conf = new config();
         String qry = "SELECT prod_id, prod_name, prod_status, prod_stock FROM products";
         conf.displayData(qry, table);
     }
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
     }
 
     /**

@@ -429,8 +429,46 @@ public void BuyTimeLoaddingFrame() {
         bar.setValue(strength);
         return strength;
     }
+    
+    public static JPanel linearGrade(Color topColor, Color bottomColor) {
+        return new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g.create();
+                int width = getWidth();
+                int height = getHeight();
+                GradientPaint gp = new GradientPaint(
+                        0, 0, topColor, 
+                        0, height, bottomColor
+                );
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, width, height);
+                g2d.dispose();
+            }
+        };
+    }
+    
+    private Timer blinkTimer;
+    private boolean isVisible = true;
 
+    public void startBlinking(JLabel label) {
 
+        if (blinkTimer != null && blinkTimer.isRunning()) {
+            return;
+        }
+
+        blinkTimer = new Timer(500, e -> {
+            if (isVisible) {
+                label.setBackground(Color.WHITE);
+            } else {
+                label.setBackground(Color.YELLOW);
+            }
+            isVisible = !isVisible;
+        });
+
+        blinkTimer.start();
+    }
 }
 
 

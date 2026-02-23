@@ -23,21 +23,24 @@ public class miniTable_User extends javax.swing.JInternalFrame {
         StyleTable();
     }
     
-    public void DisplayTable(){
+    public final void DisplayTable(){
         Admin_config admin = new Admin_config();
         
         String sql = "SELECT user_id, user_badge, user_name FROM users";
         admin.displayData(sql, table);
     }
     
-    public void StyleTable(){
+    public final void StyleTable(){
         table.setRowHeight(50);
         
     }
     
-    public void StyleFrame(){
-        this.setBorder(null);
-        ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
     }
 
     /**
