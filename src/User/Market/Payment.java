@@ -5,7 +5,10 @@
  */
 package User.Market;
 
+import configuration.config;
+import javax.swing.ButtonGroup;
 import javax.swing.JDesktopPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -33,6 +36,79 @@ public class Payment extends javax.swing.JInternalFrame {
         
         initComponents();
         StyleFrame();
+        SwingUtilities.invokeLater(()-> { 
+            ToggleAPayBtn();
+        });
+        GroupBtn();
+    }
+    
+    public final void GroupBtn(){
+        ButtonGroup groupBank = new ButtonGroup();
+        ButtonGroup groupAPay = new ButtonGroup();
+        ButtonGroup groupPayMethod = new ButtonGroup();
+        
+        groupBank.add(landBank);
+        groupBank.add(BDO);
+        groupBank.add(Gcash);
+        groupBank.add(UnionBank);
+        groupBank.add(metroBank);
+        groupBank.add(BPI);
+        
+        groupAPay.add(OP);
+        groupAPay.add(AP);
+        groupAPay.add(COD);
+        
+        groupPayMethod.add(one);
+        groupPayMethod.add(two);
+        groupPayMethod.add(three);
+        groupPayMethod.add(four);
+        groupPayMethod.add(five);
+        groupPayMethod.add(six);
+    }
+    
+    public void ToggleAPayBtn(){
+        one.setText("2 m x Install");
+        two.setText("3 m x Install");
+        three.setText("4 m x Install");
+        four.setText("5 m x Install");
+        five.setText("6 m x Install");
+        six.setText("7 m x Install");
+        
+        one.setEnabled(false);
+        two.setEnabled(false);
+        three.setEnabled(false);
+        four.setEnabled(false);
+        five.setEnabled(false);
+        six.setEnabled(false);
+    }
+    
+    public final void setAPayLater(){
+        config conf = new config();
+        
+        String qry = "SELECT * FROM products WHERE prod_id = ?";
+        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, ProdId); 
+        
+        if(!result.isEmpty()){
+            java.util.Map<String, Object> prod = result.get(0);
+            String price = prod.get("prod_price").toString();
+            System.out.println(price);
+            
+            int pr = Integer.parseInt(price);
+            
+            float value1 = pr / 2;
+            float value2 = pr / 3;
+            float value3 = pr / 4;
+            float value4 = pr / 5;
+            float value5 = pr / 6;
+            float value6 = pr / 7;
+            
+            one.setText(String.format("2 m x %.2f", value1));
+            two.setText(String.format("3 m x %.2f", value2));
+            three.setText(String.format("4 m x %.2f", value3));
+            four.setText(String.format("5 m x %.2f", value4));
+            five.setText(String.format("6 m x %.2f", value5));
+            six.setText(String.format("7 m x %.2f", value6));
+        }
     }
     
     public final void StyleFrame(){
@@ -53,7 +129,7 @@ public class Payment extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jRadioButton4 = new javax.swing.JRadioButton();
+        COD = new javax.swing.JRadioButton();
         jLabel8 = new javax.swing.JLabel();
         jFormattedTextField2 = new javax.swing.JFormattedTextField();
         jLabel15 = new javax.swing.JLabel();
@@ -67,40 +143,40 @@ public class Payment extends javax.swing.JInternalFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
-        jRadioButton14 = new javax.swing.JRadioButton();
-        jRadioButton15 = new javax.swing.JRadioButton();
-        jRadioButton16 = new javax.swing.JRadioButton();
-        jRadioButton17 = new javax.swing.JRadioButton();
-        jRadioButton18 = new javax.swing.JRadioButton();
-        jRadioButton19 = new javax.swing.JRadioButton();
+        landBank = new javax.swing.JRadioButton();
+        Gcash = new javax.swing.JRadioButton();
+        metroBank = new javax.swing.JRadioButton();
+        BPI = new javax.swing.JRadioButton();
+        UnionBank = new javax.swing.JRadioButton();
+        BDO = new javax.swing.JRadioButton();
         jLabel7 = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
-        jFormattedTextField3 = new javax.swing.JFormattedTextField();
+        cardNum = new javax.swing.JFormattedTextField();
         jLabel16 = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
-        jLabel11 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jRadioButton8 = new javax.swing.JRadioButton();
-        jRadioButton13 = new javax.swing.JRadioButton();
-        jRadioButton12 = new javax.swing.JRadioButton();
-        jRadioButton11 = new javax.swing.JRadioButton();
-        jRadioButton10 = new javax.swing.JRadioButton();
-        jRadioButton9 = new javax.swing.JRadioButton();
         jSeparator6 = new javax.swing.JSeparator();
-        jRadioButton20 = new javax.swing.JRadioButton();
-        jRadioButton21 = new javax.swing.JRadioButton();
+        OP = new javax.swing.JRadioButton();
+        AP = new javax.swing.JRadioButton();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        six = new javax.swing.JRadioButton();
+        five = new javax.swing.JRadioButton();
+        three = new javax.swing.JRadioButton();
+        four = new javax.swing.JRadioButton();
+        two = new javax.swing.JRadioButton();
+        one = new javax.swing.JRadioButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jRadioButton4.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        jRadioButton4.setText("Cash-on-Delivery (COD)");
-        jPanel1.add(jRadioButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 350, -1, -1));
+        COD.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        COD.setText("Cash-on-Delivery (COD)");
+        jPanel1.add(COD, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 350, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 130, -1, -1));
@@ -183,32 +259,37 @@ public class Payment extends javax.swing.JInternalFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("CANCEL");
         jLabel4.setOpaque(true);
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 580, 210, 56));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 580, 210, 56));
 
         jLabel5.setText("QUANTITY:");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 600, -1, -1));
-        jPanel1.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 560, 280, 10));
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 92, 10, 480));
 
-        jRadioButton14.setText("LandBank");
-        jPanel1.add(jRadioButton14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, -1));
+        landBank.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        landBank.setText("LandBank");
+        jPanel1.add(landBank, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, -1));
 
-        jRadioButton15.setText("GCash");
-        jPanel1.add(jRadioButton15, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, -1, -1));
+        Gcash.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        Gcash.setText("GCash");
+        jPanel1.add(Gcash, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, -1, -1));
 
-        jRadioButton16.setText("jRadioButton1");
-        jPanel1.add(jRadioButton16, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 340, -1, -1));
+        metroBank.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        metroBank.setText("Metro Bank");
+        jPanel1.add(metroBank, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 340, -1, -1));
 
-        jRadioButton17.setText("jRadioButton1");
-        jPanel1.add(jRadioButton17, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 340, -1, -1));
+        BPI.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        BPI.setText("BPI");
+        jPanel1.add(BPI, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 340, -1, -1));
 
-        jRadioButton18.setText("jRadioButton1");
-        jPanel1.add(jRadioButton18, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 300, -1, -1));
+        UnionBank.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        UnionBank.setText("Union Bank");
+        jPanel1.add(UnionBank, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 300, -1, -1));
 
-        jRadioButton19.setText("BDO");
-        jPanel1.add(jRadioButton19, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, -1, -1));
+        BDO.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        BDO.setText("BDO");
+        jPanel1.add(BDO, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, -1, -1));
 
         jLabel7.setBackground(new java.awt.Color(204, 204, 204));
         jLabel7.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
@@ -220,18 +301,14 @@ public class Payment extends javax.swing.JInternalFrame {
         jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jPanel1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 10, 440));
 
-        jFormattedTextField3.setEditable(false);
-        jFormattedTextField3.setForeground(new java.awt.Color(153, 153, 153));
-        jFormattedTextField3.setText("Card Number");
-        jPanel1.add(jFormattedTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 270, 51));
+        cardNum.setEditable(false);
+        cardNum.setForeground(new java.awt.Color(153, 153, 153));
+        cardNum.setText("Card Number");
+        jPanel1.add(cardNum, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 270, 51));
 
         jLabel16.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, -1, -1));
         jPanel1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, 290, 10));
-
-        jLabel11.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        jLabel11.setText("PAYMENT SECURITY - SSL ENCRYPTED");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 530, 260, -1));
 
         jLabel21.setText("DUE NOW");
         jPanel1.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 500, -1, -1));
@@ -242,53 +319,146 @@ public class Payment extends javax.swing.JInternalFrame {
 
         jLabel13.setText("qty");
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 600, -1, -1));
-
-        jRadioButton8.setText("jRadioButton1");
-        jPanel1.add(jRadioButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, -1, -1));
-
-        jRadioButton13.setText("jRadioButton1");
-        jPanel1.add(jRadioButton13, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 430, -1, -1));
-
-        jRadioButton12.setText("jRadioButton1");
-        jPanel1.add(jRadioButton12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 390, -1, -1));
-
-        jRadioButton11.setText("jRadioButton1");
-        jPanel1.add(jRadioButton11, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 390, -1, -1));
-
-        jRadioButton10.setText("jRadioButton1");
-        jPanel1.add(jRadioButton10, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 430, -1, -1));
-
-        jRadioButton9.setText("jRadioButton1");
-        jPanel1.add(jRadioButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 470, -1, -1));
         jPanel1.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 330, 310, 10));
 
-        jRadioButton20.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jRadioButton20.setText("Online Pay");
-        jPanel1.add(jRadioButton20, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, -1, -1));
-
-        jRadioButton21.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jRadioButton21.setText("A-payLater");
-        jRadioButton21.addActionListener(new java.awt.event.ActionListener() {
+        OP.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        OP.setText("Online Pay");
+        OP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton21ActionPerformed(evt);
+                OPActionPerformed(evt);
             }
         });
-        jPanel1.add(jRadioButton21, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, -1, -1));
+        jPanel1.add(OP, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, -1, -1));
+
+        AP.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        AP.setText("A-payLater");
+        AP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                APActionPerformed(evt);
+            }
+        });
+        jPanel1.add(AP, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, -1, -1));
+
+        jPanel4.setBackground(new java.awt.Color(204, 204, 204));
+
+        jLabel11.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel11.setText("PAYMENT SECURITY - SSL ENCRYPTED");
+
+        six.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        six.setText("7 m x Install");
+
+        five.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        five.setText("6 m x Install");
+
+        three.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        three.setText("4 m x Install");
+
+        four.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        four.setText("5 m x Install");
+
+        two.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        two.setText("3 m x Install");
+        two.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                twoActionPerformed(evt);
+            }
+        });
+
+        one.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        one.setText("2 m x Install");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(one)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(two))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(three)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(four))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(five)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(six))
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(one)
+                    .addComponent(two))
+                .addGap(11, 11, 11)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(three)
+                    .addComponent(four))
+                .addGap(11, 11, 11)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(five)
+                    .addComponent(six))
+                .addGap(31, 31, 31)
+                .addComponent(jLabel11)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 390, 270, 180));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton21ActionPerformed
+    private void APActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_APActionPerformed
+        if(AP.isSelected()){
+            setAPayLater();
+            one.setEnabled(true);
+            two.setEnabled(true);
+            three.setEnabled(true);
+            four.setEnabled(true);
+            five.setEnabled(true);
+            six.setEnabled(true);
+        }else{
+            ToggleAPayBtn();
+            
+        }// TODO add your handling code here:
+    }//GEN-LAST:event_APActionPerformed
+
+    private void twoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_twoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton21ActionPerformed
+    }//GEN-LAST:event_twoActionPerformed
+
+    private void OPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OPActionPerformed
+        if(OP.isSelected()){
+            one.setEnabled(false);
+            two.setEnabled(false);
+            three.setEnabled(false);
+            four.setEnabled(false);
+            five.setEnabled(false);
+            six.setEnabled(false);
+        }// TODO add your handling code here:
+    }//GEN-LAST:event_OPActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton AP;
+    private javax.swing.JRadioButton BDO;
+    private javax.swing.JRadioButton BPI;
+    private javax.swing.JRadioButton COD;
+    private javax.swing.JRadioButton Gcash;
+    private javax.swing.JRadioButton OP;
+    private javax.swing.JRadioButton UnionBank;
+    private javax.swing.JFormattedTextField cardNum;
     private javax.swing.JLabel due;
+    private javax.swing.JRadioButton five;
+    private javax.swing.JRadioButton four;
     private javax.swing.JFormattedTextField jFormattedTextField2;
-    private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -307,25 +477,16 @@ public class Payment extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JRadioButton jRadioButton10;
-    private javax.swing.JRadioButton jRadioButton11;
-    private javax.swing.JRadioButton jRadioButton12;
-    private javax.swing.JRadioButton jRadioButton13;
-    private javax.swing.JRadioButton jRadioButton14;
-    private javax.swing.JRadioButton jRadioButton15;
-    private javax.swing.JRadioButton jRadioButton16;
-    private javax.swing.JRadioButton jRadioButton17;
-    private javax.swing.JRadioButton jRadioButton18;
-    private javax.swing.JRadioButton jRadioButton19;
-    private javax.swing.JRadioButton jRadioButton20;
-    private javax.swing.JRadioButton jRadioButton21;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JRadioButton jRadioButton8;
-    private javax.swing.JRadioButton jRadioButton9;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JRadioButton landBank;
+    private javax.swing.JRadioButton metroBank;
+    private javax.swing.JRadioButton one;
+    private javax.swing.JRadioButton six;
+    private javax.swing.JRadioButton three;
+    private javax.swing.JRadioButton two;
     // End of variables declaration//GEN-END:variables
 }

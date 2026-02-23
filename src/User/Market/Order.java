@@ -117,8 +117,6 @@ public class Order extends javax.swing.JInternalFrame {
         ShowDue();
     }
    
-   private int totalDue;
-   
     public final void ShowDue(){
         StringBuilder message = new StringBuilder("<html>");
         config conf = new config();
@@ -164,8 +162,6 @@ public class Order extends javax.swing.JInternalFrame {
         
         String value1 = "P " + String.valueOf(total) + ".00";
         due.setText(value1);
-        
-        totalDue = Integer.parseInt(value1);
     }
     
     public boolean validateInputs() {
