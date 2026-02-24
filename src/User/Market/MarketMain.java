@@ -74,8 +74,8 @@ public class MarketMain extends javax.swing.JInternalFrame {
                 
                 if(status.equals("Active")){
                     //Active ra ang i display
-                    mainPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
-                    mainPanel.setBackground(Color.WHITE);
+//                    mainPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
+//                    mainPanel.setBackground(Color.WHITE);
 
                     // Product card ni kung uns apag display sa product
                     animation ani = new animation();
@@ -133,6 +133,12 @@ public class MarketMain extends javax.swing.JInternalFrame {
             }
         }
     }
+
+    mainScroll.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+    mainScroll.setHorizontalScrollBarPolicy(
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     mainPanel.revalidate();
     mainPanel.repaint();
 }

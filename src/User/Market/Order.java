@@ -245,7 +245,7 @@ public class Order extends javax.swing.JInternalFrame {
             + comboCountry.getSelectedItem() + ", "
             + zipCode.getText().trim();    
         
-        Payment pay = new Payment(id, pane, deliveryInfo, label.getText(), spec.getText(), (int) totalFee);
+        Payment pay = new Payment(id, pane, deliveryInfo, label.getText(), spec.getText(), (int) totalFee, name1.getText());
         
         this.dispose();
         pane.add(pay).setVisible(true);
@@ -442,7 +442,7 @@ public class Order extends javax.swing.JInternalFrame {
         due.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
         due.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         due.setText("DUE");
-        getContentPane().add(due, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 520, 160, 43));
+        getContentPane().add(due, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 520, 210, 43));
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setToolTipText("");
