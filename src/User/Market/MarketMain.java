@@ -181,6 +181,11 @@ public class MarketMain extends javax.swing.JInternalFrame {
         jTextField1.setEditable(false);
         jTextField1.setForeground(new java.awt.Color(153, 153, 153));
         jTextField1.setText("Search Market . . .");
+        jTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextField1MouseClicked(evt);
+            }
+        });
 
         jLabel2.setBackground(new java.awt.Color(204, 204, 204));
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
@@ -196,7 +201,7 @@ public class MarketMain extends javax.swing.JInternalFrame {
         });
 
         mainPanel.setBackground(new java.awt.Color(204, 204, 204));
-        mainPanel.setLayout(new java.awt.GridLayout());
+        mainPanel.setLayout(new java.awt.GridLayout(1, 0));
         mainScroll.setViewportView(mainPanel);
 
         category.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -262,6 +267,12 @@ public class MarketMain extends javax.swing.JInternalFrame {
     private void categoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_categoryActionPerformed
+
+    private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked
+        animation ani = new animation();
+
+        ani.addPlaceholder(jTextField1, "Search Market . . .");        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

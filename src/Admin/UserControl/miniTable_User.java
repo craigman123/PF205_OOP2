@@ -6,6 +6,7 @@
 package Admin.UserControl;
 
 import Admin.Admin_config;
+import javax.swing.JDesktopPane;
 
 /**
  *
@@ -66,6 +67,11 @@ public class miniTable_User extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(table);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -76,11 +82,24 @@ public class miniTable_User extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+        int row = table.getSelectedRow();
+        
+        Object id = table.getValueAt(row, 0);
+            System.out.println("Selected ID: " + id);
+            
+            connector.DataReciever(id);
+            connector connect = new connector();
+            Refactorial refact = new Refactorial();
+            JDesktopPane panel = connect.panelsender();
+            panel.add(refact).setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_tableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

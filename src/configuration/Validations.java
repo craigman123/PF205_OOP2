@@ -1,8 +1,11 @@
 
 package configuration;
 
+import java.awt.Color;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 public class Validations {
 
@@ -30,24 +33,22 @@ public class Validations {
         return valid;
     }
     
-    public static int ConvertInts(Object IDKdigit){
-        int RealDigit;
+    public static int ConvertInts(String input) {
         
-        try{
-            RealDigit = Integer.parseInt((String) IDKdigit);
-        }catch(NumberFormatException e){
-            JOptionPane.showMessageDialog(
-                null,
-                "Inout Should be Integer!",
-                "Error",
-                JOptionPane.WARNING_MESSAGE
-            );
-            return 0;
+        if(!input.equals("Valid ID Number") && !input.equals("Badge") && !input.isEmpty() && input != null){
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Input should be an integer!",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE
+                );
+                return 0;
+            }
         }
-        
-        
-        return RealDigit;
-        
+        return 0;
     }
     
     public static int ValidateInteger(String input){
@@ -84,6 +85,41 @@ public class Validations {
         }
         
         return valid1;
+    }
+    
+    Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
+    Border orangeBorder = BorderFactory.createLineBorder(Color.ORANGE, 2);
+    Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 2);
+    Border grayBorder = BorderFactory.createLineBorder(Color.GRAY, 2);
+    
+    public boolean ValidBadgeUpdate(String Input, int sessionBadge, JTextField bdg) {
+        config conf = new config();
+        boolean valid = false;
+        int input = 0;
+
+        try {
+            input = Integer.parseInt(Input);
+
+            String qry = "SELECT * FROM users WHERE user_badge = ?";
+            java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, input);
+
+            if (input == sessionBadge) { 
+                valid = true;
+                bdg.setBorder(greenBorder);
+            } else if (result.isEmpty()) { 
+                valid = true;
+                bdg.setBorder(greenBorder);
+            } else { 
+                valid = false;
+                bdg.setBorder(orangeBorder);
+            }
+
+        } catch (NumberFormatException e) {
+            bdg.setBorder(redBorder); 
+            valid = false;
+        }
+
+        return valid;
     }
     
     public boolean validateEmailBoolean(JTextField field) {

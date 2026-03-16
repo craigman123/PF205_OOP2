@@ -563,12 +563,15 @@ public class LoginRegister extends javax.swing.JFrame {
     }//GEN-LAST:event_log_passMouseExited
 
     private void jLabel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MouseClicked
-    
+        config conf = new config()
+;        
         String nm = name.getText();
         String bdg = badge.getText();
         String ps = pass.getText();
+        System.out.println(ps);
+        String FinalPass = conf.hashPassword(ps);
         
-        LogReg_config.Register(nm, bdg, ps, this);
+        LogReg_config.Register(nm, bdg, FinalPass, this);
     }//GEN-LAST:event_jLabel13MouseClicked
 
     private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed

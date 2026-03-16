@@ -5,6 +5,8 @@
  */
 package User;
 
+import Profiles.session;
+import Profiles.profile;
 import configuration.Validations;
 import configuration.animation;
 import java.awt.Color;
@@ -30,27 +32,105 @@ public final class User_Details extends javax.swing.JFrame {
     private static boolean enable;
     private final String username;
     private final int badge;
-    private final String hashedPassword;
+    private final String hashedPass;
+    private int flag = 0;
+    private boolean isHashed = true;
     
-    public User_Details(String username, int badge, String hashedPassword) {
+    public User_Details(String username, int Badge, String hashedPassword, boolean preset) {
         User_config userconf = new User_config();
         
             this.username = username;
-            this.badge = badge;
-            this.hashedPassword = hashedPassword;
+            this.badge = Badge;
+            this.hashedPass = hashedPassword;
             
         initComponents();
         Gender();
         userconf.Age(age);
         userconf.Education(educationBox);
-        TextInput();
         userconf.loadAllCountries(country);
         setBorder();
         UpdateBar();
         
+        SwingUtilities.invokeLater(() -> {
+            if(preset){
+                PreSetted();
+                flag = 1;
+                detailHeader.setText("EDIT PROFILE");
+            }else{
+                TextInput();
+            }
+        });
     }
     
-    public void SendInputsToDatabase(String nm, String name, int bdg, String pass, String birth, 
+    Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
+    Border orangeBorder = BorderFactory.createLineBorder(Color.ORANGE, 2);
+    Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 2);
+    Border grayBorder = BorderFactory.createLineBorder(Color.GRAY, 2);
+    
+    public void PreSetted(){
+        config conf = new config();
+        
+        String qry = "SELECT * FROM users WHERE user_name = ? AND user_badge = ?";
+        java.util.List<java.util.Map<String, Object>> resultUser = conf.fetchRecords(qry, username, badge); 
+        
+        if(!resultUser.isEmpty()){
+            java.util.Map<String, Object> user = resultUser.get(0);
+            int id = ((Number) user.get("user_id")).intValue();
+            String nameGet = user.get("user_name").toString();
+            String badgeGet = user.get("user_badge").toString();
+            
+            qry = "SELECT * FROM details WHERE user_id = ?";
+            java.util.List<java.util.Map<String, Object>> resultDetails = conf.fetchRecords(qry, id); 
+            
+            if(!resultDetails.isEmpty()){
+                java.util.Map<String, Object> details = resultDetails.get(0);
+                String nmGet =  details.get("user_name").toString();
+                String ageGet = details.get("user_age").toString();
+                String genderGet = details.get("user_gender").toString();
+                String educGet = details.get("user_education").toString();
+                String countryGet = details.get("user_country").toString();
+                String birthdGet = details.get("user_birthdate").toString();
+                String emailGet = details.get("user_email").toString();
+                String numberGet = details.get("user_number").toString();
+                String validGet = details.get("user_ValidId").toString();
+                
+                isHashed = false;
+
+                nm.setText(nameGet);
+                bdg.setText(badgeGet);
+                pass.setText("HASHED");
+
+                age.setSelectedItem(ageGet);
+                educationBox.setSelectedItem(educGet);
+                country.setSelectedItem(countryGet);
+
+                if (genderGet.equalsIgnoreCase("male")) {
+                    male.setSelected(true);
+                } else if (genderGet.equalsIgnoreCase("female")) {
+                    female.setSelected(true);
+                }
+                
+                name.setText(nmGet);
+                BirthField.setText(birthdGet);
+                email.setText(emailGet);
+                number.setText(numberGet);
+                number1.setText(validGet);
+                
+                bdg.setBorder(greenBorder);
+                BirthPane.setBorder(grayBorder);
+                gender.setBorder(grayBorder);
+                email.setBorder(grayBorder);
+                number.setBorder(grayBorder);
+                number1.setBorder(grayBorder);
+                agePane.setBorder(grayBorder);
+                countryPane.setBorder(grayBorder);
+                educationPane.setBorder(grayBorder);
+                name.setBorder(grayBorder);
+            }
+        }
+    }
+    
+    public int SendInputsToDatabase(String nm, String name, int bdg, String pass, String birth, 
             String number, int Valid_Id, String email, String gender, String age, String education, String country){
         
         config conf = new config();
@@ -63,6 +143,46 @@ public final class User_Details extends javax.swing.JFrame {
         sql = "INSERT INTO details(user_id, user_age, user_gender, user_number, user_email, user_name, user_education, "
                 + "user_ValidId, user_birthdate, user_country) VALUES (?,?,?,?,?,?,?,?,?,?)";
         conf.addRecordAndReturnId(sql, userID, age, gender, number, email, name, education, Valid_Id, birth, country);
+        
+        return userID;
+    }
+    
+    public void UpdateInputs(String name, String nm, int bdg, String pass, String birth, 
+                         String number, int Valid_Id, String email, String gender, String age, 
+                         String education, String country) {
+
+        session see = new session();
+        config conf = new config();
+
+        String sqlUser;
+        if (pass != null && !pass.isEmpty() && !pass.equals("HASHED")) {
+            String hashpass = conf.hashPassword(pass);
+            sqlUser = "UPDATE users SET user_name=?, user_badge=?, user_hashpass=? WHERE user_id=?";
+            conf.updateRecord(sqlUser, nm, bdg, hashpass, see.GetID());
+        } else {
+            sqlUser = "UPDATE users SET user_name=?, user_badge=? WHERE user_id=?";
+            conf.updateRecord(sqlUser, nm, bdg, see.GetID());
+        }
+
+        String sqlDetails = "UPDATE details SET user_age=?, user_gender=?, user_number=?, user_email=?, "
+                + "user_name=?, user_education=?, user_ValidId=?, user_birthdate=?, user_country=? "
+                + "WHERE user_id=?";
+        conf.updateRecord(sqlDetails, age, gender, number, email, name, education, Valid_Id, birth, country, see.GetID());
+        
+        JOptionPane.showMessageDialog(
+            null,
+            "Account Succesfully Updated!",
+            "Success",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+        
+        this.dispose();
+        UserDashboard dash = new UserDashboard();
+        profile prof = new profile(see.GetID(), dash);
+        
+        JDesktopPane desktopPane = User_config.GetPane(); 
+        desktopPane.add(prof);
+        prof.setVisible(true);
     }
     
     private void UpdateBar(){
@@ -72,10 +192,6 @@ public final class User_Details extends javax.swing.JFrame {
         int strength = ani.calculatePasswordStrength(password, passStrength);
         ChangeBarLabel(strength);
     }
-    
-    Border redBorder = BorderFactory.createLineBorder(Color.RED, 2);
-    Border orangeBorder = BorderFactory.createLineBorder(Color.ORANGE, 2);
-    Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 2);
     
     private void setBorder(){
         
@@ -176,21 +292,21 @@ public final class User_Details extends javax.swing.JFrame {
     public void TextInput(){
         nm.setText(username);
         bdg.setText(String.valueOf(badge));
-        pass.setText(hashedPassword);
+        pass.setText(hashedPass);
     }
     
     public void Gender(){
         ButtonGroup menuGroup = new ButtonGroup();
         
-        menuGroup.add(jToggleButton1);
-        menuGroup.add(jToggleButton2);
+        menuGroup.add(female);
+        menuGroup.add(male);
         
-        animation.StyleToggleButtons(jToggleButton2); 
-        animation.StyleToggleButtons(jToggleButton1); 
+        animation.StyleToggleButtons(male); 
+        animation.StyleToggleButtons(female); 
         
-        if(jToggleButton1.isFocusOwner()){
+        if(female.isFocusOwner()){
             gender.setBorder(greenBorder);
-        }else if(jToggleButton2.isFocusOwner()){
+        }else if(male.isFocusOwner()){
             gender.setBorder(greenBorder);
         }
         
@@ -229,90 +345,85 @@ public final class User_Details extends javax.swing.JFrame {
         }
     }
     
-    public String checkAllInputs() {
+    
+    //condensed using ai, cause validation was very long
+    public String checkAllInputsUpdate() {
+        StringBuilder errors = new StringBuilder();
+        Validations validation = new Validations();
+        String badgeValue = bdg.getText();
+        String value = number1.getText();
+        String value2 = number.getText();
 
-    StringBuilder errors = new StringBuilder();
-    Validations validation = new Validations();
-
-    String badgeValue = bdg.getText();
-
-    // Username
-    if (nm.getText() == null || nm.getText().trim().isEmpty() || nm.getText().equals("Username")) {
+    if (nm.getText() == null || nm.getText().trim().isEmpty() || nm.getText().equals("Username"))
         errors.append("Username is required.\n");
-    }
 
-    // Badge
-    if (bdg.getText() == null || bdg.getText().trim().isEmpty() || bdg.getText().equals("badge")) {
-        errors.append("Badge is required.\n");
-    } else if (validation.ValidBadge(badgeValue)) {
-        errors.append("Badge is invalid.\n");
-    }
-
-    // Password
-    if (pass.getText() == null || pass.getText().trim().isEmpty() || pass.getText().equals("Password")) {
-        errors.append("Password is required.\n");
-    }
-
-    // Name
-    if (name.getText().trim().isEmpty()) {
-        errors.append("Full name is required.\n");
-    }
-
-    String value = number1.getText();
-    // ID Number
-    if (number1.getText().trim().isEmpty() || number1.getText().equals("Valid ID Number")) {
-        errors.append("Valid ID Number is required.\n");
-    }else if(validation.ValidateIntegerBool(value)){
-        errors.append("Valid ID Number should be Integer.\n");
-    }
-
-    String value2 = number.getText();
-    // Phone
-    if (number.getText().trim().isEmpty() || number.getText().equals("Phone Number")) {
-        errors.append("Phone number is required.\n");
-    }else if(validation.ValidateIntegerBool(value2)){
-        errors.append("Phone Number should be Integer.\n");
-    }
-
-    // Email
-    if (email.getText().trim().isEmpty() || email.getText().equals("Email")) {
-        errors.append("Email is required.\n");
-    } else if (!validation.validateEmailBoolean(email)) {
-        errors.append("Email format is invalid.\n");
-    }
-
-    // Birthdate
-    if (BirthField.getText().equals("Select Birthdate")) {
-        errors.append("Birthdate must be selected.\n");
-    }
-
-    // Age
-    if (age.getSelectedItem().equals("Select Age")) {
-        errors.append("Age must be selected.\n");
-    } else {
-        int selectedAge = Integer.parseInt(age.getSelectedItem().toString());
-        if (selectedAge < 18) {
-            errors.append("Must be at least 18 years old.\n");
+        if (!badgeValue.equals(badge)) {
+            if (badgeValue == null || badgeValue.trim().isEmpty() || badgeValue.equals("badge")) {
+                errors.append("Badge is required.\n");
+            } else if (!validation.ValidBadgeUpdate(badgeValue, badge, bdg)) {
+                errors.append("Badge is invalid or already exists!\n");
+            }
         }
-    }
 
-    // Country
-    if (country.getSelectedItem().equals("Select Country")) {
-        errors.append("Country must be selected.\n");
-    }
+        if (pass.getText() == null || pass.getText().trim().isEmpty() || pass.getText().equals("Password"))
+            errors.append("Password is required.\n");
+        if (name.getText().trim().isEmpty())
+            errors.append("Full name is required.\n");
+        if (number1.getText().trim().isEmpty() || number1.getText().equals("Valid ID Number"))
+            errors.append("Valid ID Number is required.\n");
+        else if (validation.ValidateIntegerBool(value))
+            errors.append("Valid ID Number should be Integer.\n");
+        if (number.getText().trim().isEmpty() || number.getText().equals("Phone Number"))
+            errors.append("Phone number is required.\n");
+        else if (validation.ValidateIntegerBool(value2))
+            errors.append("Phone Number should be Integer.\n");
+        if (email.getText().trim().isEmpty() || email.getText().equals("Email"))
+            errors.append("Email is required.\n");
+        else if (!validation.validateEmailBoolean(email))
+            errors.append("Email format is invalid.\n");
+        if (BirthField.getText().equals("Select Birthdate"))
+            errors.append("Birthdate must be selected.\n");
+        if (age.getSelectedItem().equals("Select Age"))
+            errors.append("Age must be selected.\n");
+        else if (Integer.parseInt(age.getSelectedItem().toString()) < 18)
+            errors.append("Must be at least 18 years old.\n");
+        if (country.getSelectedItem().equals("Select Country"))
+            errors.append("Country must be selected.\n");
+        if (educationBox.getSelectedItem().equals("Select Educational Attainment"))
+            errors.append("Educational attainment must be selected.\n");
+        if (!female.isSelected() && !male.isSelected())
+            errors.append("Gender must be selected.\n");
 
-    // Education
-    if (educationBox.getSelectedItem().equals("Select Educational Attainment")) {
-        errors.append("Educational attainment must be selected.\n");
+        return errors.toString();
     }
+    
+    public String checkAllInputs() { //condensed using ai hehe
+        StringBuilder errors = new StringBuilder();
+        Validations validation = new Validations();
+        String badgeValue = bdg.getText();
+        String value = number1.getText();
+        String value2 = number.getText();
 
-    // Gender
-    if (!jToggleButton1.isSelected() && !jToggleButton2.isSelected()) {
-        errors.append("Gender must be selected.\n");
+        if (nm.getText() == null || nm.getText().trim().isEmpty() || nm.getText().equals("Username")) errors.append("Username is required.\n");
+        if (bdg.getText() == null || bdg.getText().trim().isEmpty() || bdg.getText().equals("badge")) errors.append("Badge is required.\n");
+        else if (validation.ValidBadge(badgeValue)) errors.append("Badge is invalid.\n");
+        if (pass.getText() == null || pass.getText().trim().isEmpty() || pass.getText().equals("Password")) errors.append("Password is required.\n");
+        if (name.getText().trim().isEmpty()) errors.append("Full name is required.\n");
+        if (number1.getText().trim().isEmpty() || number1.getText().equals("Valid ID Number")) errors.append("Valid ID Number is required.\n");
+        else if (validation.ValidateIntegerBool(value)) errors.append("Valid ID Number should be Integer.\n");
+        if (number.getText().trim().isEmpty() || number.getText().equals("Phone Number")) errors.append("Phone number is required.\n");
+        else if (validation.ValidateIntegerBool(value2)) errors.append("Phone Number should be Integer.\n");
+        if (email.getText().trim().isEmpty() || email.getText().equals("Email")) errors.append("Email is required.\n");
+        else if (!validation.validateEmailBoolean(email)) errors.append("Email format is invalid.\n");
+        if (BirthField.getText().equals("Select Birthdate")) errors.append("Birthdate must be selected.\n");
+        if (age.getSelectedItem().equals("Select Age")) errors.append("Age must be selected.\n");
+        else if (Integer.parseInt(age.getSelectedItem().toString()) < 18) errors.append("Must be at least 18 years old.\n");
+        if (country.getSelectedItem().equals("Select Country")) errors.append("Country must be selected.\n");
+        if (educationBox.getSelectedItem().equals("Select Educational Attainment")) errors.append("Educational attainment must be selected.\n");
+        if (!female.isSelected() && !male.isSelected()) errors.append("Gender must be selected.\n");
+
+        return errors.toString();
     }
-
-    return errors.toString(); // empty = valid
-}
     
 
     
@@ -328,7 +439,8 @@ public final class User_Details extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        detailHeader = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         name = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
@@ -349,8 +461,8 @@ public final class User_Details extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         PassLabel = new javax.swing.JLabel();
         gender = new javax.swing.JPanel();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
+        female = new javax.swing.JToggleButton();
+        male = new javax.swing.JToggleButton();
         educationPane = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         educationBox = new javax.swing.JComboBox<>();
@@ -365,23 +477,38 @@ public final class User_Details extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
-        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 36)); // NOI18N
-        jLabel1.setText("REGISTRATION DETAILS");
+        detailHeader.setFont(new java.awt.Font("Trebuchet MS", 1, 36)); // NOI18N
+        detailHeader.setText("REGISTRATION DETAILS");
+
+        jLabel9.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
+        jLabel9.setText("<<");
+        jLabel9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel9MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(388, 388, 388)
-                .addComponent(jLabel1)
+                .addContainerGap()
+                .addComponent(jLabel9)
+                .addGap(322, 322, 322)
+                .addComponent(detailHeader)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jLabel1)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(detailHeader))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel9)))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -463,6 +590,11 @@ public final class User_Details extends javax.swing.JFrame {
         pass.setForeground(new java.awt.Color(153, 153, 153));
         pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         pass.setText("Password");
+        pass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                passMouseClicked(evt);
+            }
+        });
         pass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 passActionPerformed(evt);
@@ -631,23 +763,23 @@ public final class User_Details extends javax.swing.JFrame {
 
         gender.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jToggleButton1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jToggleButton1.setText("Female");
-        jToggleButton1.addFocusListener(new java.awt.event.FocusAdapter() {
+        female.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        female.setText("Female");
+        female.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jToggleButton1FocusGained(evt);
+                femaleFocusGained(evt);
             }
         });
-        gender.add(jToggleButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 187, 44));
+        gender.add(female, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 187, 44));
 
-        jToggleButton2.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jToggleButton2.setText("Male");
-        jToggleButton2.addFocusListener(new java.awt.event.FocusAdapter() {
+        male.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        male.setText("Male");
+        male.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jToggleButton2FocusGained(evt);
+                maleFocusGained(evt);
             }
         });
-        gender.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, 183, 44));
+        gender.add(male, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 10, 183, 44));
 
         jLabel6.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         jLabel6.setText("Educational Attainment");
@@ -900,44 +1032,33 @@ public final class User_Details extends javax.swing.JFrame {
     }//GEN-LAST:event_emailActionPerformed
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-        String value9 = "";
         Validations validate = new Validations();
+        session see = new session();
         
-        String value1 = name.getText();
-        String value2 = nm.getText();
-        String Getbadge = bdg.getText();
-        String value4 = pass.getText();
-        String value5 = BirthField.getText();
-        String value6 = number.getText();
-        String GetValidID = number1.getText();
-        String value8 = email.getText();
-        
-        int value3 = validate.ConvertInts(Getbadge);
-        int value7 = validate.ConvertInts(GetValidID);
-        
-        if(jToggleButton2.isSelected() == true){
-            value9 = "male";
-        }else if(jToggleButton1.isSelected() == true){
-            value9 = "female";
-        }
-        
-        String value10 = (String) age.getSelectedItem();
-        String value11 = (String) educationBox.getSelectedItem();
-        String value12 = (String) country.getSelectedItem();
-        
-        String errors = checkAllInputs();
+        String genderGet = male.isSelected() ? "male" : female.isSelected() ? "female" : "";
+            int badgeget = validate.ConvertInts(bdg.getText());
+            int validID = validate.ConvertInts(number1.getText());
 
-        if (!errors.isEmpty()) {
-            JOptionPane.showMessageDialog(null, errors, "Input Errors", JOptionPane.ERROR_MESSAGE);
-        } else {
-            SendInputsToDatabase(value1, value2, value3, value4, value5, value6, value7, value8, value9, value10, value11, value12);
-        
-            UserDashboard user = new UserDashboard();
-            animation ani = new animation();
-            
-            ani.showLoadingAndOpen(this, user, "Creating Account");
-        }
-       
+            String errors = (flag == 0) ? checkAllInputs() : checkAllInputsUpdate();
+            if (!errors.isEmpty()) {
+                JOptionPane.showMessageDialog(null, errors, "Input Errors", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (flag == 0) {
+                int id = SendInputsToDatabase(name.getText(), nm.getText(), badgeget, pass.getText(), BirthField.getText(),
+                    number.getText(), validID, email.getText(), genderGet, (String) age.getSelectedItem(), (String) educationBox.getSelectedItem(),
+                    (String) country.getSelectedItem());
+                
+                see.SaveLogIn(id);
+                UserDashboard user = new UserDashboard();
+                animation ani = new animation();
+                ani.showLoadingAndOpen(this, user, "Creating Account");
+            } else {
+                
+                UpdateInputs(name.getText(), nm.getText(), badgeget, pass.getText(), BirthField.getText(), number.getText(), validID, email.getText(), genderGet,
+                    (String) age.getSelectedItem(), (String) educationBox.getSelectedItem(), (String) country.getSelectedItem());
+            }
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
@@ -1008,7 +1129,11 @@ public final class User_Details extends javax.swing.JFrame {
 
     private void passKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passKeyReleased
         animation ani = new animation();
-        ani.validateRequired(pass); 
+        if(flag == 0){
+            ani.validateRequired(pass); 
+        }else if(flag == 1){
+            pass.setBorder(greenBorder);
+        }
         
         pass.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
@@ -1020,6 +1145,7 @@ public final class User_Details extends javax.swing.JFrame {
 
             private void updateStrength() {
                 String password = pass.getText();
+                
                 int strength = ani.calculatePasswordStrength(password, passStrength);
                 ChangeBarLabel(strength);
             }
@@ -1035,9 +1161,9 @@ public final class User_Details extends javax.swing.JFrame {
         animation ani = new animation();
         Validations validate = new Validations();
         
-        String badge = bdg.getText();
+        String badgeGet = bdg.getText();
         
-        int valid = validate.BadgeValidate(badge);
+        int valid = validate.BadgeValidate(badgeGet);
         
         switch (valid) {
             case 1:
@@ -1047,7 +1173,13 @@ public final class User_Details extends javax.swing.JFrame {
                 bdg.setBorder(redBorder);
                 break;
             case 3:
-                bdg.setBorder(orangeBorder);
+                int FinalBadge = Integer.parseInt(badgeGet);
+                
+                if(FinalBadge != badge){
+                    bdg.setBorder(orangeBorder);
+                }else if(FinalBadge == badge){
+                    bdg.setBorder(greenBorder);
+                }
                 break;
             default:
                 break;
@@ -1097,13 +1229,13 @@ public final class User_Details extends javax.swing.JFrame {
         }       // TODO add your handling code here:
     }//GEN-LAST:event_BirthFieldActionPerformed
 
-    private void jToggleButton1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jToggleButton1FocusGained
+    private void femaleFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_femaleFocusGained
         gender.setBorder(greenBorder);// TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton1FocusGained
+    }//GEN-LAST:event_femaleFocusGained
 
-    private void jToggleButton2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jToggleButton2FocusGained
+    private void maleFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_maleFocusGained
         gender.setBorder(greenBorder);        // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton2FocusGained
+    }//GEN-LAST:event_maleFocusGained
 
     private void ageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ageActionPerformed
         Object selected = age.getSelectedItem();
@@ -1143,6 +1275,20 @@ public final class User_Details extends javax.swing.JFrame {
 
          // TODO add your handling code here:
     }//GEN-LAST:event_BirthFieldKeyTyped
+
+    private void passMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_passMouseClicked
+        animation ani = new animation();
+
+        ani.addPlaceholder(pass, isHashed ? "Password" : "HASHED");       // TODO add your handling code here:
+    }//GEN-LAST:event_passMouseClicked
+
+    private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
+        this.dispose();
+        UserDashboard dash = new UserDashboard();
+        dash.ShowProf();
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel9MouseClicked
 
     /**
      * @param args the command line arguments
@@ -1188,11 +1334,12 @@ public final class User_Details extends javax.swing.JFrame {
     private javax.swing.JTextField bdg;
     private javax.swing.JComboBox<String> country;
     private javax.swing.JPanel countryPane;
+    private javax.swing.JLabel detailHeader;
     private javax.swing.JComboBox<String> educationBox;
     private javax.swing.JPanel educationPane;
     private javax.swing.JTextField email;
+    private javax.swing.JToggleButton female;
     private javax.swing.JPanel gender;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1201,13 +1348,13 @@ public final class User_Details extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JToggleButton male;
     private javax.swing.JTextField name;
     private javax.swing.JTextField nm;
     private javax.swing.JTextField number;

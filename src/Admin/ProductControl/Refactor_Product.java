@@ -22,11 +22,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author user
  */
-public class Refactor_Product extends javax.swing.JInternalFrame {
+public final class Refactor_Product extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form Refactor_Product
      */
+    private int ID;
+    
     public Refactor_Product() {
         Admin_config adminconf = new Admin_config();
         
@@ -36,6 +38,18 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
         adminconf.DisplayRarity(rarity);
         adminconf.DisplayProdStatus(status);
         Renderer();
+        int ProdID = (int) connector.datasender();
+        
+        this.ID = ProdID;
+        AutoGet();
+    }
+    
+    public void AutoGet(){
+        id.setText(String.valueOf(ID));
+        SwingUtilities.invokeLater(() -> {
+            GetInfo();
+        });
+        
     }
     
     public void Renderer(){
@@ -783,10 +797,6 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_idActionPerformed
-
     private void prodNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prodNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_prodNameActionPerformed
@@ -887,12 +897,6 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
         GetInfo();        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel2MouseClicked
 
-    private void idMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_idMouseClicked
-        animation ani = new animation();
-
-        ani.addPlaceholder(id, "Enter ID . . .");        // TODO add your handling code here:
-    }//GEN-LAST:event_idMouseClicked
-
     private void prodNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_prodNameMouseClicked
         animation ani = new animation();
 
@@ -932,6 +936,16 @@ public class Refactor_Product extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_idActionPerformed
+
+    private void idMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_idMouseClicked
+        animation ani = new animation();
+
+        ani.addPlaceholder(id, "Enter ID . . .");        // TODO add your handling code here:
+    }//GEN-LAST:event_idMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

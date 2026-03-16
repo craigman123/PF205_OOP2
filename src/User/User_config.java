@@ -281,13 +281,13 @@ public class User_config {
         statusCombo.addItem("Antique");
     }
     
-    private JDesktopPane Panel;
+    private static JDesktopPane Panel;
     
     public void SendPane(JDesktopPane pane){
         this.Panel = pane;
     }
     
-    public JDesktopPane GetPane(){
+    public static JDesktopPane GetPane(){
         return Panel;
     }
 }

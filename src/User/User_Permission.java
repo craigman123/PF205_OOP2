@@ -39,9 +39,7 @@ public class User_Permission extends javax.swing.JFrame {
         name = nm;
         badge = badge1;
         
-        String sec = conf.hashPassword(password);
-        
-        pass = sec;
+        this.pass = password;
     }
     
     public int GetBadge(){
@@ -70,6 +68,7 @@ public class User_Permission extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         details = new javax.swing.JCheckBox();
         securityprivacy = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
@@ -88,6 +87,15 @@ public class User_Permission extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel1.setText("Permission");
         jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(157, 16, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
+        jLabel5.setText("<<");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 50));
 
@@ -147,13 +155,12 @@ public class User_Permission extends javax.swing.JFrame {
             config conf = new config();
         
             if(details.isSelected()){
-                User_Details det = new User_Details(GetName(), GetBadge(), GetPass());
-                LoginRegister log = new LoginRegister();
+                User_Details det = new User_Details(GetName(), GetBadge(), GetPass(), false);
                 det.setVisible(true);
-                log.setVisible(false);
-                this.dispose();
+                
             }else{
-                String sql = "INSERT into users (user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
+                System.out.println("Account Created: ");
+                String sql = "INSERT INTO users (user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
                 int id = conf.addRecordAndReturnId(sql, GetName(), GetBadge(), GetPass(), "User", "Enable");
                 
                 session.SaveLogIn(id);
@@ -184,6 +191,10 @@ public class User_Permission extends javax.swing.JFrame {
     private void jLabel4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseExited
         jLabel4.setBackground(new Color(153,153,153));        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel4MouseExited
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        this.dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel5MouseClicked
 
     /**
      * @param args the command line arguments
@@ -228,6 +239,7 @@ public class User_Permission extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JCheckBox securityprivacy;

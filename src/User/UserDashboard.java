@@ -7,6 +7,7 @@ package User;
 
 import Profiles.profile;
 import Profiles.session;
+import User.Cart.CartMain;
 import User.Market.MarketMain;
 import configuration.animation;
 import java.awt.Dimension;
@@ -79,6 +80,15 @@ public final class UserDashboard extends javax.swing.JFrame {
         
     }
     
+    public void ShowProf(){
+        session see = new session();
+        
+        int id = see.GetID();
+        
+        MainPane.removeAll();
+        profile prof = new profile(id, this);
+        MainPane.add(prof).setVisible(true);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -125,9 +135,19 @@ public final class UserDashboard extends javax.swing.JFrame {
         jPanel2.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 204, 60));
 
         jToggleButton3.setText("Cart");
+        jToggleButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jToggleButton3MouseClicked(evt);
+            }
+        });
         jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton3ActionPerformed(evt);
+            }
+        });
+        jToggleButton3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jToggleButton3KeyPressed(evt);
             }
         });
         jPanel2.add(jToggleButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 204, 60));
@@ -214,13 +234,7 @@ public final class UserDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleButton6ActionPerformed
 
     private void jToggleButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MouseClicked
-        session see = new session();
-        
-        int id = see.GetID();
-        
-        MainPane.removeAll();
-        profile prof = new profile(id, this);
-        MainPane.add(prof).setVisible(true);   // TODO add your handling code here:
+        ShowProf();   // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton1MouseClicked
 
     private void jToggleButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton2MouseClicked
@@ -236,6 +250,16 @@ public final class UserDashboard extends javax.swing.JFrame {
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void jToggleButton3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jToggleButton3KeyPressed
+         // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton3KeyPressed
+
+    private void jToggleButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton3MouseClicked
+        CartMain cart = new CartMain(MainPane);
+        MainPane.removeAll();
+        MainPane.add(cart).setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton3MouseClicked
 
     /**
      * @param args the command line arguments

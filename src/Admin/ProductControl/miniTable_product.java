@@ -6,6 +6,7 @@
 package Admin.ProductControl;
 
 import configuration.config;
+import javax.swing.JDesktopPane;
 
 /**
  *
@@ -21,6 +22,7 @@ public class miniTable_product extends javax.swing.JInternalFrame {
         StyleTable();
         DispTable();
         StyleFrame();
+        
     }
     
     public final void StyleTable(){
@@ -66,6 +68,11 @@ public class miniTable_product extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(table);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -92,6 +99,19 @@ public class miniTable_product extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+        int row = table.getSelectedRow();
+        
+        Object id = table.getValueAt(row, 0);
+            System.out.println("Selected ID: " + id);
+            
+            connector.datareciever(id);
+            connector connect = new connector();
+            Refactor_Product refact = new Refactor_Product();
+            JDesktopPane panel = connect.PanelSender();
+            panel.add(refact).setVisible(true);// TODO add your handling code here:
+    }//GEN-LAST:event_tableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

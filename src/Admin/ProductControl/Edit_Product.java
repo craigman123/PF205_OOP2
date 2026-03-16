@@ -9,10 +9,10 @@ import Admin.Mng_Product;
 import Admin.TableUser;
 import Admin.UserControl.Add_user;
 import Admin.UserControl.Refactorial;
-import Admin.UserControl.Remove_User;
 import configuration.config;
 import java.awt.Color;
 import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 
 /**
  *
@@ -27,6 +27,9 @@ public class Edit_Product extends javax.swing.JInternalFrame {
         initComponents();
         StyleFrame();
         DispTableandRefresh();
+        
+        connector recieve = new connector();
+        recieve.PanelReciever(miniPane);
     }
     
     public final void DispTableandRefresh(){
@@ -54,13 +57,14 @@ public class Edit_Product extends javax.swing.JInternalFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        removeuser = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         miniPane = new javax.swing.JDesktopPane();
         ProductPane = new javax.swing.JDesktopPane();
         jLabel1 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        removeuser = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel6.setBackground(new java.awt.Color(153, 153, 153));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -78,44 +82,49 @@ public class Edit_Product extends javax.swing.JInternalFrame {
         });
         jPanel6.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        jPanel7.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, 83));
 
-        jLabel7.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel7.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("REFACTORATION");
-        jLabel7.setOpaque(true);
-        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+        javax.swing.GroupLayout miniPaneLayout = new javax.swing.GroupLayout(miniPane);
+        miniPane.setLayout(miniPaneLayout);
+        miniPaneLayout.setHorizontalGroup(
+            miniPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 536, Short.MAX_VALUE)
+        );
+        miniPaneLayout.setVerticalGroup(
+            miniPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 493, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(miniPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(399, 154, 536, 493));
+
+        javax.swing.GroupLayout ProductPaneLayout = new javax.swing.GroupLayout(ProductPane);
+        ProductPane.setLayout(ProductPaneLayout);
+        ProductPaneLayout.setHorizontalGroup(
+            ProductPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 375, Short.MAX_VALUE)
+        );
+        ProductPaneLayout.setVerticalGroup(
+            ProductPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 488, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(ProductPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 154, -1, -1));
+
+        jLabel1.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("REFRESH");
+        jLabel1.setToolTipText("");
+        jLabel1.setMaximumSize(new java.awt.Dimension(10, 2));
+        jLabel1.setMinimumSize(new java.awt.Dimension(9, 2));
+        jLabel1.setOpaque(true);
+        jLabel1.setPreferredSize(new java.awt.Dimension(10, 2));
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel7MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jLabel7MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jLabel7MouseExited(evt);
+                jLabel1MouseClicked(evt);
             }
         });
-        jPanel7.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 10, 180, 20));
-
-        removeuser.setBackground(new java.awt.Color(153, 153, 153));
-        removeuser.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
-        removeuser.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        removeuser.setText("ADD PRODUCT");
-        removeuser.setOpaque(true);
-        removeuser.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                removeuserMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                removeuserMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                removeuserMouseExited(evt);
-            }
-        });
-        jPanel7.add(removeuser, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 10, 140, 20));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 97, 86, 40));
 
         jLabel9.setBackground(new java.awt.Color(153, 153, 153));
         jLabel9.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
@@ -133,78 +142,43 @@ public class Edit_Product extends javax.swing.JInternalFrame {
                 jLabel9MouseExited(evt);
             }
         });
-        jPanel7.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 170, -1));
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 100, 250, 40));
 
-        javax.swing.GroupLayout miniPaneLayout = new javax.swing.GroupLayout(miniPane);
-        miniPane.setLayout(miniPaneLayout);
-        miniPaneLayout.setHorizontalGroup(
-            miniPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        miniPaneLayout.setVerticalGroup(
-            miniPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 489, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout ProductPaneLayout = new javax.swing.GroupLayout(ProductPane);
-        ProductPane.setLayout(ProductPaneLayout);
-        ProductPaneLayout.setHorizontalGroup(
-            ProductPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 375, Short.MAX_VALUE)
-        );
-        ProductPaneLayout.setVerticalGroup(
-            ProductPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        jLabel1.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("REFRESH");
-        jLabel1.setToolTipText("");
-        jLabel1.setMaximumSize(new java.awt.Dimension(10, 2));
-        jLabel1.setMinimumSize(new java.awt.Dimension(9, 2));
-        jLabel1.setOpaque(true);
-        jLabel1.setPreferredSize(new java.awt.Dimension(10, 2));
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        removeuser.setBackground(new java.awt.Color(153, 153, 153));
+        removeuser.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        removeuser.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        removeuser.setText("ADD PRODUCT");
+        removeuser.setOpaque(true);
+        removeuser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
+                removeuserMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                removeuserMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                removeuserMouseExited(evt);
             }
         });
+        getContentPane().add(removeuser, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 100, 270, 40));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ProductPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
-                    .addComponent(miniPane))
-                .addContainerGap())
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(miniPane)
-                        .addGap(11, 11, 11))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(ProductPane)
-                        .addContainerGap())))
-        );
+        jLabel7.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel7.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("REFACTORATION");
+        jLabel7.setOpaque(true);
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel7MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel7MouseExited(evt);
+            }
+        });
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 100, 170, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -249,10 +223,12 @@ public class Edit_Product extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_removeuserMouseExited
 
     private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
-        miniPane.removeAll();
-        Remove_Product remove = new Remove_Product();
+        Remove_Productclass remove = new Remove_Productclass();
 
-        miniPane.add(remove).setVisible(true);// TODO add your handling code here:
+        remove.remove();
+        for (JInternalFrame frame : miniPane.getAllFrames()) {
+            frame.dispose();
+        }// TODO add your handling code here:
     }//GEN-LAST:event_jLabel9MouseClicked
 
     private void jLabel9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseEntered
@@ -276,7 +252,6 @@ public class Edit_Product extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JDesktopPane miniPane;
     private javax.swing.JLabel removeuser;
     // End of variables declaration//GEN-END:variables

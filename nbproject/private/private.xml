@@ -6,12 +6,14 @@
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/Product_Detail.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/tableProduct.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Refactor_Product.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Remove_Productclass.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/Mng_Product.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Remove_Product.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/connector.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/connector.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/Payment.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/Remove_User.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Edit_Product.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/config.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/Remove_Userclass.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/Add_user.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/MarketMain.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/tableUser.java</file>
@@ -31,10 +33,12 @@
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/User_Details.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/User_Permission.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/miniTable_User.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/connector.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/LogReg_config.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Cart/CartMain.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/User_config.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Profiles/session.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/Validations.java</file>
         </group>
     </open-files>
 </project-private>

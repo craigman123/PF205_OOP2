@@ -98,6 +98,7 @@ public class LogReg_config {
             
             User_Permission perms = new User_Permission(nm, Finalbadge, ps, frame);
             perms.setVisible(true);
+            System.out.println("Account Created: " + ps);
             
             ani.BuyTimeLoaddingFrame();
            

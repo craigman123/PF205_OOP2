@@ -415,18 +415,22 @@ public void BuyTimeLoaddingFrame() {
     
     public int calculatePasswordStrength(String password, JProgressBar bar) {
         int strength = 0;
-
-        if (password.length() >= 6) strength += 20; 
-        if (password.length() >= 10) strength += 20; 
-        if (password.matches(".*[a-z].*")) strength += 20; 
-        if (password.matches(".*[A-Z].*")) strength += 20; 
-        if (password.matches(".*[0-9].*")) strength += 10; 
-        if (password.matches(".*[!@#$%^&*()].*")) strength += 10; 
         
-        if (strength > 100) strength = 100;
-        if (strength < 0) strength = 0;
+        if(!password.equals("Password") && !password.isEmpty() && !password.equals("HASHED")){
 
-        bar.setValue(strength);
+            if (password.length() >= 6) strength += 20; 
+            if (password.length() >= 10) strength += 20; 
+            if (password.matches(".*[a-z].*")) strength += 20; 
+            if (password.matches(".*[A-Z].*")) strength += 20; 
+            if (password.matches(".*[0-9].*")) strength += 10; 
+            if (password.matches(".*[!@#$%^&*()].*")) strength += 10; 
+
+            if (strength > 100) strength = 100;
+            if (strength < 0) strength = 0;
+
+            bar.setValue(strength);
+            return strength;
+            }
         return strength;
     }
     

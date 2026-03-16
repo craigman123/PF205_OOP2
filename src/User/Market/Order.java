@@ -11,6 +11,7 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import configuration.config;
+import java.awt.Dimension;
 import javax.swing.*;
 
 /**
@@ -105,6 +106,10 @@ public class Order extends javax.swing.JInternalFrame {
 
         if (ppc.isSelected()) {
             total += 20;
+        }
+        
+        if(warranty.isSelected()){
+            total += 100;
         }
 
         if (minDays < 1) minDays = 1;
@@ -236,19 +241,24 @@ public class Order extends javax.swing.JInternalFrame {
         ui.setNorthPane(null);
     }
     
-    public void SendInputs(){
+    public void SendInputs() {
         String deliveryInfo = name1.getText().trim() + ", "
             + barangay.getText().trim() + ", "
             + city.getText().trim() + ", "
             + province.getText().trim() + ", "
             + region.getText().trim() + ", "
             + comboCountry.getSelectedItem() + ", "
-            + zipCode.getText().trim();    
+            + zipCode.getText().trim();
+
+        // Safely parse due
+        String dueText = due.getText().replaceAll("[^0-9.]", "");
+        float Due = Float.parseFloat(dueText);
+
+        // Create payment frame
+        Payment pay = new Payment(id, pane, deliveryInfo, label.getText(), spec.getText(), (int) totalFee, Due);
         
-        Payment pay = new Payment(id, pane, deliveryInfo, label.getText(), spec.getText(), (int) totalFee);
         
-        this.dispose();
-        pane.add(pay).setVisible(true);
+        pay.CenterFrame();
     }
     
     /**
@@ -307,6 +317,7 @@ public class Order extends javax.swing.JInternalFrame {
         mega = new javax.swing.JRadioButton();
         norma = new javax.swing.JRadioButton();
         indicator = new javax.swing.JLabel();
+        warranty = new javax.swing.JRadioButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -633,7 +644,7 @@ public class Order extends javax.swing.JInternalFrame {
                 ppcActionPerformed(evt);
             }
         });
-        getContentPane().add(ppc, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 450, -1, -1));
+        getContentPane().add(ppc, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 430, -1, -1));
 
         fast.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
         fast.setText("FAST SHIPPING (P 20.00)");
@@ -647,7 +658,7 @@ public class Order extends javax.swing.JInternalFrame {
                 fastActionPerformed(evt);
             }
         });
-        getContentPane().add(fast, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 360, -1, -1));
+        getContentPane().add(fast, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 340, -1, -1));
 
         ultra.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
         ultra.setText("ULTRA SHIPPING (P 50.00)");
@@ -656,7 +667,7 @@ public class Order extends javax.swing.JInternalFrame {
                 ultraActionPerformed(evt);
             }
         });
-        getContentPane().add(ultra, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 390, -1, -1));
+        getContentPane().add(ultra, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 370, -1, -1));
 
         mega.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
         mega.setText("MEGA SHIPPING (P 80.00)");
@@ -665,7 +676,7 @@ public class Order extends javax.swing.JInternalFrame {
                 megaActionPerformed(evt);
             }
         });
-        getContentPane().add(mega, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 420, -1, -1));
+        getContentPane().add(mega, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 400, -1, -1));
 
         norma.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
         norma.setSelected(true);
@@ -675,11 +686,20 @@ public class Order extends javax.swing.JInternalFrame {
                 normaMouseClicked(evt);
             }
         });
-        getContentPane().add(norma, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 330, -1, -1));
+        getContentPane().add(norma, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 310, -1, -1));
 
         indicator.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
         indicator.setText("Stock: ");
         getContentPane().add(indicator, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 580, -1, -1));
+
+        warranty.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        warranty.setText("WARRANTY (P 100.00)");
+        warranty.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                warrantyMouseClicked(evt);
+            }
+        });
+        getContentPane().add(warranty, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 460, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -803,7 +823,7 @@ public class Order extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jLabel1MouseExited
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-
+        
         
         if(validateInputs() == true){
             SendInputs();
@@ -818,6 +838,10 @@ public class Order extends javax.swing.JInternalFrame {
         Order order = new Order(id, pane);
         pane.add(order).setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void warrantyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_warrantyMouseClicked
+        updateTotal();        // TODO add your handling code here:
+    }//GEN-LAST:event_warrantyMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -867,6 +891,7 @@ public class Order extends javax.swing.JInternalFrame {
     private javax.swing.JTextField region;
     private javax.swing.JTextArea spec;
     private javax.swing.JRadioButton ultra;
+    private javax.swing.JRadioButton warranty;
     private javax.swing.JTextField zipCode;
     // End of variables declaration//GEN-END:variables
 }

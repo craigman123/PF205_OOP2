@@ -47,30 +47,65 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
             SetStatusIndicator();
             heartIcon(false);
             CheckValidation();
+            checkHeart();
         });
         StyleScrollPane();
         ToggleButtons();
         SetOrderButton();
+        
     }
     
-    public void heartIcon(boolean change){
-        ImageIcon icon;
+    public void checkHeart(){
+        config conf = new config();
+        session see = new session();
+        
+        String qry = "SELECT * FROM cart WHERE prod_id = ? AND user_id = ?";
+        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, ID, see.GetID()); 
+        System.out.println("ID: " + ID + "User ID: " + see.GetID());
+        
+        if(!result.isEmpty()){
+            heartIcon(true);
+            System.out.println("true");
+        }else{
+            heartIcon(false);
+            System.out.println("false");
+        }
+    }
+    
+    public void heartIcon(boolean change) {
+        session see = new session();
+        config conf = new config();
+
+        ImageIcon icon = null;
         int w = 0, h = 0;
 
-        if(!change){
-            icon = new ImageIcon(getClass().getResource("/images/icon-removebg-preview (1).png"));
-            w = heart.getWidth();
-            h = heart.getHeight();
-        } else {
-            icon = new ImageIcon(getClass().getResource("/images/red-removebg-preview (1).png"));
-            w = heart.getWidth() - 10;
-            h = heart.getHeight() - 10;
+        int userId = see.GetID();
+        java.util.Date now = new java.util.Date();
+
+        try {
+            if (!change) {
+                icon = new ImageIcon(getClass().getResource("/images/red-removebg-preview (1).png"));
+                w = heart.getWidth() - 10;
+                h = heart.getHeight() - 10;
+
+                // Insert into favorites (cart) with timestamp
+                String insertQry = "INSERT INTO cart(user_id, prod_id, cart_timeSaved) VALUES(?, ?, ?)";
+                conf.addRecordAndReturnId(insertQry, userId, ID, now);
+
+            } else {
+                icon = new ImageIcon(getClass().getResource("/images/icon-removebg-preview (1).png"));
+                w = heart.getWidth();
+                h = heart.getHeight();
+
+                String deleteQry = "DELETE FROM cart WHERE user_id = ? AND prod_id = ?";
+                conf.deleteRecord(deleteQry, userId, ID);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error updating favorites: " + ex.getMessage());
         }
 
-        
-
         Image img = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
-
         heart.setIcon(new ImageIcon(img));
         heart.setHorizontalAlignment(JLabel.CENTER);
         heart.setVerticalAlignment(JLabel.CENTER);
@@ -725,7 +760,7 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_addCartMouseClicked
 
     private void heartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_heartMouseClicked
-     // TODO add your handling code here:
+
     }//GEN-LAST:event_heartMouseClicked
 
     private void heartAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_heartAncestorAdded

@@ -174,7 +174,7 @@ public class config {
         return 1;
     }
    
-   public void deleteRecord(String sql, Object... values) {
+   public boolean deleteRecord(String sql, Object... values) {
         try (Connection conn = this.connectDB();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -189,8 +189,10 @@ public class config {
 
             pstmt.executeUpdate();
             System.out.println("Record deleted successfully!");
+            return true;
         } catch (SQLException e) {
             System.out.println("Error deleting record: " + e.getMessage());
+            return false;
         }
     }
    
