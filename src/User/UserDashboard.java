@@ -9,6 +9,7 @@ import Profiles.profile;
 import Profiles.session;
 import User.Cart.CartMain;
 import User.Market.MarketMain;
+import User.Orders.Orders;
 import configuration.animation;
 import java.awt.Dimension;
 import java.util.*;
@@ -153,6 +154,11 @@ public final class UserDashboard extends javax.swing.JFrame {
         jPanel2.add(jToggleButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 204, 60));
 
         jToggleButton4.setText("Orders");
+        jToggleButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jToggleButton4MouseClicked(evt);
+            }
+        });
         jPanel2.add(jToggleButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 204, 60));
 
         jToggleButton5.setText("Auction");
@@ -260,6 +266,12 @@ public final class UserDashboard extends javax.swing.JFrame {
         MainPane.removeAll();
         MainPane.add(cart).setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton3MouseClicked
+
+    private void jToggleButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton4MouseClicked
+        Orders order = new Orders(MainPane);
+        MainPane.removeAll();
+        MainPane.add(order).setVisible(true);         // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton4MouseClicked
 
     /**
      * @param args the command line arguments

@@ -45,7 +45,6 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
         SwingUtilities.invokeLater(() -> {
             ShowComponent();
             SetStatusIndicator();
-            heartIcon(false);
             CheckValidation();
             checkHeart();
         });
@@ -83,12 +82,11 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
         java.util.Date now = new java.util.Date();
 
         try {
-            if (!change) {
+            if (change) {
                 icon = new ImageIcon(getClass().getResource("/images/red-removebg-preview (1).png"));
                 w = heart.getWidth() - 10;
                 h = heart.getHeight() - 10;
 
-                // Insert into favorites (cart) with timestamp
                 String insertQry = "INSERT INTO cart(user_id, prod_id, cart_timeSaved) VALUES(?, ?, ?)";
                 conf.addRecordAndReturnId(insertQry, userId, ID, now);
 

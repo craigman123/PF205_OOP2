@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package User.Cart;
+package User.Orders;
 
 import Profiles.session;
 import User.Market.Product_Detail;
@@ -27,22 +27,22 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author user
+ * @author USER18
  */
-public class CartMain extends javax.swing.JInternalFrame {
+public class Orders extends javax.swing.JInternalFrame {
 
     /**
-     * Creates new form CartMain
+     * Creates new form Orders
      */
     private JDesktopPane MainPane;
     
-    public CartMain(JDesktopPane Pane) {
+    public Orders(JDesktopPane Pane) {
         this.MainPane = Pane;
         initComponents();
-        StyleFrame();
         loadImages();
+        StyleFrame();
     }
-
+    
     public final void StyleFrame(){
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
@@ -55,24 +55,23 @@ public class CartMain extends javax.swing.JInternalFrame {
     session see = new session();
     config conf = new config();
     File folder = new File("Input_Images");
-    int add = 0;
 
     if (!folder.exists() || !folder.isDirectory()) {
         System.out.println("Folder not found!");
         return;
     }
 
-    cartPanel.removeAll();
-    cartPanel.setLayout(new GridLayout(0, 3, 15, 15));
-    cartPanel.setBackground(Color.WHITE);
-    cartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+    orderPanel.removeAll();
+    orderPanel.setLayout(new GridLayout(0, 3, 15, 15));
+    orderPanel.setBackground(Color.WHITE);
+    orderPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-    String favQuery = "SELECT prod_id FROM cart WHERE user_id = ?";
-    java.util.List<java.util.Map<String, Object>> favoriteOnly = conf.fetchRecords(favQuery, see.GetID());
+    String orderQuery = "SELECT prod_id, order_prod, SUM(order_quantity) AS total_quantity, SUM(order_totalPrice) AS total_price FROM orders WHERE user_id = ? GROUP BY prod_id, order_prod";
+    java.util.List<java.util.Map<String, Object>> orders = conf.fetchRecords(orderQuery, see.GetID());
 
-    java.util.Set<Integer> favoriteSet = new java.util.HashSet<>();
-    for (java.util.Map<String, Object> f : favoriteOnly) {
-        favoriteSet.add(((Number) f.get("prod_id")).intValue());
+    java.util.Set<Integer> boughtSet = new java.util.HashSet<>();
+    for (java.util.Map<String, Object> f : orders) {
+        boughtSet.add(((Number) f.get("prod_id")).intValue());
     }
 
     File[] files = folder.listFiles((dir, name) -> name.toLowerCase().matches(".*\\.(jpg|png|jpeg)$"));
@@ -86,7 +85,7 @@ public class CartMain extends javax.swing.JInternalFrame {
                 java.util.Map<String, Object> prod = result.get(0);
                 int prodId = ((Number) prod.get("prod_id")).intValue();
 
-                if (!favoriteSet.contains(prodId)) continue;
+                if (!boughtSet.contains(prodId)) continue;
 
                 String name = prod.get("prod_name").toString();
                 String price = prod.get("prod_price").toString();
@@ -94,8 +93,8 @@ public class CartMain extends javax.swing.JInternalFrame {
                 String status = prod.get("prod_status").toString();
 
                 if (status.equals("Active")) {
-                    cartPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
-                    cartPanel.setBackground(Color.WHITE);
+                    orderPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
+                    orderPanel.setBackground(Color.WHITE);
 
                     animation ani = new animation();
                     JPanel productCard = ani.linearGrade(Color.WHITE, Color.GRAY);
@@ -132,9 +131,7 @@ public class CartMain extends javax.swing.JInternalFrame {
                     productCard.add(stockLabel);
                     productCard.add(Box.createVerticalStrut(10));
 
-                    cartPanel.add(productCard);
-                    add++;
-                    manyFav.setText(add + " Favorited Item(s): ");
+                    orderPanel.add(productCard);
 
                     productCard.addMouseListener(new java.awt.event.MouseAdapter() {
                         @Override
@@ -147,10 +144,11 @@ public class CartMain extends javax.swing.JInternalFrame {
             }
         }
     }
-    
-    cartPanel.revalidate();
-    cartPanel.repaint();
+
+    orderPanel.revalidate();
+    orderPanel.repaint();
 }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -162,62 +160,62 @@ public class CartMain extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        manyFav = new javax.swing.JLabel();
-        cartPanel = new javax.swing.JPanel();
+        orderPanel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 36)); // NOI18N
-        jLabel1.setText("CART");
+        jLabel1.setText("ORDERS");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(439, 439, 439)
+                .addGap(422, 422, 422)
                 .addComponent(jLabel1)
-                .addContainerGap(414, Short.MAX_VALUE))
+                .addContainerGap(445, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(31, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addGap(29, 29, 29))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 80));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        manyFav.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        manyFav.setText("0 Favorited Items");
-        getContentPane().add(manyFav, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
+        orderPanel.setBackground(new java.awt.Color(204, 204, 204));
 
-        cartPanel.setBackground(new java.awt.Color(204, 204, 204));
-
-        javax.swing.GroupLayout cartPanelLayout = new javax.swing.GroupLayout(cartPanel);
-        cartPanel.setLayout(cartPanelLayout);
-        cartPanelLayout.setHorizontalGroup(
-            cartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout orderPanelLayout = new javax.swing.GroupLayout(orderPanel);
+        orderPanel.setLayout(orderPanelLayout);
+        orderPanelLayout.setHorizontalGroup(
+            orderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 900, Short.MAX_VALUE)
         );
-        cartPanelLayout.setVerticalGroup(
-            cartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 490, Short.MAX_VALUE)
+        orderPanelLayout.setVerticalGroup(
+            orderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 470, Short.MAX_VALUE)
         );
 
-        getContentPane().add(cartPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 900, 490));
+        getContentPane().add(orderPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 900, 470));
+
+        jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel2.setText(" Orders / Completed");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel cartPanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel manyFav;
+    private javax.swing.JPanel orderPanel;
     // End of variables declaration//GEN-END:variables
 }
