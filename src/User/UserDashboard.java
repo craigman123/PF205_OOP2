@@ -9,6 +9,7 @@ import Profiles.profile;
 import Profiles.session;
 import User.Cart.CartMain;
 import User.Market.MarketMain;
+import User.Notifications.notify;
 import User.Orders.Orders;
 import configuration.animation;
 import java.awt.Dimension;
@@ -69,7 +70,6 @@ public final class UserDashboard extends javax.swing.JFrame {
         menuGroup.add(jToggleButton3); 
         menuGroup.add(jToggleButton4);
         menuGroup.add(jToggleButton5); 
-        menuGroup.add(jToggleButton6);
         menuGroup.add(jToggleButton7);
         
         animation.StyleToggleButtons(jToggleButton2); 
@@ -77,7 +77,6 @@ public final class UserDashboard extends javax.swing.JFrame {
         animation.StyleToggleButtons(jToggleButton4); 
         animation.StyleToggleButtons(jToggleButton5); 
         animation.StyleToggleButtons(jToggleButton7); 
-        animation.StyleToggleButtons(jToggleButton6); 
         
     }
     
@@ -87,7 +86,7 @@ public final class UserDashboard extends javax.swing.JFrame {
         int id = see.GetID();
         
         MainPane.removeAll();
-        profile prof = new profile(id, this);
+        profile prof = new profile(id, this, MainPane);
         MainPane.add(prof).setVisible(true);
     }
     /**
@@ -106,7 +105,6 @@ public final class UserDashboard extends javax.swing.JFrame {
         jToggleButton3 = new javax.swing.JToggleButton();
         jToggleButton4 = new javax.swing.JToggleButton();
         jToggleButton5 = new javax.swing.JToggleButton();
-        jToggleButton6 = new javax.swing.JToggleButton();
         jToggleButton7 = new javax.swing.JToggleButton();
         jToggleButton1 = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
@@ -161,19 +159,16 @@ public final class UserDashboard extends javax.swing.JFrame {
         });
         jPanel2.add(jToggleButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 204, 60));
 
-        jToggleButton5.setText("Auction");
-        jPanel2.add(jToggleButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 204, 60));
-
-        jToggleButton6.setText("Notifications");
-        jToggleButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton6ActionPerformed(evt);
+        jToggleButton5.setText("Notification");
+        jToggleButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jToggleButton5MouseClicked(evt);
             }
         });
-        jPanel2.add(jToggleButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 480, 204, 60));
+        jPanel2.add(jToggleButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 204, 60));
 
-        jToggleButton7.setText("Settings & Privacy");
-        jPanel2.add(jToggleButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 550, 204, 60));
+        jToggleButton7.setText("About");
+        jPanel2.add(jToggleButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 480, 204, 60));
 
         jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dyna_image/dafault_image.jpg"))); // NOI18N
         jToggleButton1.setText("jToggleButton1");
@@ -235,10 +230,6 @@ public final class UserDashboard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jToggleButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton6ActionPerformed
-
     private void jToggleButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MouseClicked
         ShowProf();   // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton1MouseClicked
@@ -272,6 +263,12 @@ public final class UserDashboard extends javax.swing.JFrame {
         MainPane.removeAll();
         MainPane.add(order).setVisible(true);         // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton4MouseClicked
+
+    private void jToggleButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton5MouseClicked
+        notify nigga = new notify(MainPane);
+        MainPane.removeAll();
+        MainPane.add(nigga).setVisible(true);         // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton5MouseClicked
 
     /**
      * @param args the command line arguments
@@ -319,7 +316,6 @@ public final class UserDashboard extends javax.swing.JFrame {
     private javax.swing.JToggleButton jToggleButton3;
     private javax.swing.JToggleButton jToggleButton4;
     private javax.swing.JToggleButton jToggleButton5;
-    private javax.swing.JToggleButton jToggleButton6;
     private javax.swing.JToggleButton jToggleButton7;
     // End of variables declaration//GEN-END:variables
 }

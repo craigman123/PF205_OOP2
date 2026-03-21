@@ -6,6 +6,7 @@
 package User.Cart;
 
 import Profiles.session;
+import User.Market.Order;
 import User.Market.Product_Detail;
 import configuration.animation;
 import configuration.config;
@@ -14,16 +15,22 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -41,6 +48,16 @@ public class CartMain extends javax.swing.JInternalFrame {
         initComponents();
         StyleFrame();
         loadImages();
+        Prefillers();
+    }
+    
+    public void Prefillers(){
+        Cart_config cart = new Cart_config();
+        
+        String getName = cart.NameGetter();
+        
+        cart.DisplayPreviousAddress(prefillLocation);
+        prefillName.setText(getName);
     }
 
     public final void StyleFrame(){
@@ -92,17 +109,64 @@ public class CartMain extends javax.swing.JInternalFrame {
                 String price = prod.get("prod_price").toString();
                 int stock = ((Number) prod.get("prod_stock")).intValue();
                 String status = prod.get("prod_status").toString();
+                String rarity = prod.get("prod_rarity").toString();
 
                 if (status.equals("Active")) {
                     cartPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
                     cartPanel.setBackground(Color.WHITE);
-
+                    
+                    JPanel productCard;
+                    
                     animation ani = new animation();
-                    JPanel productCard = ani.linearGrade(Color.WHITE, Color.GRAY);
+                    if(rarity.equals("Common")){
+                        productCard = ani.linearGrade(
+                            Color.decode("#FAFAFA"),
+                            Color.decode("#E0E0E0")
+                        );
+
+                    }else if(rarity.equals("Uncommon")){
+                        productCard = ani.linearGrade(
+                            Color.decode("#FAFAFA"),
+                            new Color(102, 187, 106, 80)
+                        );
+
+                    }else if(rarity.equals("Rare")){
+                        productCard = ani.linearGrade(
+                            Color.decode("#FAFAFA"),
+                            new Color(66, 165, 245, 80)
+                        );
+
+                    }else if(rarity.equals("Exquisite")){
+                        productCard = ani.linearGrade(
+                            Color.decode("#FAFAFA"),
+                            new Color(0, 131, 176, 90)
+                        );
+
+                    }else if(rarity.equals("Unique")){
+                        productCard = ani.linearGrade(
+                            Color.decode("#FAFAFA"),
+                            new Color(186, 104, 200, 90)
+                        );
+
+                    }else if(rarity.equals("Collectors Choice")){
+                        productCard = ani.linearGrade(
+                            Color.decode("#FAFAFA"),
+                            new Color(255, 179, 0, 100)
+                        );
+
+                    }else if(rarity.equals("Antique")){
+                        productCard = ani.linearGrade(
+                            Color.decode("#FAFAFA"),
+                            new Color(229, 57, 53, 90)
+                        );
+
+                    }else{
+                        productCard = ani.linearGrade(Color.WHITE, Color.LIGHT_GRAY);
+                    }
                     productCard.setLayout(new BoxLayout(productCard, BoxLayout.Y_AXIS));
                     productCard.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-                    Dimension cardSize = new Dimension(220, 300);
+                    Dimension cardSize = new Dimension(220, 320);
                     productCard.setPreferredSize(cardSize);
                     productCard.setMinimumSize(cardSize);
                     productCard.setMaximumSize(cardSize);
@@ -134,13 +198,16 @@ public class CartMain extends javax.swing.JInternalFrame {
 
                     cartPanel.add(productCard);
                     add++;
-                    manyFav.setText(add + " Favorited Item(s): ");
+                    manyFav.setText(add + " Item(s): ");
 
                     productCard.addMouseListener(new java.awt.event.MouseAdapter() {
                         @Override
                         public void mouseClicked(java.awt.event.MouseEvent e) {
-                            Product_Detail proddet = new Product_Detail(prodId, MainPane);
-                            MainPane.add(proddet).setVisible(true);
+                            DeclareLocationGlobal();
+                            
+                            Order ord = new Order(prodId, MainPane);
+                            MainPane.add(ord).setVisible(true);
+                            
                         }
                     });
                 }
@@ -148,9 +215,68 @@ public class CartMain extends javax.swing.JInternalFrame {
         }
     }
     
-    cartPanel.revalidate();
-    cartPanel.repaint();
+    mainScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    mainScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+    // 2️⃣ Make scrollbar thin
+    mainScroll.getVerticalScrollBar().setPreferredSize(new Dimension(10, Integer.MAX_VALUE));
+
+    // 3️⃣ Apply custom UI with colors and hover
+    mainScroll.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+    private final Color thumbDefault = new Color(102,102,102);
+    private final Color thumbHover   = new Color(51,51,51);
+    private final Color trackClr     = new Color(204,204,204);
+
+    @Override
+    protected void configureScrollBarColors() {
+        this.thumbColor = thumbDefault;
+    }
+
+    @Override
+    protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
+        g.setColor(trackClr); // set custom track color
+        g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
+    }
+
+    @Override
+    protected JButton createDecreaseButton(int orientation) { return createZeroButton(); }
+    @Override
+    protected JButton createIncreaseButton(int orientation) { return createZeroButton(); }
+
+    private JButton createZeroButton() {
+        JButton btn = new JButton();
+        btn.setPreferredSize(new Dimension(0,0));
+        btn.setMinimumSize(new Dimension(0,0));
+        btn.setMaximumSize(new Dimension(0,0));
+        return btn;
+    }
+
+    @Override
+    protected void installListeners() {
+        super.installListeners();
+        scrollbar.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                thumbColor = thumbHover;
+                scrollbar.repaint();
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                thumbColor = thumbDefault;
+                scrollbar.repaint();
+            }
+        });
+    }
+});
 }
+    
+    public void DeclareLocationGlobal(){
+        Cart_config cart = new Cart_config();
+        
+        String address =  String.valueOf(prefillLocation.getSelectedItem());
+        String name = prefillName.getText();
+        cart.sendGlobal(name, address);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -163,7 +289,12 @@ public class CartMain extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         manyFav = new javax.swing.JLabel();
+        mainScroll = new javax.swing.JScrollPane();
         cartPanel = new javax.swing.JPanel();
+        prefillLocation = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        prefillName = new javax.swing.JTextField();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -186,13 +317,13 @@ public class CartMain extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 80));
 
         manyFav.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        manyFav.setText("0 Favorited Items");
+        manyFav.setText("0 Items");
         getContentPane().add(manyFav, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
 
         cartPanel.setBackground(new java.awt.Color(204, 204, 204));
@@ -201,14 +332,30 @@ public class CartMain extends javax.swing.JInternalFrame {
         cartPanel.setLayout(cartPanelLayout);
         cartPanelLayout.setHorizontalGroup(
             cartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 900, Short.MAX_VALUE)
+            .addGap(0, 888, Short.MAX_VALUE)
         );
         cartPanelLayout.setVerticalGroup(
             cartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 490, Short.MAX_VALUE)
+            .addGap(0, 478, Short.MAX_VALUE)
         );
 
-        getContentPane().add(cartPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 900, 490));
+        mainScroll.setViewportView(cartPanel);
+
+        getContentPane().add(mainScroll, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 890, 480));
+
+        prefillLocation.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        getContentPane().add(prefillLocation, new org.netbeans.lib.awtextra.AbsoluteConstraints(588, 86, 320, 40));
+
+        jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel2.setText("Delivery Area:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 90, -1, 30));
+
+        jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel3.setText("Recievers Name:");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, -1, 30));
+
+        prefillName.setText("Name");
+        getContentPane().add(prefillName, new org.netbeans.lib.awtextra.AbsoluteConstraints(304, 86, 160, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -217,7 +364,12 @@ public class CartMain extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel cartPanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane mainScroll;
     private javax.swing.JLabel manyFav;
+    private javax.swing.JComboBox<String> prefillLocation;
+    private javax.swing.JTextField prefillName;
     // End of variables declaration//GEN-END:variables
 }

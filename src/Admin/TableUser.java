@@ -72,7 +72,7 @@ public class TableUser extends javax.swing.JInternalFrame {
         searchUser = new javax.swing.JTextField();
         TablePane = new javax.swing.JDesktopPane();
         statusBox = new javax.swing.JComboBox<>();
-        jLabel3 = new javax.swing.JLabel();
+        search = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jInternalFrame1 = new javax.swing.JInternalFrame();
@@ -138,22 +138,22 @@ public class TableUser extends javax.swing.JInternalFrame {
         });
         jPanel1.add(statusBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 0, 140, 40));
 
-        jLabel3.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("SEARCH");
-        jLabel3.setOpaque(true);
-        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+        search.setBackground(new java.awt.Color(153, 153, 153));
+        search.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        search.setText("SEARCH");
+        search.setOpaque(true);
+        search.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel3MouseClicked(evt);
+                searchMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jLabel3MouseEntered(evt);
+                searchMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                jLabel3MouseExited(evt);
+                searchMouseExited(evt);
             }
         });
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 0, 130, 40));
+        jPanel1.add(search, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 0, 130, 40));
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
 
@@ -290,10 +290,10 @@ public class TableUser extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_statusBoxActionPerformed
 
-    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+    private void searchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMouseClicked
 
         RefreshTable();        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel3MouseClicked
+    }//GEN-LAST:event_searchMouseClicked
 
     private void searchUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchUserMouseClicked
         animation ani = new animation();
@@ -301,13 +301,13 @@ public class TableUser extends javax.swing.JInternalFrame {
         ani.addPlaceholder(searchUser, "Search Users . . .");     // TODO add your handling code here:
     }//GEN-LAST:event_searchUserMouseClicked
 
-    private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
-        jLabel3.setBackground(new Color(102,102,102));        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel3MouseEntered
+    private void searchMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMouseEntered
+        search.setBackground(new Color(102,102,102));        // TODO add your handling code here:
+    }//GEN-LAST:event_searchMouseEntered
 
-    private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
-        jLabel3.setBackground(new Color(153,153,153));        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel3MouseExited
+    private void searchMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMouseExited
+        search.setBackground(new Color(153,153,153));        // TODO add your handling code here:
+    }//GEN-LAST:event_searchMouseExited
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -315,7 +315,6 @@ public class TableUser extends javax.swing.JInternalFrame {
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -323,6 +322,7 @@ public class TableUser extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
+    private javax.swing.JLabel search;
     private javax.swing.JTextField searchUser;
     private javax.swing.JComboBox<String> statusBox;
     // End of variables declaration//GEN-END:variables

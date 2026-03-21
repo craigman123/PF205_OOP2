@@ -12,6 +12,10 @@ import java.awt.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -367,52 +371,91 @@ public final class Refactor_Product extends javax.swing.JInternalFrame {
     private String currentImagePathFromDatabase = "";
     
     public void saveChanges() throws Exception {
-        config conf = new config();
+    config conf = new config();
 
-        String prodId = id.getText().trim();
-        String name = prodName.getText().trim();
-        String cat = category.getSelectedItem().toString();
-        String rare = rarity.getSelectedItem().toString();
-        String cash = price.getText().trim();
-        String desc = Descript.getText().trim();
-        String stock = ProdStock.getText().trim();
-        String stat = status.getSelectedItem().toString();
-        String finalFileName = currentImagePathFromDatabase;
+    String prodId = id.getText().trim();
+    String name = prodName.getText().trim();
+    String cat = category.getSelectedItem().toString();
+    String rare = rarity.getSelectedItem().toString();
+    String cash = price.getText().trim();
+    String desc = Descript.getText().trim();
+    String stock = ProdStock.getText().trim();
+    String stat = status.getSelectedItem().toString();
+    String finalFileName = currentImagePathFromDatabase;
 
-        if (imageChanged && selectedImageFile != null) {
-
-            String extension = selectedImageFile.getName().substring(selectedImageFile.getName().lastIndexOf(".")).toLowerCase();
-            String uniqueName = conf.generateHashedName(); 
-            String uniqueFileName = uniqueName + extension;    
-            finalFileName = uniqueFileName;
-            saveImageToFolder(selectedImageFile, uniqueName, extension); 
-            System.out.println("Image changed: " + finalFileName);
-        }      
-        
-        if (finalFileName == null || !finalFileName.contains(".")) {
-            System.out.println(finalFileName);
-            JOptionPane.showMessageDialog(null, "Invalid image path!");
-            return;
-        }
-
-        String extension = finalFileName.substring(finalFileName.lastIndexOf(".")).toLowerCase();
-        if (!extension.equals(".jpg") && !extension.equals(".jpeg") && !extension.equals(".png") && !extension.equals(".webp")) {
+    // Handle image change
+    if (imageChanged && selectedImageFile != null) {
+        String extension = selectedImageFile.getName()
+                             .substring(selectedImageFile.getName().lastIndexOf("."))
+                             .toLowerCase();
+        if (!extension.equals(".jpg") && !extension.equals(".jpeg") &&
+            !extension.equals(".png") && !extension.equals(".webp")) {
             JOptionPane.showMessageDialog(null, "Invalid image type!");
             return;
         }
-
-            String qry = "UPDATE products SET prod_name = ?, prod_category = ?, prod_price = ?, prod_rarity = ?, "
-                    + "prod_descript = ?, prod_stock = ?, prod_status = ?, prod_image = ? WHERE prod_id = ?";
-
-            int rowsAffected = conf.updateRecord(qry, name, cat, cash, rare, desc, stock, stat, finalFileName, prodId);
-
-            if (rowsAffected > 0) {
-                JOptionPane.showMessageDialog(null, "Product updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                ResetInputs();
-            } else {
-                JOptionPane.showMessageDialog(null, "No changes were made.", "Info", JOptionPane.INFORMATION_MESSAGE);
-            }
+        String uniqueName = conf.generateHashedName();
+        finalFileName = uniqueName + extension;
+        saveImageToFolder(selectedImageFile, uniqueName, extension);
+        System.out.println("Image changed: " + finalFileName);
     }
+
+    // Validate image path
+    if (finalFileName == null || !finalFileName.contains(".")) {
+        JOptionPane.showMessageDialog(null, "Invalid image path!");
+        return;
+    }
+
+    // Fetch current product data from DB
+    List<Map<String, Object>> records = conf.fetchRecords(
+        "SELECT * FROM products WHERE prod_id = ?", prodId
+    );
+
+    if (records.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Product not found!");
+        return;
+    }
+
+    Map<String, Object> currentProd = records.get(0);
+
+    // Check if any field actually changed
+    boolean changed = false;
+    if (!name.equals(currentProd.get("prod_name"))) changed = true;
+    if (!cat.equals(currentProd.get("prod_category"))) changed = true;
+    if (!cash.equals(currentProd.get("prod_price").toString())) changed = true;
+    if (!rare.equals(currentProd.get("prod_rarity"))) changed = true;
+    if (!desc.equals(currentProd.get("prod_descript"))) changed = true;
+    if (!stock.equals(currentProd.get("prod_stock").toString())) changed = true;
+    if (!stat.equals(currentProd.get("prod_status"))) changed = true;
+    if (!finalFileName.equals(currentProd.get("prod_image"))) changed = true;
+
+    if (!changed) {
+        JOptionPane.showMessageDialog(null, "No changes detected.");
+        return;
+    }
+    
+    if(!stock.equals("0")) {
+        stat = "Active";
+    }
+
+    // Update the product
+    String qry = "UPDATE products SET prod_name = ?, prod_category = ?, prod_price = ?, "
+               + "prod_rarity = ?, prod_descript = ?, prod_stock = ?, prod_status = ?, "
+               + "prod_image = ? WHERE prod_id = ?";
+
+    int rowsAffected = conf.updateRecord(qry, name, cat, cash, rare, desc, stock, stat, finalFileName, prodId);
+    
+    LocalDateTime now = LocalDateTime.now();
+    Timestamp date = Timestamp.valueOf(now);
+    String queryNow = "INSERT INTO logs(prod_id, user_id, dateTime, log_action) VALUES(?,?,?,?)";
+    conf.addRecordAndReturnId(queryNow, prodId, ID, date, "Update");
+
+    if (rowsAffected > 0) {
+        JOptionPane.showMessageDialog(null, "Product updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        ResetInputs();
+    } else {
+        JOptionPane.showMessageDialog(null, "Update failed!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
     
     
     public String saveImageToFolder(File sourceFile, String uniqueName, String extension) {

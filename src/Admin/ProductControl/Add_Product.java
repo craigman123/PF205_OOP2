@@ -13,6 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -63,11 +66,11 @@ public class Add_Product extends javax.swing.JInternalFrame {
                 if (value != null) {
                     String text = value.toString();
                     switch (text) {
-                        case "Active": c.setForeground(Color.GREEN); break;
-                        case "Inactive": c.setForeground(Color.GRAY); break;
-                        case "Pending": c.setForeground(Color.ORANGE); break;
-                        case "Suspended": c.setForeground(Color.RED); break;
-                        case "Sold Out": c.setForeground(Color.MAGENTA); break;
+                        case "Active": c.setForeground(Color.decode("#00A11F")); break;
+                        case "Inactive": c.setForeground(Color.decode("#858585")); break;
+                        case "Pending": c.setForeground(Color.decode("#C96C00")); break;
+                        case "Suspended": c.setForeground(Color.decode("#A30000")); break;
+                        case "Sold Out": c.setForeground(Color.decode("#720096")); break;
                         case "Out of Stock": c.setBackground(new Color(255, 182, 193)); break;
                         case "Archived": c.setBackground(new Color(200, 200, 200)); break;
                         case "Discontinued": c.setBackground(new Color(139, 0, 0));
@@ -95,9 +98,9 @@ public class Add_Product extends javax.swing.JInternalFrame {
                 if (value != null) {
                     String text = value.toString();
                     switch (text) {
-                        case "Pistol": c.setForeground(Color.GREEN); break;
+                        case "Pistol": c.setForeground(Color.decode("#009667")); break;
                         case "Rifle": c.setForeground(new Color(102,102,0)); break;
-                        case "Sniper Rifle": c.setForeground(Color.ORANGE); break;
+                        case "Sniper Rifle": c.setForeground(Color.decode("#965000")); break;
                         case "Shotgun": c.setForeground(Color.RED); break;
                         case "Sub Machine Gun": c.setForeground(Color.MAGENTA); break;
                         case "Machine Gun": c.setForeground(Color.BLUE); break;
@@ -125,11 +128,11 @@ public class Add_Product extends javax.swing.JInternalFrame {
                     String text = value.toString();
                     switch (text) {
                         case "Common": c.setForeground(Color.GRAY); break;
-                        case "Uncommon": c.setForeground(Color.GREEN); break;
-                        case "Rare": c.setForeground(Color.BLUE); break;
-                        case "Exquisite": c.setForeground(Color.CYAN); break;
-                        case "Unique": c.setForeground(Color.decode("#E6E6FA")); break;
-                        case "Collectors Choice": c.setForeground(Color.decode("#FFD700")); break;
+                        case "Uncommon": c.setForeground(Color.decode("#539600")); break;
+                        case "Rare": c.setForeground(Color.decode("#005C80")); break;
+                        case "Exquisite": c.setForeground(Color.decode("#008075")); break;
+                        case "Unique": c.setForeground(Color.decode("#640080")); break;
+                        case "Collectors Choice": c.setForeground(Color.decode("#805100")); break;
                         case "Antique": c.setForeground(Color.RED); break;
                         default: c.setForeground(Color.BLACK);
                     }
@@ -261,13 +264,17 @@ public class Add_Product extends javax.swing.JInternalFrame {
         
         java.util.Map<String, Object> user = result.get(0);
         String getAddedBy = user.get("user_name").toString();
-
+        
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String date = now.format(formatter);
+    
         String sql = "INSERT INTO products(prod_name, prod_category, prod_price, prod_rarity,"
-                + " prod_descript, prod_stock, prod_addedBy, prod_status, prod_image) VALUES(?,?,?,?,?,?,?,?,?)";
+                + " prod_descript, prod_stock, prod_addedBy, prod_status, prod_image, date_added) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        int prodNewID = conf.addRecordAndReturnId(sql, Prname, cat, cash, rare, descrip, stock, getAddedBy, stat, finalFileName, date);
         
-        
-        
-        conf.addRecordAndReturnId(sql, Prname, cat, cash, rare, descrip, stock, getAddedBy, stat, finalFileName);
+        String queryNow = "INSERT INTO logs(prod_id, user_id, dateTime, log_action) VALUES(?,?,?,?)";
+        conf.addRecordAndReturnId(queryNow, prodNewID, id, date, "Create");
         
         ResetInputs();
         
@@ -649,12 +656,12 @@ public class Add_Product extends javax.swing.JInternalFrame {
                                 .addGap(146, 146, 146)
                                 .addComponent(jLabel6))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(imageUpload, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(

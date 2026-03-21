@@ -5,6 +5,8 @@
  */
 package User.Market;
 
+import Profiles.session;
+import User.Cart.Cart_config;
 import User.User_config;
 import configuration.animation;
 import java.awt.Color;
@@ -41,6 +43,7 @@ public class Order extends javax.swing.JInternalFrame {
         StockLeft();
         ShowDue();
         updateTotal();
+        CheckToPrefillLocation();
     }
     
     private int stock;
@@ -242,24 +245,103 @@ public class Order extends javax.swing.JInternalFrame {
     }
     
     public void SendInputs() {
+        String specs = spec.getText();
+        
+        if(specs.isEmpty() || specs.equals("Specific Info . . .")){
+            specs = "none";
+        }
+        
         String deliveryInfo = name1.getText().trim() + ", "
             + barangay.getText().trim() + ", "
             + city.getText().trim() + ", "
             + province.getText().trim() + ", "
             + region.getText().trim() + ", "
             + comboCountry.getSelectedItem() + ", "
-            + zipCode.getText().trim();
+            + zipCode.getText().trim() + ", "
+            + specs;
 
         // Safely parse due
         String dueText = due.getText().replaceAll("[^0-9.]", "");
         float Due = Float.parseFloat(dueText);
+        
+        java.util.List<String> additionalsList = new java.util.ArrayList<>();
+        
+        if (mega.isSelected()) {
+            additionalsList.add("Mega");
+        } else if (fast.isSelected()) {
+            additionalsList.add("Fast");
+        } else if (ultra.isSelected()) {
+            additionalsList.add("Ultra");
+        }
+
+        if (ppc.isSelected()) {
+            additionalsList.add("PPC");
+        }
+
+        if (warranty.isSelected()) {
+            additionalsList.add("Warranty");
+        }
+        
+        String[] additionals = additionalsList.toArray(new String[0]);
 
         // Create payment frame
-        Payment pay = new Payment(id, pane, deliveryInfo, label.getText(), spec.getText(), (int) totalFee, Due);
+        Payment pay = new Payment(id, pane, deliveryInfo, label.getText(), spec.getText(), (int) totalFee, Due, additionals);
         
         
         pay.CenterFrame();
     }
+    
+    public void CheckToPrefillLocation() {
+    Cart_config config = new Cart_config();
+    config conf = new config();
+    session see = new session();
+
+    if (config.getCity() != null && !config.getCity().isEmpty() &&
+        config.getProvince() != null && !config.getProvince().isEmpty() &&
+        config.getCountry() != null && !config.getCountry().isEmpty() &&
+        config.getRegion() != null && !config.getRegion().isEmpty() &&
+        config.getBrg() != null && !config.getBrg().isEmpty()) {
+
+        comboCountry.setSelectedItem(config.getCountry());
+        name1.setText(config.getFinalname());
+        province.setText(config.getProvince());
+        region.setText(config.getRegion());
+        city.setText(config.getCity());
+        zipCode.setText(String.valueOf(config.getZip()));
+        barangay.setText(config.getBrg());
+        spec.setText(config.getSpecificInf());
+
+        return;
+    }
+
+    String qry = "SELECT * FROM userOrders WHERE user_id = ?";
+    java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, see.GetID());
+
+    if (!result.isEmpty()) {
+        for (java.util.Map<String, Object> previousOrders : result) {
+            String rawAddress = previousOrders.get("order_shippingAddress").toString();
+            String[] parts = rawAddress.split(",");
+
+            for (int i = 0; i < parts.length; i++) {
+                parts[i] = parts[i].trim();
+            }
+
+            // ✅ Safe assignment (check length first)
+            if (parts.length >= 8) {
+                name1.setText(parts[0]);
+                barangay.setText(parts[1]);
+                city.setText(parts[2]);
+                province.setText(parts[3]);
+                region.setText(parts[4]);
+                comboCountry.setSelectedItem(parts[5]);
+                zipCode.setText(parts[6]);
+                spec.setText(parts[7]);
+            }
+        }
+    } else {
+        System.out.println("No previous Order Details");
+    }
+}
     
     /**
      * This method is called from within the constructor to initialize the form.

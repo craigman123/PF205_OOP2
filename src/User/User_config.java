@@ -250,6 +250,7 @@ public class User_config {
     public static void DisplayProdStatus(JComboBox<String> statusCombo){
         statusCombo.removeAllItems();
         
+        statusCombo.addItem("All");
         statusCombo.addItem("Active");
         statusCombo.addItem("Inactive");
         statusCombo.addItem("Pending");

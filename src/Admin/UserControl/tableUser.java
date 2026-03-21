@@ -43,41 +43,78 @@ public class tableUser extends javax.swing.JInternalFrame {
     }
     
     public final void DispTable() {
-    config conf = new config();
+        config conf = new config();
 
-    String status = stat != null ? stat.trim() : "All";
-    String text = txt != null ? txt.trim() : "";
+        String status = (stat != null) ? stat.trim() : "All";
+        String text = (txt != null) ? txt.trim() : "";
 
-    System.out.println("Status: " + status);
-    System.out.println("Text: " + text);
+        System.out.println("Status: " + status);
+        System.out.println("Text: " + text);
 
-    if (status.equals("All") && (text.isEmpty() || text.equalsIgnoreCase("Search Users . . ."))) {
-        String qry = "SELECT * FROM users ORDER BY user_name";
-        conf.displayData(qry, table);
-        return;
-    }
+        boolean isEmptySearch = text.isEmpty() || text.equalsIgnoreCase("Search Users . . .");
 
-    try {
-        int id = Integer.parseInt(text);
-
-        if (status.equals("All")) {
-            String qry = "SELECT * FROM users ORDER BY CASE WHEN user_id = ? THEN 0 ELSE 1 END, user_name";
-            conf.displayData(qry, table, id);
-        } else {
-            String qry = "SELECT * FROM users WHERE user_access = ? ORDER BY CASE WHEN user_id = ? THEN 0 ELSE 1 END, user_name";
-            conf.displayData(qry, table, status, id);
+        // 🔹 No search input
+        if (isEmptySearch) {
+            if (status.equals("All")) {
+                String qry = "SELECT * FROM users ORDER BY user_name";
+                conf.displayData(qry, table);
+            } else {
+                String qry = "SELECT * FROM users WHERE user_access = ? ORDER BY user_name";
+                conf.displayData(qry, table, status);
+            }
+            return;
         }
 
-    } catch (NumberFormatException e) {
-        if (status.equals("All")) {
-            String qry = "SELECT * FROM users WHERE user_name LIKE ? ORDER BY user_name";
-            conf.displayData(qry, table, "%" + text + "%");
-        } else {
-            String qry = "SELECT * FROM users WHERE user_access = ? AND user_name LIKE ? ORDER BY user_name";
-            conf.displayData(qry, table, status, "%" + text + "%");
+        try {
+            int id = Integer.parseInt(text);
+
+            // 🔹 PRIORITIZE ID MATCH
+            if (status.equals("All")) {
+                String qry =
+                    "SELECT * FROM users " +
+                    "ORDER BY CASE " +
+                    "WHEN user_id = ? THEN 0 " +
+                    "ELSE 1 END, user_name";
+
+                conf.displayData(qry, table, id);
+
+            } else {
+                String qry =
+                    "SELECT * FROM users " +
+                    "WHERE user_access = ? " +
+                    "ORDER BY CASE " +
+                    "WHEN user_id = ? THEN 0 " +
+                    "ELSE 1 END, user_name";
+
+                conf.displayData(qry, table, status, id);
+            }
+
+        } catch (NumberFormatException e) {
+
+            // 🔹 PRIORITIZE NAME MATCH (LIKE at top, but still show all)
+            if (status.equals("All")) {
+
+                String qry =
+                    "SELECT * FROM users " +
+                    "ORDER BY CASE " +
+                    "WHEN user_name LIKE ? THEN 0 " +
+                    "ELSE 1 END, user_name";
+
+                conf.displayData(qry, table, "%" + text + "%");
+
+            } else {
+
+                String qry =
+                    "SELECT * FROM users " +
+                    "WHERE user_access = ? " +
+                    "ORDER BY CASE " +
+                    "WHEN user_name LIKE ? THEN 0 " +
+                    "ELSE 1 END, user_name";
+
+                conf.displayData(qry, table, status, "%" + text + "%");
+            }
         }
     }
-}
 
 
     /**

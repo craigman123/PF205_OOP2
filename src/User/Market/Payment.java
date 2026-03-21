@@ -10,8 +10,10 @@ import User.User_config;
 import configuration.config;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.*;
@@ -32,10 +34,11 @@ public final class Payment extends javax.swing.JInternalFrame {
     private final String specInfo;
     private final int shipFee;
     private final float Total;
-    
+    private String extra[];
+
     Border grayBorder = BorderFactory.createLineBorder(Color.GRAY, 2);
-    
-    public Payment(int id, JDesktopPane pane, String address, String quantity, String SpecificInfo, int shippingFee, float totalPay) {
+
+    public Payment(int id, JDesktopPane pane, String address, String quantity, String SpecificInfo, int shippingFee, float totalPay, String additionals[]) {
         this.ProdId = id;
         this.panel = pane;
         this.Address = address;
@@ -43,99 +46,104 @@ public final class Payment extends javax.swing.JInternalFrame {
         this.specInfo = SpecificInfo;
         this.shipFee = shippingFee;
         this.Total = totalPay;
-        
+        this.extra = additionals;
+
         initComponents();
         StyleFrame();
-        SwingUtilities.invokeLater(()-> { 
+        SwingUtilities.invokeLater(() -> {
             ToggleAPayBtn();
         });
         GroupBtn();
         CenterFrame();
         DisplayDueandLocation();
-    } 
-    
-    private float[] values;
-    
-    public void DisplayDueandLocation(){
-
-    StringBuilder location = new StringBuilder();
-    config conf = new config();
-
-    String qry = "SELECT * FROM products WHERE prod_id = ?";
-    java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, ProdId); 
-
-    if(!result.isEmpty()){
-
-        java.util.Map<String, Object> prod = result.get(0);
-
-        String name = prod.get("prod_name").toString();
-        String cat = prod.get("prod_category").toString();
-        String cash = prod.get("prod_price").toString();
-        String stat = prod.get("prod_status").toString();
-        String seller = prod.get("prod_addedBy").toString();
-
-        // ================= LOCATION =================
-        location.append("<html>");
-        location.append("Location:<br>");
-        location.append(Address).append("<br><br>");
-        location.append("Specific Location:<br>");
-        location.append(specInfo);
-        location.append("</html>");
-
-        address.setText(location.toString());
-
-        // ================= PRODUCT INFO =================
-        StringBuilder due = new StringBuilder();
-        due.append("<html>");
-        due.append("Product Info: <br>");
-        due.append("Name: ").append(name).append("<br>");
-        due.append("Category: ").append(cat).append("<br>");
-        due.append("Status: ").append(stat).append("<br>");
-        due.append("Seller: ").append(seller).append("<br><br>");
-        due.append("Payment Information:<br>");
-        due.append("Product Price: ").append(cash).append("<br>");
-        due.append("Quantity: ").append(quan).append("<br>");
-        due.append("Shipping Fee: ").append(shipFee).append("<br>");
-        due.append("</html>");
-
-        PayInfo.setText(due.toString());
-
-        // ================= CALCULATIONS =================
-
-        float installmentPrice = 0;
-
-        if(one.isSelected()) installmentPrice = values[0];
-        else if(two.isSelected()) installmentPrice = values[1];
-        else if(three.isSelected()) installmentPrice = values[2];
-        else if(four.isSelected()) installmentPrice = values[3];
-        else if(five.isSelected()) installmentPrice = values[4];
-        else if(six.isSelected()) installmentPrice = values[5];
-
-        int quantity = Integer.parseInt(quan);
-
-        float installmentTotal = installmentPrice * quantity + shipFee;
-
-        // ================= DISPLAY LOGIC =================
-
-        if(AP.isSelected()){
-            // AP → show Due Now (installment total)
-            DueNow.setText("P " + String.format("%.2f", installmentTotal));
-        } 
-        else if(COD.isSelected() || OP.isSelected()){
-            // COD or OP → show full total
-            DueNow.setText("P " + String.format("%.2f", Total));
-        }
-
-        // Always show full total below
-        FullDue.setText("P " + String.format("%.2f", Total));
     }
-}
-    
+
+    private float[] values;
+
+    public void DisplayDueandLocation() {
+
+        StringBuilder location = new StringBuilder();
+        config conf = new config();
+
+        String qry = "SELECT * FROM products WHERE prod_id = ?";
+        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, ProdId);
+
+        if (!result.isEmpty()) {
+
+            java.util.Map<String, Object> prod = result.get(0);
+
+            String name = prod.get("prod_name").toString();
+            String cat = prod.get("prod_category").toString();
+            String cash = prod.get("prod_price").toString();
+            String stat = prod.get("prod_status").toString();
+            String seller = prod.get("prod_addedBy").toString();
+
+            // ================= LOCATION =================
+            location.append("<html>");
+            location.append("Location:<br>");
+            location.append(Address).append("<br><br>");
+            location.append("Specific Location:<br>");
+            location.append(specInfo);
+            location.append("</html>");
+
+            address.setText(location.toString());
+
+            // ================= PRODUCT INFO =================
+            StringBuilder due = new StringBuilder();
+            due.append("<html>");
+            due.append("Product Info: <br>");
+            due.append("Name: ").append(name).append("<br>");
+            due.append("Category: ").append(cat).append("<br>");
+            due.append("Status: ").append(stat).append("<br>");
+            due.append("Seller: ").append(seller).append("<br><br>");
+            due.append("Payment Information:<br>");
+            due.append("Product Price: ").append(cash).append("<br>");
+            due.append("Quantity: ").append(quan).append("<br>");
+            due.append("Shipping Fee: ").append(shipFee).append("<br>");
+            due.append("</html>");
+
+            PayInfo.setText(due.toString());
+
+            // ================= CALCULATIONS =================
+            float installmentPrice = 0;
+
+            if (one.isSelected()) {
+                installmentPrice = values[0];
+            } else if (two.isSelected()) {
+                installmentPrice = values[1];
+            } else if (three.isSelected()) {
+                installmentPrice = values[2];
+            } else if (four.isSelected()) {
+                installmentPrice = values[3];
+            } else if (five.isSelected()) {
+                installmentPrice = values[4];
+            } else if (six.isSelected()) {
+                installmentPrice = values[5];
+            }
+
+            int quantity = Integer.parseInt(quan);
+
+            float installmentTotal = installmentPrice * quantity + shipFee;
+
+            // ================= DISPLAY LOGIC =================
+            if (AP.isSelected()) {
+                // AP → show Due Now (installment total)
+                DueNow.setText("P " + String.format("%.2f", installmentTotal));
+            } else if (COD.isSelected() || OP.isSelected()) {
+                // COD or OP → show full total
+                DueNow.setText("P " + String.format("%.2f", Total));
+            }
+
+            // Always show full total below
+            FullDue.setText("P " + String.format("%.2f", Total));
+        }
+    }
+
     public void CenterFrame() {
-        this.pack(); 
+        this.pack();
         Dimension desktopSize = panel.getSize();
         Dimension frameSize = this.getSize();
-        
+
         System.out.println("D: " + desktopSize + ",F: " + frameSize);
 
         int x = (desktopSize.width - frameSize.width) / 2;
@@ -149,104 +157,100 @@ public final class Payment extends javax.swing.JInternalFrame {
 
         this.setVisible(true);
     }
-    
+
     public void OpenCardField() {
 
-    boolean codSelected = COD.isSelected();
-    boolean opSelected = OP.isSelected();
-    boolean apSelected = AP.isSelected();
+        boolean codSelected = COD.isSelected();
+        boolean opSelected = OP.isSelected();
+        boolean apSelected = AP.isSelected();
 
-    // ================= COD SELECTED =================
-    if (codSelected) {
+        // ================= COD SELECTED =================
+        if (codSelected) {
 
-        // Disable all banks
-        landBank.setEnabled(false);
-        BDO.setEnabled(false);
-        BPI.setEnabled(false);
-        Gcash.setEnabled(false);
-        UnionBank.setEnabled(false);
-        metroBank.setEnabled(false);
+            // Disable all banks
+            landBank.setEnabled(false);
+            BDO.setEnabled(false);
+            BPI.setEnabled(false);
+            Gcash.setEnabled(false);
+            UnionBank.setEnabled(false);
+            metroBank.setEnabled(false);
 
-        // Disable installment options
-        one.setEnabled(false);
-        two.setEnabled(false);
-        three.setEnabled(false);
-        four.setEnabled(false);
-        five.setEnabled(false);
-        six.setEnabled(false);
+            // Disable installment options
+            one.setEnabled(false);
+            two.setEnabled(false);
+            three.setEnabled(false);
+            four.setEnabled(false);
+            five.setEnabled(false);
+            six.setEnabled(false);
 
-        // Disable card number
-        cardNum.setEnabled(false);
-        cardNum.setText("Card Number");
-        cardNum.setForeground(new Color(153,153,153));
+            // Disable card number
+            cardNum.setEnabled(false);
+            cardNum.setText("Card Number");
+            cardNum.setForeground(new Color(153, 153, 153));
 
+        } // ================= ONLINE PAYMENT SELECTED =================
+        else if (apSelected) {
+
+            // Enable banks
+            landBank.setEnabled(true);
+            BDO.setEnabled(true);
+            BPI.setEnabled(true);
+            Gcash.setEnabled(true);
+            UnionBank.setEnabled(true);
+            metroBank.setEnabled(true);
+
+            // Enable installment options
+            one.setEnabled(true);
+            two.setEnabled(true);
+            three.setEnabled(true);
+            four.setEnabled(true);
+            five.setEnabled(true);
+            six.setEnabled(true);
+
+            // Enable card number
+            cardNum.setEnabled(true);
+            cardNum.setText("");
+            cardNum.setForeground(Color.BLACK);
+        } // ================= AP SELECTED =================
+        else if (opSelected) {
+
+            // Example: Enable banks but disable installments
+            landBank.setEnabled(true);
+            BDO.setEnabled(true);
+            BPI.setEnabled(true);
+            Gcash.setEnabled(true);
+            UnionBank.setEnabled(true);
+            metroBank.setEnabled(true);
+
+            one.setEnabled(false);
+            two.setEnabled(false);
+            three.setEnabled(false);
+            four.setEnabled(false);
+            five.setEnabled(false);
+            six.setEnabled(false);
+
+            cardNum.setEnabled(true);
+            cardNum.setText("");
+            cardNum.setForeground(Color.BLACK);
+        }
     }
 
-    // ================= ONLINE PAYMENT SELECTED =================
-    else if (apSelected) {
-
-        // Enable banks
-        landBank.setEnabled(true);
-        BDO.setEnabled(true);
-        BPI.setEnabled(true);
-        Gcash.setEnabled(true);
-        UnionBank.setEnabled(true);
-        metroBank.setEnabled(true);
-
-        // Enable installment options
-        one.setEnabled(true);
-        two.setEnabled(true);
-        three.setEnabled(true);
-        four.setEnabled(true);
-        five.setEnabled(true);
-        six.setEnabled(true);
-
-        // Enable card number
-        cardNum.setEnabled(true);
-        cardNum.setText("");
-        cardNum.setForeground(Color.BLACK);
-    }
-
-    // ================= AP SELECTED =================
-    else if (opSelected) {
-
-        // Example: Enable banks but disable installments
-        landBank.setEnabled(true);
-        BDO.setEnabled(true);
-        BPI.setEnabled(true);
-        Gcash.setEnabled(true);
-        UnionBank.setEnabled(true);
-        metroBank.setEnabled(true);
-
-        one.setEnabled(false);
-        two.setEnabled(false);
-        three.setEnabled(false);
-        four.setEnabled(false);
-        five.setEnabled(false);
-        six.setEnabled(false);
-
-        cardNum.setEnabled(true);
-        cardNum.setText("");
-        cardNum.setForeground(Color.BLACK);
-    }
-}
-    
-    public final void GroupBtn(){
+    public final void GroupBtn() {
         ButtonGroup groupBank = new ButtonGroup();
         ButtonGroup groupAPay = new ButtonGroup();
         ButtonGroup groupPayMethod = new ButtonGroup();
-        
+
         groupBank.add(landBank);
         groupBank.add(BDO);
         groupBank.add(Gcash);
         groupBank.add(UnionBank);
         groupBank.add(metroBank);
         groupBank.add(BPI);
-        
+
         groupAPay.add(OP);
         groupAPay.add(AP);
         groupAPay.add(COD);
-        
+
         groupPayMethod.add(one);
         groupPayMethod.add(two);
         groupPayMethod.add(three);
@@ -254,15 +258,15 @@ public final class Payment extends javax.swing.JInternalFrame {
         groupPayMethod.add(five);
         groupPayMethod.add(six);
     }
-    
-    public void ToggleAPayBtn(){
+
+    public void ToggleAPayBtn() {
         one.setText("2 m x Install");
         two.setText("3 m x Install");
         three.setText("4 m x Install");
         four.setText("5 m x Install");
         five.setText("6 m x Install");
         six.setText("7 m x Install");
-        
+
         one.setEnabled(false);
         two.setEnabled(false);
         three.setEnabled(false);
@@ -270,29 +274,29 @@ public final class Payment extends javax.swing.JInternalFrame {
         five.setEnabled(false);
         six.setEnabled(false);
     }
-    
-    public final void setAPayLater(){
+
+    public final void setAPayLater() {
         config conf = new config();
-        
+
         String qry = "SELECT * FROM products WHERE prod_id = ?";
-        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, ProdId); 
-        
-        if(!result.isEmpty()){
+        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, ProdId);
+
+        if (!result.isEmpty()) {
             java.util.Map<String, Object> prod = result.get(0);
             String price = prod.get("prod_price").toString();
             System.out.println(price);
-            
+
             int pr = Integer.parseInt(price);
-            
+
             float value1 = pr / 2;
             float value2 = pr / 3;
             float value3 = pr / 4;
             float value4 = pr / 5;
             float value5 = pr / 6;
             float value6 = pr / 7;
-            
+
             this.values = new float[]{value1, value2, value3, value4, value5, value6};
-            
+
             one.setText(String.format("2 m x %.2f", value1));
             two.setText(String.format("3 m x %.2f", value2));
             three.setText(String.format("4 m x %.2f", value3));
@@ -301,15 +305,15 @@ public final class Payment extends javax.swing.JInternalFrame {
             six.setText(String.format("7 m x %.2f", value6));
         }
     }
-    
-    public final void StyleFrame(){
+
+    public final void StyleFrame() {
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        javax.swing.plaf.basic.BasicInternalFrameUI ui =
-            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        javax.swing.plaf.basic.BasicInternalFrameUI ui
+                = (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
     }
-    
+
     public boolean validation() {
         // Check AP/OP/COD selection
         if (!AP.isSelected() && !OP.isSelected() && !COD.isSelected()) {
@@ -319,16 +323,16 @@ public final class Payment extends javax.swing.JInternalFrame {
 
         // Check installments if AP is selected
         if (AP.isSelected()) {
-            if (!one.isSelected() && !two.isSelected() && !three.isSelected() &&
-                !four.isSelected() && !five.isSelected() && !six.isSelected()) {
+            if (!one.isSelected() && !two.isSelected() && !three.isSelected()
+                    && !four.isSelected() && !five.isSelected() && !six.isSelected()) {
                 JOptionPane.showMessageDialog(this, "Please select an installment plan for APay.", "Validation Error", JOptionPane.WARNING_MESSAGE);
                 return false;
             }
         }
 
         // Check bank selection if not COD
-        if (!COD.isSelected() && !landBank.isSelected() && !BDO.isSelected() &&
-            !BPI.isSelected() && !UnionBank.isSelected() && !metroBank.isSelected() && !Gcash.isSelected()) {
+        if (!COD.isSelected() && !landBank.isSelected() && !BDO.isSelected()
+                && !BPI.isSelected() && !UnionBank.isSelected() && !metroBank.isSelected() && !Gcash.isSelected()) {
             JOptionPane.showMessageDialog(this, "Please select a bank or digital wallet.", "Validation Error", JOptionPane.WARNING_MESSAGE);
             return false;
         }
@@ -352,7 +356,7 @@ public final class Payment extends javax.swing.JInternalFrame {
         return true; // All checks passed
     }
 
-    public void SendInputs(){
+    public void SendInputs() {
         config conf = new config();
         session see = new session();
 
@@ -369,41 +373,62 @@ public final class Payment extends javax.swing.JInternalFrame {
 
         String paymentMethod = "", card = "";
 
-        if(COD.isSelected()){
+        if (COD.isSelected()) {
             paymentMethod = "Cash on Delivery";
             card = "none";
-        }else if(OP.isSelected()){
+        } else if (OP.isSelected()) {
             paymentMethod = "Online Pay";
             card = cardNum.getText();
-        }else if(AP.isSelected()){
+        } else if (AP.isSelected()) {
             paymentMethod = "Apay-Later";
             card = cardNum.getText();
         }
 
         qry = "INSERT INTO userOrders(user_id, prod_id, order_status, order_prod, order_quantity, order_totalPrice,"
-                + " order_shippingAddress, order_paymentMethod, order_date) VALUES(?,?,?,?,?,?,?,?,?)";
-        conf.addRecordAndReturnId(qry, see.GetID(), ProdId, "Pending", name, quan, Total, Address, paymentMethod, formattedNow);
+                + " order_shippingAddress, order_paymentMethod, order_date, order_additionals, order_visibility) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        conf.addRecordAndReturnId(qry, see.GetID(), ProdId, "Pending", name, quan, Total, Address, paymentMethod, formattedNow, Arrays.toString(extra), "true");
 
-        qry = "INSERT INTO logs(user_id, prod_id, time, log_action) VALUES(?,?,?,?) ";
+        qry = "SELECT * FROM products WHERE prod_id = ?";
+        java.util.List<java.util.Map<String, Object>> prodResult = conf.fetchRecords(qry, ProdId);
+
+        if (!prodResult.isEmpty()) {
+            java.util.Map<String, Object> user = prodResult.get(0);
+            int prodGetStock = ((Number) user.get("prod_stock")).intValue();
+
+            if (Integer.parseInt(quan) == prodGetStock) {
+                qry = "UPDATE products SET prod_stock = ?, prod_status = ? WHERE prod_id = ?";
+                conf.updateRecord(qry, 0, "Sold Out", ProdId);
+
+            } else {
+                int calcStock = prodGetStock - Integer.parseInt(quan);
+                qry = "UPDATE products SET prod_stock = ? WHERE prod_id = ?";
+                conf.updateRecord(qry, calcStock, ProdId);
+            }
+        }
+
+        qry = "INSERT INTO logs(user_id, prod_id, dateTime, log_action) VALUES(?,?,?,?) ";
         conf.addRecordAndReturnId(qry, see.GetID(), ProdId, formattedNow, "Bought A Product");
+
+        String queryNow = "INSERT INTO notifications(prod_id, user_id, n_content, date) VALUES (?, ?, ?, ?)";
+        conf.addRecordAndReturnId(queryNow, ProdId, see.GetID(), "Purchased Product:", formattedNow);
 
         qry = "INSERT INTO creditCards(user_id, pay_method, card_num) VALUES(?,?,?)";
         conf.addRecordAndReturnId(qry, see.GetID(), paymentMethod, card);
 
         JDesktopPane desktopPane = User_config.GetPane();
-        if(desktopPane != null){
-            for(JInternalFrame f : desktopPane.getAllFrames()){
-                if(f.isVisible()){
+        if (desktopPane != null) {
+            for (JInternalFrame f : desktopPane.getAllFrames()) {
+                if (f.isVisible()) {
                     f.dispose();
                 }
             }
         }
 
         JOptionPane.showMessageDialog(
-            null,
-            "Product Succesfully Bought!",
-            "Succes",
-            JOptionPane.INFORMATION_MESSAGE
+                null,
+                "Product Succesfully Bought!",
+                "Succes",
+                JOptionPane.INFORMATION_MESSAGE
         );
     }
 
@@ -775,9 +800,7 @@ public final class Payment extends javax.swing.JInternalFrame {
         address.setOpaque(true);
         jPanel1.add(address, new org.netbeans.lib.awtextra.AbsoluteConstraints(311, 230, 300, 400));
 
-        cardNum.setEditable(false);
         cardNum.setBackground(new java.awt.Color(204, 204, 204));
-        cardNum.setForeground(new java.awt.Color(204, 204, 204));
         cardNum.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 cardNumKeyTyped(evt);
@@ -791,7 +814,7 @@ public final class Payment extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void APActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_APActionPerformed
-        if(AP.isSelected()){
+        if (AP.isSelected()) {
             setAPayLater();
             one.setEnabled(true);
             two.setEnabled(true);
@@ -799,9 +822,9 @@ public final class Payment extends javax.swing.JInternalFrame {
             four.setEnabled(true);
             five.setEnabled(true);
             six.setEnabled(true);
-        }else{
+        } else {
             ToggleAPayBtn();
-            
+
         }// TODO add your handling code here:
     }//GEN-LAST:event_APActionPerformed
 
@@ -810,7 +833,7 @@ public final class Payment extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_twoActionPerformed
 
     private void OPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OPActionPerformed
-        if(OP.isSelected()){
+        if (OP.isSelected()) {
             one.setEnabled(false);
             two.setEnabled(false);
             three.setEnabled(false);
@@ -821,7 +844,7 @@ public final class Payment extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_OPActionPerformed
 
     private void CODMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CODMouseClicked
-        OpenCardField(); 
+        OpenCardField();
         DisplayDueandLocation();// TODO add your handling code here:
     }//GEN-LAST:event_CODMouseClicked
 
@@ -850,8 +873,8 @@ public final class Payment extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_sixMouseClicked
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        
-        if(validation()){
+
+        if (validation()) {
             SendInputs();
         }// TODO add your handling code here:
     }//GEN-LAST:event_jLabel7MouseClicked
@@ -861,24 +884,24 @@ public final class Payment extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_CODActionPerformed
 
     private void OPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OPMouseClicked
-        OpenCardField(); 
+        OpenCardField();
         DisplayDueandLocation();// TODO add your handling code here:
     }//GEN-LAST:event_OPMouseClicked
 
     private void APMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_APMouseClicked
-        OpenCardField();  
+        OpenCardField();
         DisplayDueandLocation();// TODO add your handling code here:
     }//GEN-LAST:event_APMouseClicked
 
     private void cardNumKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cardNumKeyTyped
         char c = evt.getKeyChar();
-            String text = cardNum.getText();
+        String text = cardNum.getText();
 
-            // If not a digit OR length >= 16, ignore the input
-            if (!Character.isDigit(c) || text.length() >= 16) {
-                evt.consume();
-            }
-                // TODO add your handling code here:
+        // If not a digit OR length >= 16, ignore the input
+        if (!Character.isDigit(c) || text.length() >= 16) {
+            evt.consume();
+        }
+        // TODO add your handling code here:
     }//GEN-LAST:event_cardNumKeyTyped
 
 

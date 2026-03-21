@@ -5,12 +5,15 @@
  */
 package configuration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import net.proteanit.sql.DbUtils;
 import java.security.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -257,6 +260,32 @@ public class config {
         }
 
         return sb.toString();
+    }
+   
+    public List<ProductPurchase> getUserPurchases(String query, Object... params) {
+        List<ProductPurchase> purchases = new ArrayList<>();
+
+        try (Connection conn = connectDB();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            // Set parameters
+            for (int i = 0; i < params.length; i++) {
+                pstmt.setObject(i + 1, params[i]);
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String product = rs.getString("product_name");
+                    java.sql.Timestamp ts = rs.getTimestamp("purchase_time");
+                    purchases.add(new ProductPurchase(product, ts));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching purchases: " + e.getMessage());
+        }
+
+        return purchases;
     }
 
 }

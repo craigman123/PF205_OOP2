@@ -8,6 +8,9 @@ package User;
 import Profiles.session;
 import configuration.config;
 import java.awt.Color;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
 import main.LoginRegister;
 
@@ -162,6 +165,16 @@ public class User_Permission extends javax.swing.JFrame {
                 System.out.println("Account Created: ");
                 String sql = "INSERT INTO users (user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
                 int id = conf.addRecordAndReturnId(sql, GetName(), GetBadge(), GetPass(), "User", "Enable");
+                
+                LocalDateTime now = LocalDateTime.now();
+                Timestamp date = Timestamp.valueOf(now);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String formattedDate = now.format(formatter);
+                String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
+                conf.addRecordAndReturnId(queryNow, id, "Successfully Registered", formattedDate);
+                
+                queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+                conf.addRecordAndReturnId(queryNow, id, formattedDate, "Register");
                 
                 session.SaveLogIn(id);
                 

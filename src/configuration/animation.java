@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.event.WindowAdapter;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -472,6 +473,84 @@ public void BuyTimeLoaddingFrame() {
         });
 
         blinkTimer.start();
+    }
+    
+    public JPanel scalePanel(JPanel panel, double scale) {
+        return new ScaledPanel(panel, scale);
+    }
+
+    // Inner class for scaling
+    public static class ScaledPanel extends JPanel {
+        private final JPanel innerPanel;
+        private double scale;
+
+        public ScaledPanel(JPanel panel, double scale) {
+            this.innerPanel = panel;
+            this.scale = scale;
+
+            setLayout(new BorderLayout());
+            add(innerPanel, BorderLayout.CENTER);
+            setOpaque(false);
+        }
+
+        public void setScale(double scale) {
+            this.scale = scale;
+            revalidate();
+            repaint();
+        }
+
+        public double getScale() {
+            return scale;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            int w = getWidth();
+            int h = getHeight();
+            double tx = (w - w * scale) / 2.0;
+            double ty = (h - h * scale) / 2.0;
+            AffineTransform at = AffineTransform.getTranslateInstance(tx, ty);
+            at.scale(scale, scale);
+            g2.setTransform(at);
+
+            super.paintComponent(g2);
+            g2.dispose();
+        }
+    }
+
+     public static void transitionBackground(JComponent component, Color start, Color end, int duration) {
+        int frames = 30; //>> pang smooth dri adjust
+        int delay = duration / frames;
+
+        Timer timer = new Timer(delay, null);
+
+        timer.addActionListener(e -> {
+            float progress = (float) ((Timer)e.getSource()).getDelay() * ((Timer)e.getSource()).getActionListeners().length;
+
+        });
+
+        final long startTime = System.currentTimeMillis();
+
+        timer.addActionListener(e -> {
+            float elapsed = System.currentTimeMillis() - startTime;
+            float fraction = Math.min(elapsed / duration, 1f);
+
+            int r = (int) (start.getRed() + fraction * (end.getRed() - start.getRed()));
+            int g = (int) (start.getGreen() + fraction * (end.getGreen() - start.getGreen()));
+            int b = (int) (start.getBlue() + fraction * (end.getBlue() - start.getBlue()));
+
+            component.setBackground(new Color(r, g, b));
+            component.repaint();
+
+            if (fraction >= 1f) {
+                ((Timer)e.getSource()).stop();
+            }
+        });
+
+        timer.start();
     }
 }
 

@@ -5,7 +5,10 @@
  */
 package Admin.ProductControl;
 
+import Profiles.session;
 import configuration.config;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
@@ -16,6 +19,7 @@ import javax.swing.JOptionPane;
 public class Remove_Productclass {
     public static void remove(){
         config conf = new config();
+        session see = new session();
         
         Object data = connector.datasender();
 
@@ -62,10 +66,14 @@ public class Remove_Productclass {
                 null,
                 "Product successfully removed.",
                 "Success",
-                JOptionPane.INFORMATION_MESSAGE
-                
-                
+                JOptionPane.INFORMATION_MESSAGE    
             );
+            
+            LocalDateTime now = LocalDateTime.now();
+            Timestamp date = Timestamp.valueOf(now);
+            String queryNow = "INSERT INTO logs(prod_id, user_id, dateTime, log_action) VALUES(?,?,?,?)";
+            conf.addRecordAndReturnId(queryNow, id, see.GetID(), date, "Update");
+            
             JDesktopPane desktop = connector.PanelSender();
             desktop.removeAll();
         } else {

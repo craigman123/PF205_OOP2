@@ -5,6 +5,8 @@
  */
 package Admin;
 
+import Admin.Logs.Logs;
+import Admin.Sales.Sales;
 import Profiles.profile;
 import Profiles.session;
 import configuration.animation;
@@ -66,16 +68,12 @@ public class AdminDashboard extends javax.swing.JFrame {
         menuGroup.add(jToggleButton2);
         menuGroup.add(jToggleButton3); 
         menuGroup.add(jToggleButton4);
-        menuGroup.add(jToggleButton5); 
-        menuGroup.add(jToggleButton6);
         menuGroup.add(jToggleButton7);
         
         animation.StyleToggleButtons(jToggleButton2); 
         animation.StyleToggleButtons(jToggleButton3); 
-        animation.StyleToggleButtons(jToggleButton4); 
-        animation.StyleToggleButtons(jToggleButton5); 
+        animation.StyleToggleButtons(jToggleButton4);  
         animation.StyleToggleButtons(jToggleButton7); 
-        animation.StyleToggleButtons(jToggleButton6); 
         
     }
     
@@ -94,12 +92,11 @@ public class AdminDashboard extends javax.swing.JFrame {
         jToggleButton2 = new javax.swing.JToggleButton();
         jToggleButton3 = new javax.swing.JToggleButton();
         jToggleButton4 = new javax.swing.JToggleButton();
-        jToggleButton5 = new javax.swing.JToggleButton();
-        jToggleButton6 = new javax.swing.JToggleButton();
         jToggleButton7 = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jDesktopPane1 = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -142,21 +139,20 @@ public class AdminDashboard extends javax.swing.JFrame {
         jPanel2.add(jToggleButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, 204, 60));
 
         jToggleButton4.setText("Sales");
-        jPanel2.add(jToggleButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 204, 60));
-
-        jToggleButton5.setText("Completed");
-        jPanel2.add(jToggleButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 204, 60));
-
-        jToggleButton6.setText("Online Pay");
-        jToggleButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton6ActionPerformed(evt);
+        jToggleButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jToggleButton4MouseClicked(evt);
             }
         });
-        jPanel2.add(jToggleButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 204, 60));
+        jPanel2.add(jToggleButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 204, 60));
 
-        jToggleButton7.setText("Settings & Privacy");
-        jPanel2.add(jToggleButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 580, 204, 60));
+        jToggleButton7.setText("Logs");
+        jToggleButton7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jToggleButton7MouseClicked(evt);
+            }
+        });
+        jPanel2.add(jToggleButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 204, 60));
 
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -176,6 +172,10 @@ public class AdminDashboard extends javax.swing.JFrame {
             }
         });
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 90, 186, 369));
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel3.setText("Admin Only");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 640, -1, -1));
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -234,10 +234,6 @@ public class AdminDashboard extends javax.swing.JFrame {
         jDesktopPane1.add(table).setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton2MouseClicked
 
-    private void jToggleButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton6ActionPerformed
-
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
       // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton2ActionPerformed
@@ -248,7 +244,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         
         int id = see.GetID();
         
-        profile prof = new profile(id, this);
+        profile prof = new profile(id, this, jDesktopPane1);
         jDesktopPane1.add(prof).setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel7MouseClicked
@@ -270,6 +266,20 @@ public class AdminDashboard extends javax.swing.JFrame {
         Mng_Product mProd = new Mng_Product();
         jDesktopPane1.add(mProd).setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton3MouseClicked
+
+    private void jToggleButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton4MouseClicked
+        jDesktopPane1.removeAll();
+        
+        Sales sale = new Sales();
+        jDesktopPane1.add(sale).setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton4MouseClicked
+
+    private void jToggleButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton7MouseClicked
+        jDesktopPane1.removeAll();
+        
+        Logs logs = new Logs();
+        jDesktopPane1.add(logs).setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton7MouseClicked
 
     /**
      * @param args the command line arguments
@@ -310,14 +320,13 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JToggleButton jToggleButton3;
     private javax.swing.JToggleButton jToggleButton4;
-    private javax.swing.JToggleButton jToggleButton5;
-    private javax.swing.JToggleButton jToggleButton6;
     private javax.swing.JToggleButton jToggleButton7;
     // End of variables declaration//GEN-END:variables
 }

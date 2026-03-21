@@ -11,6 +11,9 @@ import User.UserDashboard;
 import User.User_Permission;
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 
 /**
@@ -130,6 +133,16 @@ public class LogReg_config {
 
         String sql = "INSERT INTO users(user_name, user_hashpass, user_badge, user_access, user_ussage) VALUES (?,?,?,?,?)";
         int id = conf.addRecordAndReturnId(sql, nm, FinalPass, Finalbadge, "User", "Disable");
+        
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp date = Timestamp.valueOf(now);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = now.format(formatter);
+        String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
+        conf.addRecordAndReturnId(queryNow, id, "Successfully Registered", formattedDate);
+
+        queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+        conf.addRecordAndReturnId(queryNow, id, formattedDate, "Register");
 
         successFrame.add(panel);
         successFrame.setVisible(true);
@@ -219,7 +232,6 @@ public class LogReg_config {
                         
                         break;
                     case "User":
-                        int enabilability = 1;
                         see.SaveLogIn(id);
                         Dashboard = new UserDashboard();
                         
@@ -227,100 +239,91 @@ public class LogReg_config {
                         break;
                 }
                 
+                LocalDateTime now = LocalDateTime.now();
+                Timestamp date = Timestamp.valueOf(now);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String formattedDate = now.format(formatter);
+                String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
+                conf.addRecordAndReturnId(queryNow, see.GetID(), "Successfully Logged In:", formattedDate);
+                
+                queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+                conf.addRecordAndReturnId(queryNow, see.GetID(), formattedDate, "Logged In");
+                
                 animation.showLoadingAndOpen(currentFrame, Dashboard, "Logging In . . .");
         }
         
         return 0;
     }
     
-    public static void RegisterByAdmin(String nm, String bdg, String ps, String access, String ussage){
-        config conf = new config();
-        animation ani = new animation();
-        StringBuilder errors = new StringBuilder();
-        int Finalbadge = 0;
-        boolean loop = true;
-        
-        while(loop){
-            try{
-                if (nm == null || nm.trim().isEmpty() || nm.equals("Username")) {
-                    errors.append("• Username cannot be empty.\n");
-                }
+    public static void RegisterByAdmin(String nm, String bdg, String ps, String access, String ussage) {
+    config conf = new config();
+    StringBuilder errors = new StringBuilder();
+    int Finalbadge = 0;
 
-                if (bdg == null || bdg.trim().isEmpty() || bdg.equals("Badge")) {
-                    errors.append("• Badge cannot be empty.\n");
-                }else{
-                    Finalbadge = Integer.parseInt(bdg);
-                }
+    if (nm == null || nm.trim().isEmpty() || nm.equals("Username")) {
+        errors.append("• Username cannot be empty.\n");
+    }
 
-                if (ps == null || ps.trim().isEmpty() || ps.equals("Password")) {
-                    errors.append("• Password cannot be empty.\n");
-                }
-
-                loop = false;
-            }catch(NumberFormatException e){
-                errors.append("• Warning at Badge\n");
-                errors.append("• Minimum 10 Items\n");
-                errors.append("• Should be Digits\n");
-
-                JOptionPane.showMessageDialog(
-                    null,
-                    errors.toString(),
-                    "Validation Errors",
-                    JOptionPane.ERROR_MESSAGE
-                );
+    if (bdg == null || bdg.trim().isEmpty() || bdg.equals("Badge")) {
+        errors.append("• Badge cannot be empty.\n");
+    } else {
+        try {
+            Finalbadge = Integer.parseInt(bdg);
+            if (bdg.length() < 4) {
+                errors.append("• Badge must be at least 4 digits long\n");
             }
+        } catch (NumberFormatException e) {
+            errors.append("• Badge must be digits only\n");
         }
-            
-        if(errors.length() > 0) {
-            JOptionPane.showMessageDialog(
-                null,
-                errors.toString(),
-                "Validation Errors",
-                JOptionPane.ERROR_MESSAGE
-            );
-        }else{
+    }
 
+    if (ps == null || ps.trim().isEmpty() || ps.equals("Password")) {
+        errors.append("• Password cannot be empty.\n");
+    } else if (ps.length() < 4) {
+        errors.append("• Password must be at least 4 characters long\n");
+    }
+
+    if (errors.length() == 0) {
         String qry = "SELECT * FROM users WHERE user_badge = ?";
         java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, bdg);
-        
-        int valuebadge = bdg.length();
-        int valuepass = ps.length();
-
-        if (valuebadge < 4) {
-            errors.append("• Badge must be at least 4 digits long\n");
-        }
 
         if (!result.isEmpty()) {
             errors.append("• Badge already exists\n");
         }
-
-        if (valuepass < 0) {
-            errors.append("• Invalid password\n");
-        }
-
-        if (errors.length() > 0) {
-            JOptionPane.showMessageDialog(
-                null,
-                errors.toString(),
-                "Validation Errors",
-                JOptionPane.ERROR_MESSAGE
-            );
-                }else{
-                    String hashpass = conf.hashPassword(ps);
-            
-                    qry = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES(?,?,?,?,?)";
-                    conf.addRecordAndReturnId(qry, nm, Finalbadge, hashpass, access, ussage);
-                    
-                    JOptionPane.showMessageDialog(
-                        null,
-                        "User added successfully!",
-                        "Success",
-                        JOptionPane.INFORMATION_MESSAGE
-                    );
-
-            }
-        }
     }
+
+    if (errors.length() > 0) {
+        JOptionPane.showMessageDialog(
+            null,
+            errors.toString(),
+            "Validation Errors",
+            JOptionPane.ERROR_MESSAGE
+        );
+        return;
+    }else{
+    
+        String hashpass = conf.hashPassword(ps);
+        String qry = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES(?,?,?,?,?)";
+        int id = conf.addRecordAndReturnId(qry, nm, Finalbadge, hashpass, access, ussage);
+        
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp date = Timestamp.valueOf(now);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = now.format(formatter);
+        String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
+        conf.addRecordAndReturnId(queryNow, id, "Successfully Logged In:", formattedDate);
+
+        queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+        conf.addRecordAndReturnId(queryNow, id, formattedDate, "Logged In");
+
+        JOptionPane.showMessageDialog(
+            null,
+            "User added successfully!",
+            "Success",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+}
     
     
 

@@ -10,6 +10,8 @@ import configuration.Validations;
 import configuration.animation;
 import configuration.config;
 import java.awt.Color;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
@@ -48,11 +50,13 @@ public final class Refactorial extends javax.swing.JInternalFrame {
     public final void BtnToggles(){
         ButtonGroup menuGroup = new ButtonGroup();
         
-        menuGroup.add(userbtn);
+        menuGroup.add(users);
         menuGroup.add(admin);
+        menuGroup.add(dispatcher);
         
-        animation.StyleToggleButtons(userbtn); 
+        animation.StyleToggleButtons(users); 
         animation.StyleToggleButtons(admin); 
+        animation.StyleToggleButtons(dispatcher); 
         animation.StyleToggleButtons(ussageToggle); 
     }
     
@@ -108,7 +112,7 @@ public final class Refactorial extends javax.swing.JInternalFrame {
     }
     
     public void EraseText(){
-        userbtn.setSelected(true);
+        users.setSelected(true);
         admin.setSelected(false);
         name4.setText("Username");
         badge4.setText("Badge");
@@ -122,73 +126,107 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         pass4.setBorder(grayBorder);
     }
 
-    public void UpdateUser(){
-        LogReg_config conf = new LogReg_config();
+    public void UpdateUser() {
         config confer = new config();
-        Validations valid = new Validations();
-        String access = "null";
-        int finalID = 0;
-        
-        String id = userid.getText();
-        String nm = name4.getText();
-        String bdg = badge4.getText();
-        String ps = pass4.getText();
+
+        String id = userid.getText().trim();
+        String nm = name4.getText().trim();
+        String bdg = badge4.getText().trim();
+        String ps = pass4.getText().trim();
         String ussage = ussageToggle.getText();
-        
-        if(id.isEmpty() || id.equals("User ID") || nm.isEmpty() || bdg.isEmpty() || ps.isEmpty()
-                || nm.equals("Username") || bdg.equals("Badge") || ps.equals("Password")){
-            JOptionPane.showMessageDialog(
-                null,
-                "Empty Fields!",
-                "Error",
-                JOptionPane.WARNING_MESSAGE
-            );
-        }
-        
-        if(!id.isEmpty() || !id.equals("User ID")){
-        
-            try{
-                finalID = Integer.parseInt((String) id);
-            }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(
-                    null,
-                    "Input Should be Integer!",
-                    "Error",
-                    JOptionPane.WARNING_MESSAGE
-                );
-            }
 
+        if (id.isEmpty() || id.equals("User ID") ||
+            nm.isEmpty() || nm.equals("Username") ||
+            bdg.isEmpty() || bdg.equals("Badge") ||
+            ps.isEmpty() || ps.equals("Password")) {
+
+            JOptionPane.showMessageDialog(null, "Empty Fields!", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int finalID;
+        try {
+            finalID = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "User ID must be an integer!", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String access = users.isSelected() ? "User" :
+                        admin.isSelected() ? "Admin" : null;
+
+        String qry = "SELECT * FROM users WHERE user_id = ?";
+        java.util.List<java.util.Map<String, Object>> result = confer.fetchRecords(qry, finalID);
+
+        if (result.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "User ID does not exist!", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        java.util.Map<String, Object> user = result.get(0);
+
+        String oldName = (String) user.get("user_name");
+        int parseBadge = ((Number) user.get("user_badge")).intValue();
+        String oldBadge = String.valueOf(parseBadge);
+        String oldPass = (String) user.get("user_hashpass");
+        String oldAccess = (String) user.get("user_access");
+        String oldUssage = (String) user.get("user_ussage");
+
+        StringBuilder updateQuery = new StringBuilder("UPDATE users SET ");
+        java.util.List<Object> params = new java.util.ArrayList<>();
+        boolean hasChanges = false;
+
+        if (!nm.equals(oldName)) {
+            updateQuery.append("user_name = ?, ");
+            params.add(nm);
+            hasChanges = true;
+        }
+
+        if (!bdg.equals(oldBadge)) {
+            updateQuery.append("user_badge = ?, ");
+            params.add(bdg);
+            hasChanges = true;
+        }
+
+        if (!ps.equals("HASHED")) {
             String hashpass = confer.hashPassword(ps);
-
-            if(userbtn.isSelected()){
-                access = "User";
-            }else if(admin.isSelected()){
-                access = "Admin";
+            if (!hashpass.equals(oldPass)) {
+                updateQuery.append("user_hashpass = ?, ");
+                params.add(hashpass);
+                hasChanges = true;
             }
-
-                String qry = "SELECT * FROM users WHERE user_id = ?";
-                java.util.List<java.util.Map<String, Object>> result = confer.fetchRecords(qry, finalID);
-
-            if(!result.isEmpty()){
-
-                qry = "UPDATE users SET user_name = ?, user_badge = ?, user_hashpass = ?, user_access = ?, user_ussage = ? WHERE user_id = ?";
-                confer.updateRecord(qry, nm, bdg, hashpass, access, ussage, finalID);
-                
-                JOptionPane.showMessageDialog(
-                    null,
-                    "User Succesfully Refactored!",
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE
-                    );
-            }else{
-                JOptionPane.showMessageDialog(
-                    null,
-                    "User ID does not exist!",
-                    "Error",
-                    JOptionPane.WARNING_MESSAGE
-                    );
-                }
         }
+
+        if (access != null && !access.equals(oldAccess)) {
+            updateQuery.append("user_access = ?, ");
+            params.add(access);
+            hasChanges = true;
+        }
+
+        if (!ussage.equals(oldUssage)) {
+            updateQuery.append("user_ussage = ?, ");
+            params.add(ussage);
+            hasChanges = true;
+        }
+
+        if (!hasChanges) {
+            JOptionPane.showMessageDialog(null, "No changes detected.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        updateQuery.setLength(updateQuery.length() - 2);
+
+        updateQuery.append(" WHERE user_id = ?");
+        params.add(finalID);
+
+        confer.updateRecord(updateQuery.toString(), params.toArray());
+        
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp date = Timestamp.valueOf(now);
+        String queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+        confer.addRecordAndReturnId(queryNow, id, date, "Update");
+
+        JOptionPane.showMessageDialog(null, "User successfully updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
     
     public void GetInfo(){
@@ -236,20 +274,26 @@ public final class Refactorial extends javax.swing.JInternalFrame {
             String pass = conf.hashPassword(ps);
             
             name4.setText(name);
-            name4.setBackground(new Color(102,102,102));
+            name4.setBackground(new Color(204,204,204));
             badge4.setText(bdg);
-            badge4.setBackground(new Color(102,102,102));
+            badge4.setBackground(new Color(204,204,204));
             pass4.setText("HASHED");
             name4.setForeground(new Color(0,0,0));
             badge4.setForeground(new Color(0,0,0));
             pass4.setForeground(new Color(0,0,0));
             
             if(access.equals("User")){
-                userbtn.setSelected(true);
+                users.setSelected(true);
                 admin.setSelected(false);
+                dispatcher.setSelected(false);
             }else if(access.equals("Admin")){
                 admin.setSelected(true);
-                userbtn.setSelected(false);
+                users.setSelected(false);
+                dispatcher.setSelected(false);
+            }else if(access.equals("Dispatcher")){
+                admin.setSelected(false);
+                users.setSelected(false);
+                dispatcher.setSelected(true);
             }
             
             if(ussage.equals("Enable")){
@@ -288,9 +332,10 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         badge4 = new javax.swing.JTextField();
         pass4 = new javax.swing.JTextField();
         jPanel16 = new javax.swing.JPanel();
-        userbtn = new javax.swing.JToggleButton();
+        users = new javax.swing.JToggleButton();
         admin = new javax.swing.JToggleButton();
         jLabel31 = new javax.swing.JLabel();
+        dispatcher = new javax.swing.JToggleButton();
         jPanel17 = new javax.swing.JPanel();
         ussageToggle = new javax.swing.JToggleButton();
         jLabel4 = new javax.swing.JLabel();
@@ -311,7 +356,7 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(167, 16, -1, -1));
 
         userid.setEditable(false);
-        userid.setForeground(new java.awt.Color(153, 153, 153));
+        userid.setForeground(new java.awt.Color(51, 51, 51));
         userid.setText("User ID");
         userid.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -326,7 +371,7 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         jPanel1.add(userid, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 44, 205, 48));
 
         name4.setEditable(false);
-        name4.setBackground(new java.awt.Color(204, 204, 204));
+        name4.setBackground(new java.awt.Color(255, 255, 255));
         name4.setForeground(new java.awt.Color(153, 153, 153));
         name4.setText("Username");
         name4.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -347,7 +392,7 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         jPanel1.add(name4, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 134, 197, 44));
 
         badge4.setEditable(false);
-        badge4.setBackground(new java.awt.Color(204, 204, 204));
+        badge4.setBackground(new java.awt.Color(255, 255, 255));
         badge4.setForeground(new java.awt.Color(153, 153, 153));
         badge4.setText("Badge");
         badge4.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -367,8 +412,6 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         });
         jPanel1.add(badge4, new org.netbeans.lib.awtextra.AbsoluteConstraints(223, 134, 183, 44));
 
-        pass4.setEditable(false);
-        pass4.setBackground(new java.awt.Color(204, 204, 204));
         pass4.setFont(new java.awt.Font("Tahoma", 2, 16)); // NOI18N
         pass4.setForeground(new java.awt.Color(153, 153, 153));
         pass4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -392,11 +435,11 @@ public final class Refactorial extends javax.swing.JInternalFrame {
 
         jPanel16.setBackground(new java.awt.Color(153, 153, 153));
 
-        userbtn.setSelected(true);
-        userbtn.setText("USER");
-        userbtn.addActionListener(new java.awt.event.ActionListener() {
+        users.setSelected(true);
+        users.setText("USER");
+        users.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                userbtnActionPerformed(evt);
+                usersActionPerformed(evt);
             }
         });
 
@@ -405,34 +448,48 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         jLabel31.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
         jLabel31.setText("ACCESS");
 
+        dispatcher.setText("DISPATCHER");
+        dispatcher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dispatcherActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
         jPanel16Layout.setHorizontalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(userbtn, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(admin, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel16Layout.createSequentialGroup()
+                        .addGap(70, 70, 70)
+                        .addComponent(jLabel31))
+                    .addGroup(jPanel16Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(admin, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(13, 15, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(users, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dispatcher, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(jPanel16Layout.createSequentialGroup()
-                .addGap(160, 160, 160)
-                .addComponent(jLabel31)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
-                .addGap(0, 10, Short.MAX_VALUE)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
                 .addComponent(jLabel31)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(admin, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(userbtn)
-                    .addComponent(admin))
-                .addGap(1, 1, 1))
+                .addComponent(users)
+                .addGap(2, 2, 2)
+                .addComponent(dispatcher)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 238, -1, -1));
+        jPanel1.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(216, 238, 190, 140));
 
         jPanel17.setBackground(new java.awt.Color(153, 153, 153));
 
@@ -594,9 +651,9 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ussageToggleActionPerformed
 
-    private void userbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userbtnActionPerformed
+    private void usersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usersActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_userbtnActionPerformed
+    }//GEN-LAST:event_usersActionPerformed
 
     private void pass4KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pass4KeyReleased
         animation ani = new animation();
@@ -631,7 +688,9 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         String pass = pass4.getText();
         
         if(pass.equals("Password")){
-            ani.addPlaceholder(badge4, pass);// TODO add your handling code here:
+            ani.addPlaceholder(pass4, pass);// TODO add your handling code here:
+        }else if (pass.equals("HASHED")){
+            ani.addPlaceholder(pass4, pass);   
         }
     }//GEN-LAST:event_pass4MouseClicked
 
@@ -701,11 +760,16 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         ani.addPlaceholder(userid, "User ID"); // TODO add your handling code here:
     }//GEN-LAST:event_useridMouseClicked
 
+    private void dispatcherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dispatcherActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dispatcherActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel PassLabel4;
     private javax.swing.JToggleButton admin;
     private javax.swing.JTextField badge4;
+    private javax.swing.JToggleButton dispatcher;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel29;
@@ -720,8 +784,8 @@ public final class Refactorial extends javax.swing.JInternalFrame {
     private javax.swing.JTextField name4;
     private javax.swing.JTextField pass4;
     private javax.swing.JProgressBar passStrength4;
-    private javax.swing.JToggleButton userbtn;
     private javax.swing.JTextField userid;
+    private javax.swing.JToggleButton users;
     private javax.swing.JToggleButton ussageToggle;
     // End of variables declaration//GEN-END:variables
 }

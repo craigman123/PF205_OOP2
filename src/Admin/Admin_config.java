@@ -62,6 +62,7 @@ public class Admin_config {
         statusCombo.addItem("Shotgun");
         statusCombo.addItem("Sub Machine Gun");
         statusCombo.addItem("Machine Gun");
+        statusCombo.addItem("Ammunitions");
     }
     
     public static void DisplayRarity(JComboBox<String> statusCombo){
@@ -87,5 +88,20 @@ public class Admin_config {
         statusCombo.addItem("Out of Stock"); 
         statusCombo.addItem("Archived");
         statusCombo.addItem("Discontinued");
+    }
+    
+    public static void DisplayLogAction(JComboBox<String> actionCombo){
+        actionCombo.removeAllItems();
+        
+        actionCombo.addItem("All");
+        actionCombo.addItem("Create");
+        actionCombo.addItem("Update");
+        actionCombo.addItem("Delete");
+        actionCombo.addItem("Register");
+        actionCombo.addItem("Logged In"); 
+        actionCombo.addItem("Bought A Product");
+        actionCombo.addItem("Cancel Order");
+        actionCombo.addItem("Looged Out");
+        
     }
 }

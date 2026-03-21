@@ -16,6 +16,10 @@ import javax.swing.border.Border;
 import com.toedter.calendar.JDateChooser;
 import configuration.config;
 import java.awt.event.ActionEvent;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -35,6 +39,7 @@ public final class User_Details extends javax.swing.JFrame {
     private final String hashedPass;
     private int flag = 0;
     private boolean isHashed = true;
+    private boolean validatedUpdate;
     
     public User_Details(String username, int Badge, String hashedPassword, boolean preset) {
         User_config userconf = new User_config();
@@ -56,6 +61,7 @@ public final class User_Details extends javax.swing.JFrame {
                 PreSetted();
                 flag = 1;
                 detailHeader.setText("EDIT PROFILE");
+                validatedUpdate = false;
             }else{
                 TextInput();
             }
@@ -66,124 +72,6 @@ public final class User_Details extends javax.swing.JFrame {
     Border orangeBorder = BorderFactory.createLineBorder(Color.ORANGE, 2);
     Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 2);
     Border grayBorder = BorderFactory.createLineBorder(Color.GRAY, 2);
-    
-    public void PreSetted(){
-        config conf = new config();
-        
-        String qry = "SELECT * FROM users WHERE user_name = ? AND user_badge = ?";
-        java.util.List<java.util.Map<String, Object>> resultUser = conf.fetchRecords(qry, username, badge); 
-        
-        if(!resultUser.isEmpty()){
-            java.util.Map<String, Object> user = resultUser.get(0);
-            int id = ((Number) user.get("user_id")).intValue();
-            String nameGet = user.get("user_name").toString();
-            String badgeGet = user.get("user_badge").toString();
-            
-            qry = "SELECT * FROM details WHERE user_id = ?";
-            java.util.List<java.util.Map<String, Object>> resultDetails = conf.fetchRecords(qry, id); 
-            
-            if(!resultDetails.isEmpty()){
-                java.util.Map<String, Object> details = resultDetails.get(0);
-                String nmGet =  details.get("user_name").toString();
-                String ageGet = details.get("user_age").toString();
-                String genderGet = details.get("user_gender").toString();
-                String educGet = details.get("user_education").toString();
-                String countryGet = details.get("user_country").toString();
-                String birthdGet = details.get("user_birthdate").toString();
-                String emailGet = details.get("user_email").toString();
-                String numberGet = details.get("user_number").toString();
-                String validGet = details.get("user_ValidId").toString();
-                
-                isHashed = false;
-
-                nm.setText(nameGet);
-                bdg.setText(badgeGet);
-                pass.setText("HASHED");
-
-                age.setSelectedItem(ageGet);
-                educationBox.setSelectedItem(educGet);
-                country.setSelectedItem(countryGet);
-
-                if (genderGet.equalsIgnoreCase("male")) {
-                    male.setSelected(true);
-                } else if (genderGet.equalsIgnoreCase("female")) {
-                    female.setSelected(true);
-                }
-                
-                name.setText(nmGet);
-                BirthField.setText(birthdGet);
-                email.setText(emailGet);
-                number.setText(numberGet);
-                number1.setText(validGet);
-                
-                bdg.setBorder(greenBorder);
-                BirthPane.setBorder(grayBorder);
-                gender.setBorder(grayBorder);
-                email.setBorder(grayBorder);
-                number.setBorder(grayBorder);
-                number1.setBorder(grayBorder);
-                agePane.setBorder(grayBorder);
-                countryPane.setBorder(grayBorder);
-                educationPane.setBorder(grayBorder);
-                name.setBorder(grayBorder);
-            }
-        }
-    }
-    
-    public int SendInputsToDatabase(String nm, String name, int bdg, String pass, String birth, 
-            String number, int Valid_Id, String email, String gender, String age, String education, String country){
-        
-        config conf = new config();
-        
-        String hashpass = conf.hashPassword(pass);
-        
-        String sql = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
-        int userID = conf.addRecordAndReturnId(sql, nm, bdg, hashpass, "User", "Disable");
-        
-        sql = "INSERT INTO details(user_id, user_age, user_gender, user_number, user_email, user_name, user_education, "
-                + "user_ValidId, user_birthdate, user_country) VALUES (?,?,?,?,?,?,?,?,?,?)";
-        conf.addRecordAndReturnId(sql, userID, age, gender, number, email, name, education, Valid_Id, birth, country);
-        
-        return userID;
-    }
-    
-    public void UpdateInputs(String name, String nm, int bdg, String pass, String birth, 
-                         String number, int Valid_Id, String email, String gender, String age, 
-                         String education, String country) {
-
-        session see = new session();
-        config conf = new config();
-
-        String sqlUser;
-        if (pass != null && !pass.isEmpty() && !pass.equals("HASHED")) {
-            String hashpass = conf.hashPassword(pass);
-            sqlUser = "UPDATE users SET user_name=?, user_badge=?, user_hashpass=? WHERE user_id=?";
-            conf.updateRecord(sqlUser, nm, bdg, hashpass, see.GetID());
-        } else {
-            sqlUser = "UPDATE users SET user_name=?, user_badge=? WHERE user_id=?";
-            conf.updateRecord(sqlUser, nm, bdg, see.GetID());
-        }
-
-        String sqlDetails = "UPDATE details SET user_age=?, user_gender=?, user_number=?, user_email=?, "
-                + "user_name=?, user_education=?, user_ValidId=?, user_birthdate=?, user_country=? "
-                + "WHERE user_id=?";
-        conf.updateRecord(sqlDetails, age, gender, number, email, name, education, Valid_Id, birth, country, see.GetID());
-        
-        JOptionPane.showMessageDialog(
-            null,
-            "Account Succesfully Updated!",
-            "Success",
-            JOptionPane.INFORMATION_MESSAGE
-        );
-        
-        this.dispose();
-        UserDashboard dash = new UserDashboard();
-        profile prof = new profile(see.GetID(), dash);
-        
-        JDesktopPane desktopPane = User_config.GetPane(); 
-        desktopPane.add(prof);
-        prof.setVisible(true);
-    }
     
     private void UpdateBar(){
         animation ani = new animation();
@@ -350,51 +238,84 @@ public final class User_Details extends javax.swing.JFrame {
     public String checkAllInputsUpdate() {
         StringBuilder errors = new StringBuilder();
         Validations validation = new Validations();
-        String badgeValue = bdg.getText();
-        String value = number1.getText();
-        String value2 = number.getText();
+        String badgeValue = bdg.getText().trim();
+        String valueID = number1.getText().trim();
+        String valuePhone = number.getText().trim();
+        System.out.println("Arrived at Validations");
 
-    if (nm.getText() == null || nm.getText().trim().isEmpty() || nm.getText().equals("Username"))
-        errors.append("Username is required.\n");
+        if (nm.getText() == null || nm.getText().trim().isEmpty() || nm.getText().equals("Username"))
+            errors.append("Username is required.\n");
 
         if (!badgeValue.equals(badge)) {
-            if (badgeValue == null || badgeValue.trim().isEmpty() || badgeValue.equals("badge")) {
+            if (badgeValue.isEmpty() || badgeValue.equals("badge"))
                 errors.append("Badge is required.\n");
-            } else if (!validation.ValidBadgeUpdate(badgeValue, badge, bdg)) {
+            else if (!validation.ValidBadgeUpdate(badgeValue, badge, bdg))
                 errors.append("Badge is invalid or already exists!\n");
-            }
         }
 
         if (pass.getText() == null || pass.getText().trim().isEmpty() || pass.getText().equals("Password"))
             errors.append("Password is required.\n");
-        if (name.getText().trim().isEmpty())
-            errors.append("Full name is required.\n");
-        if (number1.getText().trim().isEmpty() || number1.getText().equals("Valid ID Number"))
-            errors.append("Valid ID Number is required.\n");
-        else if (validation.ValidateIntegerBool(value))
-            errors.append("Valid ID Number should be Integer.\n");
-        if (number.getText().trim().isEmpty() || number.getText().equals("Phone Number"))
-            errors.append("Phone number is required.\n");
-        else if (validation.ValidateIntegerBool(value2))
-            errors.append("Phone Number should be Integer.\n");
-        if (email.getText().trim().isEmpty() || email.getText().equals("Email"))
-            errors.append("Email is required.\n");
-        else if (!validation.validateEmailBoolean(email))
-            errors.append("Email format is invalid.\n");
-        if (BirthField.getText().equals("Select Birthdate"))
-            errors.append("Birthdate must be selected.\n");
-        if (age.getSelectedItem().equals("Select Age"))
-            errors.append("Age must be selected.\n");
-        else if (Integer.parseInt(age.getSelectedItem().toString()) < 18)
-            errors.append("Must be at least 18 years old.\n");
-        if (country.getSelectedItem().equals("Select Country"))
-            errors.append("Country must be selected.\n");
-        if (educationBox.getSelectedItem().equals("Select Educational Attainment"))
-            errors.append("Educational attainment must be selected.\n");
-        if (!female.isSelected() && !male.isSelected())
-            errors.append("Gender must be selected.\n");
 
+        config conf = new config();
+        session see = new session();
+        String qry = "SELECT * FROM details WHERE user_id=?";
+        java.util.List<java.util.Map<String, Object>> resultDetails = conf.fetchRecords(qry, see.GetID());
+        boolean hasDetailsInDB = !resultDetails.isEmpty();
+
+        boolean anyProfileTouched =
+            (!name.getText().trim().isEmpty() && !name.getText().equals("Name")) ||
+            (!number1.getText().trim().isEmpty() && !number1.getText().equals("Valid ID Number")) ||
+            (!number.getText().trim().isEmpty() && !number.getText().equals("Phone Number")) ||
+            (!email.getText().trim().isEmpty() && !email.getText().equals("Email")) ||
+            !BirthField.getText().equals("Select Birthdate") ||
+            !age.getSelectedItem().equals("Select Age") ||
+            !country.getSelectedItem().equals("Select Country") ||
+            !educationBox.getSelectedItem().equals("Select Educational Attainment") ||
+            female.isSelected() || male.isSelected();
+
+        boolean requireProfileFields = hasDetailsInDB || anyProfileTouched;
+
+        if (requireProfileFields) {
+            if (name.getText().trim().isEmpty())
+                errors.append("Full name is required.\n");
+
+            if (valueID.isEmpty() || valueID.equals("Valid ID Number"))
+                errors.append("Valid ID Number is required.\n");
+            else if (validation.ValidateIntegerBool(valueID))
+                errors.append("Valid ID Number should be Integer.\n");
+
+            if (valuePhone.isEmpty() || valuePhone.equals("Phone Number"))
+                errors.append("Phone number is required.\n");
+            else if (validation.ValidateIntegerBool(valuePhone))
+                errors.append("Phone Number should be Integer.\n");
+
+            if (email.getText().trim().isEmpty() || email.getText().equals("Email"))
+                errors.append("Email is required.\n");
+            else if (!validation.validateEmailBoolean(email))
+                errors.append("Email format is invalid.\n");
+
+            if (BirthField.getText().equals("Select Birthdate"))
+                errors.append("Birthdate must be selected.\n");
+
+            if (age.getSelectedItem().equals("Select Age"))
+                errors.append("Age must be selected.\n");
+            else if (Integer.parseInt(age.getSelectedItem().toString()) < 18)
+                errors.append("Must be at least 18 years old.\n");
+
+            if (country.getSelectedItem().equals("Select Country"))
+                errors.append("Country must be selected.\n");
+
+            if (educationBox.getSelectedItem().equals("Select Educational Attainment"))
+                errors.append("Educational attainment must be selected.\n");
+
+            if (!female.isSelected() && !male.isSelected())
+                errors.append("Gender must be selected.\n");
+            
+            validatedUpdate = true;
+        }
+        
         return errors.toString();
+        
     }
     
     public String checkAllInputs() { //condensed using ai hehe
@@ -425,6 +346,281 @@ public final class User_Details extends javax.swing.JFrame {
         return errors.toString();
     }
     
+    public void PreSetted(){
+        config conf = new config();
+        System.out.println("Name: " + username);
+        System.out.println("Badge: " + badge);
+        
+        String qry = "SELECT * FROM users WHERE user_name = ? AND user_badge = ?";
+        java.util.List<java.util.Map<String, Object>> resultUser = conf.fetchRecords(qry, username, badge); 
+        
+        nm.setText(username);
+        bdg.setText(String.valueOf(badge));
+        pass.setText("HASHED");
+        
+        if(!resultUser.isEmpty()){
+            java.util.Map<String, Object> user = resultUser.get(0);
+            int id = ((Number) user.get("user_id")).intValue();
+            
+            qry = "SELECT * FROM details WHERE user_id = ?";
+            java.util.List<java.util.Map<String, Object>> resultDetails = conf.fetchRecords(qry, id); 
+            
+            if(!resultDetails.isEmpty()){
+                java.util.Map<String, Object> details = resultDetails.get(0);
+                String nmGet =  details.get("user_name").toString();
+                String ageGet = details.get("user_age").toString();
+                String genderGet = details.get("user_gender").toString();
+                String educGet = details.get("user_education").toString();
+                String countryGet = details.get("user_country").toString();
+                String birthdGet = details.get("user_birthdate").toString();
+                String emailGet = details.get("user_email").toString();
+                String numberGet = details.get("user_number").toString();
+                String validGet = details.get("user_ValidId").toString();
+                
+                isHashed = false;
+
+                age.setSelectedItem(ageGet);
+                educationBox.setSelectedItem(educGet);
+                country.setSelectedItem(countryGet);
+
+                if (genderGet.equalsIgnoreCase("male")) {
+                    male.setSelected(true);
+                } else if (genderGet.equalsIgnoreCase("female")) {
+                    female.setSelected(true);
+                }
+                
+                name.setText(nmGet);
+                BirthField.setText(birthdGet);
+                email.setText(emailGet);
+                number.setText(numberGet);
+                number1.setText(validGet);
+                
+                bdg.setBorder(greenBorder);
+                BirthPane.setBorder(grayBorder);
+                gender.setBorder(grayBorder);
+                email.setBorder(grayBorder);
+                number.setBorder(grayBorder);
+                number1.setBorder(grayBorder);
+                agePane.setBorder(grayBorder);
+                countryPane.setBorder(grayBorder);
+                educationPane.setBorder(grayBorder);
+                name.setBorder(grayBorder);
+            }
+        }
+    }
+    
+    public int SendInputsToDatabase(String nm, String name, int bdg, String pass, String birth, 
+            String number, int Valid_Id, String email, String gender, String age, String education, String country){
+        
+        config conf = new config();
+        
+        String hashpass = conf.hashPassword(pass);
+        
+        String sql = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
+        int userID = conf.addRecordAndReturnId(sql, nm, bdg, hashpass, "User", "Disable");
+        
+        sql = "INSERT INTO details(user_id, user_age, user_gender, user_number, user_email, user_name, user_education, "
+                + "user_ValidId, user_birthdate, user_country) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        conf.addRecordAndReturnId(sql, userID, age, gender, number, email, name, education, Valid_Id, birth, country);
+        
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp date = Timestamp.valueOf(now);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = now.format(formatter);
+        String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
+        conf.addRecordAndReturnId(queryNow, userID, "Account Details Successfully Set in ID: " + userID, formattedDate);
+
+        queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+        conf.addRecordAndReturnId(queryNow, userID, formattedDate, "Create");
+        
+        return userID;
+    }
+    
+    public void UpdateInputs(String name, String nm, int bdg, String pass, String birth, 
+                         String number, int Valid_Id, String email, String gender, String age, 
+                         String education, String country) {
+
+        session see = new session();
+        config conf = new config();
+        System.out.println("Arrive at Updating User . . .");
+
+        String qryUser = "SELECT user_name, user_badge, user_hashpass FROM users WHERE user_id=?";
+        java.util.List<java.util.Map<String, Object>> currentUser = conf.fetchRecords(qryUser, see.GetID());
+
+        String qryDetails = "SELECT * FROM details WHERE user_id=?";
+        java.util.List<java.util.Map<String, Object>> currentDetails = conf.fetchRecords(qryDetails, see.GetID());
+
+        if (currentUser.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        java.util.Map<String, Object> dbUser = currentUser.get(0);
+        java.util.Map<String, Object> dbDetails = null;
+        boolean hasDetails = !currentDetails.isEmpty();
+
+        if (hasDetails) {
+            dbDetails = currentDetails.get(0);
+        }
+
+        String sqlUser = "UPDATE users SET ";
+        java.util.List<Object> userParams = new java.util.ArrayList<>();
+        boolean updateUser = false;
+
+        if (!nm.equals(dbUser.get("user_name"))) {
+            sqlUser += "user_name=?, ";
+            userParams.add(nm);
+            updateUser = true;
+        }
+        if (bdg != ((Number) dbUser.get("user_badge")).intValue()) {
+            sqlUser += "user_badge=?, ";
+            userParams.add(bdg);
+            updateUser = true;
+        }
+        if (pass != null && !pass.isEmpty() && !pass.equals("HASHED")) {
+            String hashpass = conf.hashPassword(pass);
+            if (!hashpass.equals(dbUser.get("user_hashpass"))) {
+                sqlUser += "user_hashpass=?, ";
+                userParams.add(hashpass);
+                updateUser = true;
+            }
+        }
+
+        if (updateUser) {
+            // Remove last comma and add WHERE
+            sqlUser = sqlUser.substring(0, sqlUser.length() - 2) + " WHERE user_id=?";
+            userParams.add(see.GetID());
+            conf.updateRecord(sqlUser, userParams.toArray());
+        }
+
+        // Details table update
+        String sqlDetails = "UPDATE details SET ";
+        java.util.List<Object> detailsParams = new java.util.ArrayList<>();
+        boolean updateDetails = false;
+        
+        if(validatedUpdate = false){
+            if (currentDetails.isEmpty()) {
+                    System.out.println("No details found, inserting...");
+
+                    String insert = "INSERT INTO details (user_id, user_age, user_gender, user_number, user_email, user_name, user_education, user_ValidId, user_birthdate, user_country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                    conf.addRecordAndReturnId(insert,
+                        see.GetID(), age, gender, number, email,
+                        name, education, Valid_Id, birth, country
+                    );
+                    
+                    LocalDateTime now = LocalDateTime.now();
+                    Timestamp date = Timestamp.valueOf(now);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String formattedDate = now.format(formatter);
+                    String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
+                    conf.addRecordAndReturnId(queryNow, see.GetID(), "Account Details Succesfully Created Set in ID: " + see.GetID(), formattedDate);
+
+                    queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+                    conf.addRecordAndReturnId(queryNow, see.GetID(), formattedDate, "Create");
+            } else {
+            if (!Objects.equals(age, String.valueOf(dbDetails.get("user_age")))) {
+                detailsParams.add(age);
+                sqlDetails += "user_age=?, ";
+                updateDetails = true;
+            }
+
+            if (!Objects.equals(gender.toLowerCase(), 
+                    dbDetails.get("user_gender") == null ? null : dbDetails.get("user_gender").toString().toLowerCase())) {
+                detailsParams.add(gender);
+                sqlDetails += "user_gender=?, ";
+                updateDetails = true;
+            }
+
+            if (!Objects.equals(number, String.valueOf(dbDetails.get("user_number")))) {
+                detailsParams.add(number);
+                sqlDetails += "user_number=?, ";
+                updateDetails = true;
+            }
+
+            if (!Objects.equals(email, String.valueOf(dbDetails.get("user_email")))) {
+                detailsParams.add(email);
+                sqlDetails += "user_email=?, ";
+                updateDetails = true;
+            }
+
+            if (!Objects.equals(name, String.valueOf(dbDetails.get("user_name")))) {
+                detailsParams.add(name);
+                sqlDetails += "user_name=?, ";
+                updateDetails = true;
+            }
+
+            if (!Objects.equals(education, String.valueOf(dbDetails.get("user_education")))) {
+                detailsParams.add(education);
+                sqlDetails += "user_education=?, ";
+                updateDetails = true;
+            }
+
+            // Safe int compare
+            Object dbValidIdObj = dbDetails.get("user_ValidId");
+            int dbValidId = (dbValidIdObj instanceof Number) ? ((Number) dbValidIdObj).intValue() : -1;
+
+            if (Valid_Id != dbValidId) {
+                detailsParams.add(Valid_Id);
+                sqlDetails += "user_ValidId=?, ";
+                updateDetails = true;
+            }
+
+            if (!Objects.equals(birth, String.valueOf(dbDetails.get("user_birthdate")))) {
+                detailsParams.add(birth);
+                sqlDetails += "user_birthdate=?, ";
+                updateDetails = true;
+            }
+
+            if (!Objects.equals(country, String.valueOf(dbDetails.get("user_country")))) {
+                detailsParams.add(country);
+                sqlDetails += "user_country=?, ";
+                updateDetails = true;
+            }
+
+            if (updateDetails) {
+                sqlDetails = sqlDetails.substring(0, sqlDetails.length() - 2) + " WHERE user_id=?";
+                detailsParams.add(see.GetID());
+                conf.updateRecord(sqlDetails, detailsParams.toArray());
+            }
+            
+            LocalDateTime now = LocalDateTime.now();
+            Timestamp date = Timestamp.valueOf(now);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedDate = now.format(formatter);
+            String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
+            conf.addRecordAndReturnId(queryNow, see.GetID(), "Successfully Updated User Account Details", formattedDate);
+
+            queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+            conf.addRecordAndReturnId(queryNow, see.GetID(), formattedDate, "Update");
+
+            JOptionPane.showMessageDialog(
+                null,
+                "Account Successfully Updated!",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+    }   
+        JOptionPane.showMessageDialog(
+            null,
+            "User Successfully Updated!",
+            "Success",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+        
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp date = Timestamp.valueOf(now);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = now.format(formatter);
+        String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
+        conf.addRecordAndReturnId(queryNow, see.GetID(), "Successfully Updated Account Log In Credentials:", formattedDate);
+
+        queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+        conf.addRecordAndReturnId(queryNow, see.GetID(), formattedDate, "Update");
+        
+        this.dispose();
+    }
 
     
     
@@ -1034,6 +1230,7 @@ public final class User_Details extends javax.swing.JFrame {
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         Validations validate = new Validations();
         session see = new session();
+        int OnSession = see.GetID();
         
         String genderGet = male.isSelected() ? "male" : female.isSelected() ? "female" : "";
             int badgeget = validate.ConvertInts(bdg.getText());
@@ -1045,7 +1242,7 @@ public final class User_Details extends javax.swing.JFrame {
                 return;
             }
 
-            if (flag == 0) {
+            if (OnSession <= 0) {
                 int id = SendInputsToDatabase(name.getText(), nm.getText(), badgeget, pass.getText(), BirthField.getText(),
                     number.getText(), validID, email.getText(), genderGet, (String) age.getSelectedItem(), (String) educationBox.getSelectedItem(),
                     (String) country.getSelectedItem());
@@ -1278,8 +1475,14 @@ public final class User_Details extends javax.swing.JFrame {
 
     private void passMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_passMouseClicked
         animation ani = new animation();
-
-        ani.addPlaceholder(pass, isHashed ? "Password" : "HASHED");       // TODO add your handling code here:
+        
+        if(pass.getText().equals("Password")){
+            ani.addPlaceholder(pass, "Password");
+        }else if(pass.getText().equals("HASHED")){// TODO add your handling code here:
+            ani.addPlaceholder(pass, "HASHED");
+        }else{
+            ani.addPlaceholder(pass, "HASHED");
+        }
     }//GEN-LAST:event_passMouseClicked
 
     private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked

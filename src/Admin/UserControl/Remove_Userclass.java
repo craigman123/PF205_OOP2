@@ -7,6 +7,8 @@ package Admin.UserControl;
 
 import Profiles.session;
 import configuration.config;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
@@ -60,6 +62,11 @@ public class Remove_Userclass {
 
             String qry = "DELETE FROM users WHERE user_id = ?";
             boolean deleted = conf.deleteRecord(qry, id);
+            
+            LocalDateTime now = LocalDateTime.now();
+            Timestamp date = Timestamp.valueOf(now);
+            String queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+            conf.addRecordAndReturnId(queryNow, id, date, "Deleted");
 
             if (deleted) {
                 JOptionPane.showMessageDialog(

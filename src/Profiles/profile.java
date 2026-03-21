@@ -5,14 +5,27 @@
  */
 package Profiles;
 
+import User.Market.Product_Detail;
 import User.User_Details;
 import configuration.LogReg_config;
 import configuration.animation;
 import configuration.config;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import main.LoginRegister;
+import java.util.*;
+import javax.swing.JDesktopPane;
+import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
+import javax.swing.event.HyperlinkEvent;
 
 /**
  *
@@ -26,15 +39,109 @@ public final class profile extends javax.swing.JInternalFrame {
     private final int ID;
     private static String unique_pass;
     private JFrame fr;
+    private JDesktopPane MainPane;
     
-    public profile(int id, JFrame frame) {
+    public profile(int id, JFrame frame, JDesktopPane pane) {
         this.ID = id;
         this.fr = frame;
+        this.MainPane = pane;
         
         initComponents();
         SetTextUser();
         SetTextDetails();
         StyleFrame();
+        DisplayNewProducts();
+    }
+    
+    public void DisplayNewProducts() {
+    config conf = new config();
+
+    String qry = "SELECT * FROM products";
+    List<Map<String, Object>> newProd = conf.fetchRecords(qry);
+
+    if (newProd.isEmpty()) {
+        System.out.println("No new products found.");
+        NewProductDisplayPanel.setText("No new Products");
+        return;
+    }
+
+    StringBuilder buildMessage = new StringBuilder(
+    "<html><body style='font-family:Trebuchet MS; font-size:18px; font-weight:bold;'>"
+    );
+
+    for (Map<String, Object> product : newProd) {
+        int prodID = ((Number) product.get("prod_id")).intValue();
+        String prodName = product.get("prod_name").toString();
+        String cat = product.get("prod_category").toString();
+        String status = product.get("prod_status").toString();
+        String originalStatus = status;
+        BigDecimal price = new BigDecimal(product.get("prod_price").toString());
+        String formattedPrice = price.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+        String getDate = product.get("date_added").toString();
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateAdded = LocalDateTime.parse(getDate, formatter);
+        
+        LocalDateTime now = LocalDateTime.now();
+        long daysDiff = ChronoUnit.DAYS.between(dateAdded, now);
+
+        if (daysDiff > 5) {
+            continue;
+        }
+
+        if (status.equals("Active")) status = "On Market";
+
+        String color;
+        switch (originalStatus) {
+            case "Active": color="green"; break;
+            case "Inactive": color="red"; break;
+            case "Suspended": color="#945B00"; break;
+            case "Pending": color="#00876F"; break;
+            case "Sold Out": color="#571300"; break;
+            case "Out of Stock": color="#5C5C5C"; break;
+            case "Archived": color="#002085"; break;
+            case "Discountinued": color="#B8B8B8"; break;
+            default: color="gray";
+        }
+
+        buildMessage.append("New Product Added<br>")
+            .append("A ").append(cat).append(" ").append(prodName).append("<br>")
+            .append("Vat Price of P").append(formattedPrice).append("<br>")
+            .append("Now <span style='color:").append(color).append(";'>")
+            .append(status).append("</span>: Reference Number: ")
+            .append("<i style='text-decoration:none;'><a href='product://").append(prodID).append("'>")
+            .append(prodID).append("</a></i><br><br>")
+            .append("<br>Added At: ").append(getDate);
+    }
+
+    buildMessage.append("</body></html>");
+
+    JEditorPane editor = new JEditorPane("text/html", buildMessage.toString());
+    editor.setEditable(false);
+    editor.setOpaque(true);
+    editor.setBackground(Color.WHITE);
+    editor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+    editor.addHyperlinkListener(e -> {
+        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+            int prodID = Integer.parseInt(e.getDescription().replace("product://",""));
+            System.out.println("Clicked Product ID: " + prodID);
+            Product_Detail detail = new Product_Detail(prodID, MainPane);
+            MainPane.add(detail).setVisible(true);
+            this.dispose();
+        }
+    });
+
+    JScrollPane scrollPane = new JScrollPane(editor);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setPreferredSize(new Dimension(500, 300));
+
+    NewProductDisplayPanel.removeAll();
+    NewProductDisplayPanel.setLayout(new BorderLayout());
+    NewProductDisplayPanel.add(scrollPane, BorderLayout.CENTER);
+    NewProductDisplayPanel.revalidate();
+    NewProductDisplayPanel.repaint();
     }
     
     public final void StyleFrame(){
@@ -52,7 +159,7 @@ public final class profile extends javax.swing.JInternalFrame {
         java.util.List<java.util.Map<String, Object>> resultUser = conf.fetchRecords(qry, ID); 
         
         java.util.Map<String, Object> user = resultUser.get(0);
-            String access1 = user.get("user_access").toString();
+            String accessAccount = user.get("user_access").toString();
             String ussage1 = user.get("user_ussage").toString();
             String pass1 = user.get("user_hashpass").toString();
             int badge1 = ((Number) user.get("user_badge")).intValue();
@@ -72,15 +179,15 @@ public final class profile extends javax.swing.JInternalFrame {
             acess.setForeground(new Color(153,0,0));
         }
         
-        qry = "SELECT * FROM userOrders WHERE user_id = ?";
-        java.util.List<java.util.Map<String, Object>> resultOrders = conf.fetchRecords(qry, ID); 
-        
-        if(!resultOrders.isEmpty()){
-        
-        java.util.Map<String, Object> order = resultOrders.get(0);
-            String product_bought = order.get("prod_id").toString();
-            
-            //unfinished
+        if(accessAccount.equals("Admin")){
+            labeledAs.setText(accessAccount);
+            labeledAs.setForeground(Color.decode("#006AA3"));
+        }else if(accessAccount.equals("Dispatcher")){
+            labeledAs.setText(accessAccount);
+            labeledAs.setForeground(Color.decode("#288700"));
+        }else if(accessAccount.equals("User")){
+            labeledAs.setText(accessAccount);
+            labeledAs.setForeground(Color.decode("#BA8C00"));
         }
     }
     
@@ -160,10 +267,12 @@ public final class profile extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        displayStatistic = new javax.swing.JTextArea();
+        scrollNewProducts = new javax.swing.JScrollPane();
+        NewProductDisplayPanel = new javax.swing.JTextArea();
         acess = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        labeledAs = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -340,7 +449,7 @@ public final class profile extends javax.swing.JInternalFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("Access:");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 460, 70, -1));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 550, 70, -1));
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         jLabel12.setText("Age:");
@@ -384,35 +493,32 @@ public final class profile extends javax.swing.JInternalFrame {
         });
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 530, 120, 40));
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollNewProducts.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        displayStatistic.setEditable(false);
-        displayStatistic.setColumns(20);
-        displayStatistic.setRows(5);
-        jScrollPane1.setViewportView(displayStatistic);
+        NewProductDisplayPanel.setEditable(false);
+        NewProductDisplayPanel.setColumns(20);
+        NewProductDisplayPanel.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        NewProductDisplayPanel.setLineWrap(true);
+        NewProductDisplayPanel.setRows(5);
+        NewProductDisplayPanel.setText("New Product Display Here");
+        scrollNewProducts.setViewportView(NewProductDisplayPanel);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(scrollNewProducts, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(scrollNewProducts, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
         );
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 10, 290, 500));
 
         acess.setBackground(new java.awt.Color(204, 204, 204));
         acess.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        acess.setForeground(new java.awt.Color(153, 0, 0));
+        acess.setForeground(new java.awt.Color(153, 51, 0));
         acess.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         acess.setText("Access");
         acess.setOpaque(true);
@@ -421,6 +527,19 @@ public final class profile extends javax.swing.JInternalFrame {
         jLabel19.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         jLabel19.setText("Birthdate:");
         jPanel1.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 370, -1, -1));
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("Product Acquiration:");
+        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 460, 180, -1));
+
+        labeledAs.setBackground(new java.awt.Color(204, 204, 204));
+        labeledAs.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        labeledAs.setForeground(new java.awt.Color(153, 153, 153));
+        labeledAs.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labeledAs.setText("Labeled As:");
+        labeledAs.setOpaque(true);
+        jPanel1.add(labeledAs, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 570, 160, 50));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 0, 950, 640));
 
@@ -502,6 +621,7 @@ public final class profile extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea NewProductDisplayPanel;
     private javax.swing.JLabel Username;
     private javax.swing.JTextField ValidID;
     private javax.swing.JLabel acess;
@@ -509,7 +629,6 @@ public final class profile extends javax.swing.JInternalFrame {
     private javax.swing.JLabel badge;
     private javax.swing.JTextField birthdate;
     private javax.swing.JTextField country;
-    private javax.swing.JTextArea displayStatistic;
     private javax.swing.JTextField educational;
     private javax.swing.JTextField email;
     private javax.swing.JTextField gender;
@@ -518,6 +637,7 @@ public final class profile extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -533,10 +653,11 @@ public final class profile extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labeledAs;
     private javax.swing.JTextField name;
     private javax.swing.JLabel pass;
     private javax.swing.JTextField phonenumber;
+    private javax.swing.JScrollPane scrollNewProducts;
     private javax.swing.JLabel userID;
     // End of variables declaration//GEN-END:variables
 }
