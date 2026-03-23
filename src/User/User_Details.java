@@ -513,8 +513,8 @@ public final class User_Details extends javax.swing.JFrame {
                     Timestamp date = Timestamp.valueOf(now);
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     String formattedDate = now.format(formatter);
-                    String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
-                    conf.addRecordAndReturnId(queryNow, see.GetID(), "Account Details Succesfully Created Set in ID: " + see.GetID(), formattedDate);
+                    String queryNow = "INSERT INTO notification(user_id, n_content, date, read) VALUES (?, ?,?, ?)";
+                    conf.addRecordAndReturnId(queryNow, see.GetID(), "Account Details Succesfully Created Set in ID: " + see.GetID(), formattedDate, false);
 
                     queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
                     conf.addRecordAndReturnId(queryNow, see.GetID(), formattedDate, "Create");
@@ -588,8 +588,8 @@ public final class User_Details extends javax.swing.JFrame {
             Timestamp date = Timestamp.valueOf(now);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String formattedDate = now.format(formatter);
-            String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
-            conf.addRecordAndReturnId(queryNow, see.GetID(), "Successfully Updated User Account Details", formattedDate);
+            String queryNow = "INSERT INTO notification(user_id, n_content, date, read) VALUES (?, ?,?, ?)";
+            conf.addRecordAndReturnId(queryNow, see.GetID(), "Successfully Updated User Account Details", formattedDate, false);
 
             queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
             conf.addRecordAndReturnId(queryNow, see.GetID(), formattedDate, "Update");
@@ -613,8 +613,8 @@ public final class User_Details extends javax.swing.JFrame {
         Timestamp date = Timestamp.valueOf(now);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDate = now.format(formatter);
-        String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
-        conf.addRecordAndReturnId(queryNow, see.GetID(), "Successfully Updated Account Log In Credentials:", formattedDate);
+        String queryNow = "INSERT INTO notification(user_id, n_content, date, read) VALUES (?, ?,?, ?)";
+        conf.addRecordAndReturnId(queryNow, see.GetID(), "Successfully Updated Account Log In Credentials:", formattedDate, false);
 
         queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
         conf.addRecordAndReturnId(queryNow, see.GetID(), formattedDate, "Update");

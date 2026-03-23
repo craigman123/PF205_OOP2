@@ -36,7 +36,7 @@ import javax.swing.SwingConstants;
  *
  * @author user
  */
-public class CartMain extends javax.swing.JInternalFrame {
+public final class CartMain extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form CartMain
@@ -58,6 +58,7 @@ public class CartMain extends javax.swing.JInternalFrame {
         
         cart.DisplayPreviousAddress(prefillLocation);
         prefillName.setText(getName);
+        
     }
 
     public final void StyleFrame(){

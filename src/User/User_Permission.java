@@ -170,8 +170,8 @@ public class User_Permission extends javax.swing.JFrame {
                 Timestamp date = Timestamp.valueOf(now);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String formattedDate = now.format(formatter);
-                String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
-                conf.addRecordAndReturnId(queryNow, id, "Successfully Registered", formattedDate);
+                String queryNow = "INSERT INTO notification(user_id, n_content, date, read) VALUES (?, ?,?, ?)";
+                conf.addRecordAndReturnId(queryNow, id, "Successfully Registered", formattedDate, false);
                 
                 queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
                 conf.addRecordAndReturnId(queryNow, id, formattedDate, "Register");

@@ -107,6 +107,15 @@ public class config {
         return records;
     }
     
+    public void displayCostumData(String[][] data, JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0); // clear existing rows
+
+        for (String[] row : data) {
+            model.addRow(row);
+        }
+    }
+    
     public void displayData(String sql, javax.swing.JTable table, Object... values) {
         try (Connection conn = this.connectDB();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

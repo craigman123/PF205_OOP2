@@ -27,7 +27,6 @@ public class miniTable_product extends javax.swing.JInternalFrame {
     
     public final void StyleTable(){
         table.setRowHeight(50);
-        
     }
 
     public final void DispTable(){

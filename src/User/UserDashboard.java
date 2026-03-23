@@ -11,8 +11,12 @@ import User.Cart.CartMain;
 import User.Market.MarketMain;
 import User.Notifications.notify;
 import User.Orders.Orders;
+import about.about;
 import configuration.animation;
+import configuration.config;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.util.*;
 import javax.swing.*;
 import main.LoginRegister;
@@ -62,22 +66,47 @@ public final class UserDashboard extends javax.swing.JFrame {
         return 0;
     }
     
-    public final void Toggle_Buttons(){
+    public final void Toggle_Buttons() {
         ButtonGroup menuGroup = new ButtonGroup();
-        
-        menuGroup.add(jToggleButton1);
-        menuGroup.add(jToggleButton2);
-        menuGroup.add(jToggleButton3); 
-        menuGroup.add(jToggleButton4);
-        menuGroup.add(jToggleButton5); 
-        menuGroup.add(jToggleButton7);
-        
-        animation.StyleToggleButtons(jToggleButton2); 
-        animation.StyleToggleButtons(jToggleButton3); 
-        animation.StyleToggleButtons(jToggleButton4); 
-        animation.StyleToggleButtons(jToggleButton5); 
-        animation.StyleToggleButtons(jToggleButton7); 
-        
+        session see = new session();
+        config conf = new config();
+
+        menuGroup.add(profileSection);
+        menuGroup.add(market);
+        menuGroup.add(CartSection); 
+        menuGroup.add(ordersSection);
+        menuGroup.add(notificattion); 
+        menuGroup.add(about);
+
+        animation.StyleToggleButtons(market); 
+        animation.StyleToggleButtons(CartSection); 
+        animation.StyleToggleButtons(ordersSection); 
+        animation.StyleToggleButtons(about); 
+
+        String qry = "SELECT read FROM notification WHERE user_id = ?";
+        java.util.List<java.util.Map<String, Object>> fountNotify = 
+            conf.fetchRecords(qry, see.GetID()); 
+
+        boolean hasUnread = false;
+
+        for (java.util.Map<String, Object> notif : fountNotify) {
+            String read = notif.get("read").toString();
+
+            if (read.equals("0")) {
+                hasUnread = true;
+                break; // stop early (efficient)
+            }
+        }
+
+        // Apply style ONCE (important)
+        if (hasUnread) {
+            notificattion.setBackground(Color.decode("#FFBAB0"));
+            notificattion.setOpaque(true);
+            notificattion.setBorderPainted(false);
+            notificattion.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        } else {
+            animation.StyleToggleButtons(notificattion);
+        }
     }
     
     public void ShowProf(){
@@ -101,12 +130,12 @@ public final class UserDashboard extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        jToggleButton2 = new javax.swing.JToggleButton();
-        jToggleButton3 = new javax.swing.JToggleButton();
-        jToggleButton4 = new javax.swing.JToggleButton();
-        jToggleButton5 = new javax.swing.JToggleButton();
-        jToggleButton7 = new javax.swing.JToggleButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        market = new javax.swing.JToggleButton();
+        CartSection = new javax.swing.JToggleButton();
+        ordersSection = new javax.swing.JToggleButton();
+        notificattion = new javax.swing.JToggleButton();
+        about = new javax.swing.JToggleButton();
+        profileSection = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         MainPane = new javax.swing.JDesktopPane();
 
@@ -119,65 +148,70 @@ public final class UserDashboard extends javax.swing.JFrame {
         jLabel9.setText("All rights reserved 2025");
         jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 635, -1, 20));
 
-        jToggleButton2.setSelected(true);
-        jToggleButton2.setText("Market");
-        jToggleButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+        market.setSelected(true);
+        market.setText("Market");
+        market.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jToggleButton2MouseClicked(evt);
+                marketMouseClicked(evt);
             }
         });
-        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+        market.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
+                marketActionPerformed(evt);
             }
         });
-        jPanel2.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 204, 60));
+        jPanel2.add(market, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 204, 60));
 
-        jToggleButton3.setText("Cart");
-        jToggleButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+        CartSection.setText("Cart");
+        CartSection.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jToggleButton3MouseClicked(evt);
+                CartSectionMouseClicked(evt);
             }
         });
-        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+        CartSection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton3ActionPerformed(evt);
+                CartSectionActionPerformed(evt);
             }
         });
-        jToggleButton3.addKeyListener(new java.awt.event.KeyAdapter() {
+        CartSection.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                jToggleButton3KeyPressed(evt);
+                CartSectionKeyPressed(evt);
             }
         });
-        jPanel2.add(jToggleButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 204, 60));
+        jPanel2.add(CartSection, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 204, 60));
 
-        jToggleButton4.setText("Orders");
-        jToggleButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+        ordersSection.setText("Orders");
+        ordersSection.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jToggleButton4MouseClicked(evt);
+                ordersSectionMouseClicked(evt);
             }
         });
-        jPanel2.add(jToggleButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 204, 60));
+        jPanel2.add(ordersSection, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 204, 60));
 
-        jToggleButton5.setText("Notification");
-        jToggleButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+        notificattion.setText("Notification");
+        notificattion.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jToggleButton5MouseClicked(evt);
+                notificattionMouseClicked(evt);
             }
         });
-        jPanel2.add(jToggleButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 204, 60));
+        jPanel2.add(notificattion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 204, 60));
 
-        jToggleButton7.setText("About");
-        jPanel2.add(jToggleButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 480, 204, 60));
-
-        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dyna_image/dafault_image.jpg"))); // NOI18N
-        jToggleButton1.setText("jToggleButton1");
-        jToggleButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        about.setText("About");
+        about.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jToggleButton1MouseClicked(evt);
+                aboutMouseClicked(evt);
             }
         });
-        jPanel2.add(jToggleButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 390, 370));
+        jPanel2.add(about, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 480, 204, 60));
+
+        profileSection.setIcon(new javax.swing.ImageIcon(getClass().getResource("/dyna_image/dafault_image.jpg"))); // NOI18N
+        profileSection.setText("jToggleButton1");
+        profileSection.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                profileSectionMouseClicked(evt);
+            }
+        });
+        jPanel2.add(profileSection, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 390, 370));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 52)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -230,45 +264,51 @@ public final class UserDashboard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jToggleButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MouseClicked
+    private void profileSectionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profileSectionMouseClicked
         ShowProf();   // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton1MouseClicked
+    }//GEN-LAST:event_profileSectionMouseClicked
 
-    private void jToggleButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton2MouseClicked
+    private void marketMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_marketMouseClicked
         MarketMain main = new MarketMain(MainPane);
         MainPane.removeAll();
         MainPane.add(main).setVisible(true);// TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton2MouseClicked
+    }//GEN-LAST:event_marketMouseClicked
 
-    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+    private void CartSectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CartSectionActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton3ActionPerformed
+    }//GEN-LAST:event_CartSectionActionPerformed
 
-    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+    private void marketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_marketActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton2ActionPerformed
+    }//GEN-LAST:event_marketActionPerformed
 
-    private void jToggleButton3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jToggleButton3KeyPressed
+    private void CartSectionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_CartSectionKeyPressed
          // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton3KeyPressed
+    }//GEN-LAST:event_CartSectionKeyPressed
 
-    private void jToggleButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton3MouseClicked
+    private void CartSectionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CartSectionMouseClicked
         CartMain cart = new CartMain(MainPane);
         MainPane.removeAll();
         MainPane.add(cart).setVisible(true);        // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton3MouseClicked
+    }//GEN-LAST:event_CartSectionMouseClicked
 
-    private void jToggleButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton4MouseClicked
+    private void ordersSectionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ordersSectionMouseClicked
         Orders order = new Orders(MainPane);
         MainPane.removeAll();
         MainPane.add(order).setVisible(true);         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton4MouseClicked
+    }//GEN-LAST:event_ordersSectionMouseClicked
 
-    private void jToggleButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton5MouseClicked
+    private void notificattionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notificattionMouseClicked
         notify nigga = new notify(MainPane);
         MainPane.removeAll();
         MainPane.add(nigga).setVisible(true);         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton5MouseClicked
+    }//GEN-LAST:event_notificattionMouseClicked
+
+    private void aboutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aboutMouseClicked
+        about a = new about();
+        MainPane.removeAll();
+        MainPane.add(a).setVisible(true);     // TODO add your handling code here:
+    }//GEN-LAST:event_aboutMouseClicked
 
     /**
      * @param args the command line arguments
@@ -306,16 +346,16 @@ public final class UserDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton CartSection;
     private javax.swing.JDesktopPane MainPane;
+    private javax.swing.JToggleButton about;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
-    private javax.swing.JToggleButton jToggleButton3;
-    private javax.swing.JToggleButton jToggleButton4;
-    private javax.swing.JToggleButton jToggleButton5;
-    private javax.swing.JToggleButton jToggleButton7;
+    private javax.swing.JToggleButton market;
+    private javax.swing.JToggleButton notificattion;
+    private javax.swing.JToggleButton ordersSection;
+    private javax.swing.JToggleButton profileSection;
     // End of variables declaration//GEN-END:variables
 }

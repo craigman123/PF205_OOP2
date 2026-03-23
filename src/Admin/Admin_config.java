@@ -104,4 +104,22 @@ public class Admin_config {
         actionCombo.addItem("Looged Out");
         
     }
+    
+    public static void DisplayStatusAction(JComboBox<String> actionCombo){
+        actionCombo.removeAllItems();
+        
+        actionCombo.addItem("All");
+        actionCombo.addItem("Pending");
+        actionCombo.addItem("In Transit");
+        actionCombo.addItem("On Delivery");
+        actionCombo.addItem("Completed");
+    }
+    
+    public static void DisplaySearchAction(JComboBox<String> actionCombo){
+        actionCombo.removeAllItems();
+        
+        actionCombo.addItem("User ID");
+        actionCombo.addItem("Order ID");
+        actionCombo.addItem("Product ID");
+    }
 }

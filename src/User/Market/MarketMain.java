@@ -514,7 +514,6 @@ public class MarketMain extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JScrollPane mainScroll;
     private javax.swing.JTextField searchBar;

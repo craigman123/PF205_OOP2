@@ -7,6 +7,7 @@ package Admin;
 
 import Admin.Logs.Logs;
 import Admin.Sales.Sales;
+import Admin.userOrders.uOrders;
 import Profiles.profile;
 import Profiles.session;
 import configuration.animation;
@@ -69,11 +70,13 @@ public class AdminDashboard extends javax.swing.JFrame {
         menuGroup.add(jToggleButton3); 
         menuGroup.add(jToggleButton4);
         menuGroup.add(jToggleButton7);
+        menuGroup.add(jToggleButton8);
         
         animation.StyleToggleButtons(jToggleButton2); 
         animation.StyleToggleButtons(jToggleButton3); 
         animation.StyleToggleButtons(jToggleButton4);  
         animation.StyleToggleButtons(jToggleButton7); 
+        animation.StyleToggleButtons(jToggleButton8);
         
     }
     
@@ -89,6 +92,7 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        jToggleButton8 = new javax.swing.JToggleButton();
         jToggleButton2 = new javax.swing.JToggleButton();
         jToggleButton3 = new javax.swing.JToggleButton();
         jToggleButton4 = new javax.swing.JToggleButton();
@@ -105,6 +109,14 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jToggleButton8.setText("User Orders");
+        jToggleButton8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jToggleButton8MouseClicked(evt);
+            }
+        });
+        jPanel2.add(jToggleButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 204, 60));
 
         jToggleButton2.setSelected(true);
         jToggleButton2.setText("Users");
@@ -152,7 +164,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 jToggleButton7MouseClicked(evt);
             }
         });
-        jPanel2.add(jToggleButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 204, 60));
+        jPanel2.add(jToggleButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 204, 60));
 
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -181,7 +193,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         jDesktopPane1.setLayout(jDesktopPane1Layout);
         jDesktopPane1Layout.setHorizontalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 938, Short.MAX_VALUE)
+            .addGap(0, 937, Short.MAX_VALUE)
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,6 +293,13 @@ public class AdminDashboard extends javax.swing.JFrame {
         jDesktopPane1.add(logs).setVisible(true);        // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton7MouseClicked
 
+    private void jToggleButton8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton8MouseClicked
+        jDesktopPane1.removeAll();
+        
+        uOrders uorder = new uOrders();
+        jDesktopPane1.add(uorder).setVisible(true);// TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton8MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -328,5 +347,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JToggleButton jToggleButton3;
     private javax.swing.JToggleButton jToggleButton4;
     private javax.swing.JToggleButton jToggleButton7;
+    private javax.swing.JToggleButton jToggleButton8;
     // End of variables declaration//GEN-END:variables
 }

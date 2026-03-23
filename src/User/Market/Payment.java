@@ -17,6 +17,7 @@ import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.*;
+import org.jxmapviewer.viewer.GeoPosition;
 
 /**
  *
@@ -35,10 +36,14 @@ public final class Payment extends javax.swing.JInternalFrame {
     private final int shipFee;
     private final float Total;
     private String extra[];
+    private GeoPosition location;
 
     Border grayBorder = BorderFactory.createLineBorder(Color.GRAY, 2);
 
-    public Payment(int id, JDesktopPane pane, String address, String quantity, String SpecificInfo, int shippingFee, float totalPay, String additionals[]) {
+    public Payment(int id, JDesktopPane pane, String address, String quantity, String SpecificInfo, int shippingFee, float totalPay, String additionals[],
+            GeoPosition selectedLocation) {
+        
+        this.location = selectedLocation;
         this.ProdId = id;
         this.panel = pane;
         this.Address = address;
@@ -383,10 +388,13 @@ public final class Payment extends javax.swing.JInternalFrame {
             paymentMethod = "Apay-Later";
             card = cardNum.getText();
         }
+        
+        String locationString = location.getLatitude() + ", " + location.getLongitude();
 
         qry = "INSERT INTO userOrders(user_id, prod_id, order_status, order_prod, order_quantity, order_totalPrice,"
-                + " order_shippingAddress, order_paymentMethod, order_date, order_additionals, order_visibility) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
-        conf.addRecordAndReturnId(qry, see.GetID(), ProdId, "Pending", name, quan, Total, Address, paymentMethod, formattedNow, Arrays.toString(extra), "true");
+                + " order_shippingAddress, order_paymentMethod, order_date, order_additionals, order_visibility, exact_location) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+        conf.addRecordAndReturnId(qry, see.GetID(), ProdId, "Pending", name, quan, Total, Address, paymentMethod, formattedNow,
+                Arrays.toString(extra), "true", locationString);
 
         qry = "SELECT * FROM products WHERE prod_id = ?";
         java.util.List<java.util.Map<String, Object>> prodResult = conf.fetchRecords(qry, ProdId);
@@ -409,8 +417,8 @@ public final class Payment extends javax.swing.JInternalFrame {
         qry = "INSERT INTO logs(user_id, prod_id, dateTime, log_action) VALUES(?,?,?,?) ";
         conf.addRecordAndReturnId(qry, see.GetID(), ProdId, formattedNow, "Bought A Product");
 
-        String queryNow = "INSERT INTO notifications(prod_id, user_id, n_content, date) VALUES (?, ?, ?, ?)";
-        conf.addRecordAndReturnId(queryNow, ProdId, see.GetID(), "Purchased Product:", formattedNow);
+        String queryNow = "INSERT INTO notification(prod_id, user_id, n_content, date, read) VALUES (?,?,?,?,?)";
+        conf.addRecordAndReturnId(queryNow, ProdId, see.GetID(), "Purchased Product:", formattedNow, false);
 
         qry = "INSERT INTO creditCards(user_id, pay_method, card_num) VALUES(?,?,?)";
         conf.addRecordAndReturnId(qry, see.GetID(), paymentMethod, card);

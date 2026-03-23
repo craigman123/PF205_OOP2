@@ -13,8 +13,23 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import configuration.config;
+import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.*;
 import javax.swing.*;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.input.PanMouseInputListener;
+import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
+import org.jxmapviewer.viewer.*;
 
 /**
  *
@@ -28,6 +43,7 @@ public class Order extends javax.swing.JInternalFrame {
     private int id;
     private ButtonGroup group;
     private JDesktopPane pane;
+    private GeoPosition SelectedLocation;
     
     public Order(int ID, JDesktopPane panel) {
         User_config conf = new User_config();
@@ -217,6 +233,12 @@ public class Order extends javax.swing.JInternalFrame {
                 message.append("• Zip Code must be numeric.\n");
             }
         }
+        
+        String pos = Location.getText();
+        
+        if(pos.isEmpty() || pos.equals("Specific Location")){
+            message.append("• Exact Location is required for Delivery Accuracy\n");
+        }
 
         if (message.length() > 0) {
             JOptionPane.showMessageDialog(this, message.toString(),
@@ -281,11 +303,13 @@ public class Order extends javax.swing.JInternalFrame {
         if (warranty.isSelected()) {
             additionalsList.add("Warranty");
         }
+        location lo = new location();
+        SelectedLocation = lo.TurnToGeo(Location.getText());
         
         String[] additionals = additionalsList.toArray(new String[0]);
+        System.out.println("Location: " + SelectedLocation);
 
-        // Create payment frame
-        Payment pay = new Payment(id, pane, deliveryInfo, label.getText(), spec.getText(), (int) totalFee, Due, additionals);
+        Payment pay = new Payment(id, pane, deliveryInfo, label.getText(), spec.getText(), (int) totalFee, Due, additionals, SelectedLocation);
         
         
         pay.CenterFrame();
@@ -300,7 +324,8 @@ public class Order extends javax.swing.JInternalFrame {
         config.getProvince() != null && !config.getProvince().isEmpty() &&
         config.getCountry() != null && !config.getCountry().isEmpty() &&
         config.getRegion() != null && !config.getRegion().isEmpty() &&
-        config.getBrg() != null && !config.getBrg().isEmpty()) {
+        config.getBrg() != null && !config.getBrg().isEmpty() && 
+        config.getPosition() != null && !config.getPosition().isEmpty()) {
 
         comboCountry.setSelectedItem(config.getCountry());
         name1.setText(config.getFinalname());
@@ -310,6 +335,7 @@ public class Order extends javax.swing.JInternalFrame {
         zipCode.setText(String.valueOf(config.getZip()));
         barangay.setText(config.getBrg());
         spec.setText(config.getSpecificInf());
+        Location.setText(config.getPosition());
 
         return;
     }
@@ -320,6 +346,7 @@ public class Order extends javax.swing.JInternalFrame {
     if (!result.isEmpty()) {
         for (java.util.Map<String, Object> previousOrders : result) {
             String rawAddress = previousOrders.get("order_shippingAddress").toString();
+            String exact = previousOrders.get("exact_location").toString();
             String[] parts = rawAddress.split(",");
 
             for (int i = 0; i < parts.length; i++) {
@@ -337,11 +364,143 @@ public class Order extends javax.swing.JInternalFrame {
                 zipCode.setText(parts[6]);
                 spec.setText(parts[7]);
             }
+            
+            Location.setText(exact);
         }
     } else {
         System.out.println("No previous Order Details");
     }
 }
+    
+    Set<Waypoint> waypoints = new HashSet<>();
+    WaypointPainter<Waypoint> painter = new WaypointPainter<>();
+    
+    private GeoPosition getCurrentLocation() {
+        try {
+            URL url = new URL("http://ip-api.com/json");
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(url.openStream())
+            );
+
+            StringBuilder json = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                json.append(line);
+            }
+
+            reader.close();
+
+            // simple parsing (no library)
+            String result = json.toString();
+
+            double lat = Double.parseDouble(result.split("\"lat\":")[1].split(",")[0]);
+            double lon = Double.parseDouble(result.split("\"lon\":")[1].split(",")[0]);
+
+            return new GeoPosition(lat, lon);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new GeoPosition(10.244983, 123.794176); // fallback (Cebu)
+        }
+    }
+    
+    private void openMapDialog(JTextField field) {
+        JDialog dialog = new JDialog((Frame) null, "Select Location", true);
+        dialog.setSize(1300, 800);
+        dialog.setLayout(new BorderLayout());
+
+        JXMapViewer map = new JXMapViewer();
+
+        TileFactoryInfo info = new OSMTileFactoryInfo();
+        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        map.setTileFactory(tileFactory);
+
+        // Determine starting location
+        String text = field.getText().trim();
+        GeoPosition current = null;
+        GeoPosition defaultLocation = new GeoPosition(10.244983, 123.794176); // fixed default
+
+        if (!text.isEmpty() && text.contains(",")) {
+            try {
+                String[] parts = text.split(",");
+                double lat = Double.parseDouble(parts[0].trim());
+                double lon = Double.parseDouble(parts[1].trim());
+                current = new GeoPosition(lat, lon);
+            } catch (NumberFormatException ex) {
+                current = defaultLocation;
+            }
+        } else {
+            current = defaultLocation;
+        }
+
+        map.setAddressLocation(current);
+        map.setZoom(5);
+
+        // Enable drag
+        PanMouseInputListener pan = new PanMouseInputListener(map);
+        map.addMouseListener(pan);
+        map.addMouseMotionListener(pan);
+
+        // Enable zoom
+        map.addMouseWheelListener(new ZoomMouseWheelListenerCenter(map));
+
+        // Marker setup
+        Set<Waypoint> waypoints = new HashSet<>();
+        WaypointPainter<Waypoint> painter = new WaypointPainter<>();
+
+        // initial marker
+        waypoints.add(new DefaultWaypoint(current));
+        painter.setWaypoints(waypoints);
+        map.setOverlayPainter(painter);
+
+        // ✅ Track selected location for Confirm button
+        final GeoPosition[] selectedLocation = {current}; // store in array to mutate inside listener
+
+        // Click on map moves marker
+        map.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                GeoPosition pos = map.convertPointToGeoPosition(e.getPoint());
+                selectedLocation[0] = pos; // update selected location
+
+                // update marker
+                waypoints.clear();
+                SelectedLocation = pos;
+                waypoints.add(new DefaultWaypoint(pos));
+                painter.setWaypoints(waypoints);
+                map.repaint();
+            }
+        });
+
+        dialog.add(map, BorderLayout.CENTER);
+
+        // ✅ Confirm button at bottom-left
+        JButton confirmBtn = new JButton("Confirm");
+            confirmBtn.setBounds(550, 680, 200, 50);
+            confirmBtn.addActionListener(e -> {
+                field.setText(selectedLocation[0].getLatitude() + ", " + selectedLocation[0].getLongitude());
+                dialog.dispose();
+            });
+            
+            confirmBtn.setBackground(new Color(255, 255, 255, 200)); // semi-transparent white
+            confirmBtn.setForeground(Color.BLACK);
+            confirmBtn.setFont(new Font("Arial", Font.BOLD, 14));
+            confirmBtn.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+            confirmBtn.setFocusPainted(false); // remove focus outline
+            confirmBtn.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
+
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(1300, 800)); 
+
+        map.setBounds(0, 0, 1300, 800);
+        layeredPane.add(map, Integer.valueOf(0));
+
+        layeredPane.add(confirmBtn, Integer.valueOf(1));
+        dialog.add(layeredPane, BorderLayout.CENTER);
+
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -400,6 +559,7 @@ public class Order extends javax.swing.JInternalFrame {
         norma = new javax.swing.JRadioButton();
         indicator = new javax.swing.JLabel();
         warranty = new javax.swing.JRadioButton();
+        Location = new javax.swing.JTextField();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -535,7 +695,7 @@ public class Order extends javax.swing.JInternalFrame {
         due.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
         due.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         due.setText("DUE");
-        getContentPane().add(due, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 520, 160, 43));
+        getContentPane().add(due, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 520, 210, 43));
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setToolTipText("");
@@ -555,7 +715,7 @@ public class Order extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(spec);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 468, 290, 170));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 448, 290, 190));
 
         comboCountry.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         comboCountry.addActionListener(new java.awt.event.ActionListener() {
@@ -563,7 +723,7 @@ public class Order extends javax.swing.JInternalFrame {
                 comboCountryActionPerformed(evt);
             }
         });
-        getContentPane().add(comboCountry, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 287, 43));
+        getContentPane().add(comboCountry, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 287, 30));
 
         zipCode.setEditable(false);
         zipCode.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
@@ -574,7 +734,7 @@ public class Order extends javax.swing.JInternalFrame {
                 zipCodeMouseClicked(evt);
             }
         });
-        getContentPane().add(zipCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 420, 290, 40));
+        getContentPane().add(zipCode, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 290, 30));
 
         jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel4.setText("QUANTITY:");
@@ -658,7 +818,7 @@ public class Order extends javax.swing.JInternalFrame {
                 name1KeyTyped(evt);
             }
         });
-        getContentPane().add(name1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 290, 40));
+        getContentPane().add(name1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 290, 30));
 
         barangay.setEditable(false);
         barangay.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
@@ -669,7 +829,7 @@ public class Order extends javax.swing.JInternalFrame {
                 barangayMouseClicked(evt);
             }
         });
-        getContentPane().add(barangay, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 290, 40));
+        getContentPane().add(barangay, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 290, 30));
 
         province.setEditable(false);
         province.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
@@ -685,7 +845,7 @@ public class Order extends javax.swing.JInternalFrame {
                 provinceActionPerformed(evt);
             }
         });
-        getContentPane().add(province, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 290, 40));
+        getContentPane().add(province, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 290, 30));
 
         city.setEditable(false);
         city.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
@@ -701,7 +861,7 @@ public class Order extends javax.swing.JInternalFrame {
                 cityActionPerformed(evt);
             }
         });
-        getContentPane().add(city, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, 290, 40));
+        getContentPane().add(city, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 290, 30));
 
         region.setEditable(false);
         region.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
@@ -717,7 +877,7 @@ public class Order extends javax.swing.JInternalFrame {
                 regionActionPerformed(evt);
             }
         });
-        getContentPane().add(region, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 290, 40));
+        getContentPane().add(region, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 290, 30));
 
         ppc.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
         ppc.setText("PRODUCT CARE (P 20.00)");
@@ -782,6 +942,16 @@ public class Order extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(warranty, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 460, -1, -1));
+
+        Location.setEditable(false);
+        Location.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        Location.setText("Specific Location");
+        Location.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                LocationMouseClicked(evt);
+            }
+        });
+        getContentPane().add(Location, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 290, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -925,8 +1095,14 @@ public class Order extends javax.swing.JInternalFrame {
         updateTotal();        // TODO add your handling code here:
     }//GEN-LAST:event_warrantyMouseClicked
 
+    private void LocationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LocationMouseClicked
+
+         openMapDialog(Location);      // TODO add your handling code here:
+    }//GEN-LAST:event_LocationMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField Location;
     private javax.swing.JLabel ShowDue;
     private javax.swing.JLabel add;
     private javax.swing.JTextField barangay;

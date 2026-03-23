@@ -3,24 +3,48 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/Admin_config.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/Order.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/Product_Detail.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/tableProduct.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Orders/SeeProductStatus.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Refactor_Product.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Remove_Productclass.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/ProductPurchase.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/about/about.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/Mng_Product.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/connector.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/Payment.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Edit_Product.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/userOrders/export.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/config.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/Add_user.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/MarketMain.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/miniTable_product.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/userOrders/PdfReceipt.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/location.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/UserDashboard.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/userOrders/DisplayTable.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Add_Product.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Orders/EditOrderInfo.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/dispatcher/DispatcherDashboard.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Profiles/profile.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/AdminDashboard.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/animation.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/Admin_config.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/userOrders/uOrders.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/Order.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Orders/Orders.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Cart/Cart_config.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/User_Details.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/User_Permission.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/Payment.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Edit_Product.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/UserControl/Add_user.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Market/MarketMain.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/connector.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Notifications/notify.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/LogReg_config.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/ProductControl/Add_Product.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Orders/EditOrderInfo.java</file>
             <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Cart/CartMain.java</file>
-            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Profiles/profile.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/userOrders/uorder.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/companyInfo/CompanyInformation.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/Admin/userOrders/barcodeGenerator.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/configuration/Validations.java</file>
+            <file>file:/C:/Users/user/OneDrive/Documents/NetBeansProjects/PF205_OOP2/src/User/Orders/Order_config.java</file>
         </group>
     </open-files>
 </project-private>

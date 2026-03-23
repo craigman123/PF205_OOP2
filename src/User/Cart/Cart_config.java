@@ -89,9 +89,20 @@ public class Cart_config {
     private static String brg;
     private static int zip;
     private static String spec;
+    private static String position;
 
     public static void sendGlobal(String name, String address) {
         Finalname = name;
+        config conf = new config();
+        session see = new session();
+        
+        String qry = "SELECT * FROM userOrders WHERE user_id = ?";
+        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, see.GetID());
+        
+        if(!result.isEmpty()){
+            java.util.Map<String, Object> orders = result.get(0);
+            position = orders.get("exact_location").toString();
+        }
 
         String[] parts = address.split(",");
 
@@ -116,6 +127,6 @@ public class Cart_config {
     public static String getBrg() { return brg; }
     public static int getZip() { return zip; }
     public static String getSpecificInf() { return spec; }
-    
+    public static String getPosition() { return position; }
     
 }

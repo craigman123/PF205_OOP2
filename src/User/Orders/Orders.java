@@ -248,8 +248,7 @@ public final class Orders extends javax.swing.JInternalFrame {
 
                     case "On Delivery":
                         if (diffDays >= 4) {
-                            newStatus = "Completed";
-                            completedCount++;
+                            
                         } else {
                             deliveryInProgressCount++;
                         }

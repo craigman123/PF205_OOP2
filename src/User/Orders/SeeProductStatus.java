@@ -307,8 +307,8 @@ public final class SeeProductStatus extends javax.swing.JInternalFrame {
                     Timestamp date = Timestamp.valueOf(now);
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     String formattedDate = now.format(formatter);
-                    String queryNow = "INSERT INTO notification(prod_id, user_id, n_content, date) VALUES (?,?,?,?)";
-                    conf.addRecordAndReturnId(queryNow, ProdId, see.GetID(), "Successfully Deleted Order Information:", formattedDate);
+                    String queryNow = "INSERT INTO notification(prod_id, user_id, n_content, date, read) VALUES (?,?,?,?,?)";
+                    conf.addRecordAndReturnId(queryNow, ProdId, see.GetID(), "Successfully Deleted Order Information:", formattedDate, false);
                     
                     queryNow = "INSERT INTO logs(prod_id, user_id, dateTime, log_action) VALUES(?,?,?,?)";
                     conf.addRecordAndReturnId(queryNow, ProdId, see.GetID(), formattedDate, "Update");
