@@ -320,6 +320,9 @@ public final class Payment extends javax.swing.JInternalFrame {
     }
 
     public boolean validation() {
+        char[] PIN = pin.getPassword();
+        String password = new String(PIN);
+        
         // Check AP/OP/COD selection
         if (!AP.isSelected() && !OP.isSelected() && !COD.isSelected()) {
             JOptionPane.showMessageDialog(this, "Please select a payment method.", "Validation Error", JOptionPane.WARNING_MESSAGE);
@@ -354,6 +357,13 @@ public final class Payment extends javax.swing.JInternalFrame {
                 Long.parseLong(cardText);
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Card number must be numeric.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+        }
+        
+        if(AP.isSelected() || OP.isSelected()){
+            if(password.length() == 0){
+                JOptionPane.showMessageDialog(this, "Please Enter your car PIN.", "Validation Error", JOptionPane.WARNING_MESSAGE);
                 return false;
             }
         }
@@ -393,7 +403,7 @@ public final class Payment extends javax.swing.JInternalFrame {
 
         qry = "INSERT INTO userOrders(user_id, prod_id, order_status, order_prod, order_quantity, order_totalPrice,"
                 + " order_shippingAddress, order_paymentMethod, order_date, order_additionals, order_visibility, exact_location) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
-        conf.addRecordAndReturnId(qry, see.GetID(), ProdId, "Pending", name, quan, Total, Address, paymentMethod, formattedNow,
+        int orderID = conf.addRecordAndReturnId(qry, see.GetID(), ProdId, "Pending", name, quan, Total, Address, paymentMethod, formattedNow,
                 Arrays.toString(extra), "true", locationString);
 
         qry = "SELECT * FROM products WHERE prod_id = ?";
@@ -423,21 +433,8 @@ public final class Payment extends javax.swing.JInternalFrame {
         qry = "INSERT INTO creditCards(user_id, pay_method, card_num) VALUES(?,?,?)";
         conf.addRecordAndReturnId(qry, see.GetID(), paymentMethod, card);
 
-        JDesktopPane desktopPane = User_config.GetPane();
-        if (desktopPane != null) {
-            for (JInternalFrame f : desktopPane.getAllFrames()) {
-                if (f.isVisible()) {
-                    f.dispose();
-                }
-            }
-        }
-
-        JOptionPane.showMessageDialog(
-                null,
-                "Product Succesfully Bought!",
-                "Succes",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+        SuccesMessage mes = new SuccesMessage(orderID);
+        panel.add(mes).setVisible(true);
     }
 
     /**
@@ -488,6 +485,8 @@ public final class Payment extends javax.swing.JInternalFrame {
         jSeparator4 = new javax.swing.JSeparator();
         address = new javax.swing.JLabel();
         cardNum = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        pin = new javax.swing.JPasswordField();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -604,7 +603,7 @@ public final class Payment extends javax.swing.JInternalFrame {
         jLabel12.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel12.setText("AMOUNT DUE NOW: ");
         jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 510, -1, -1));
-        jPanel1.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 220, 310, 10));
+        jPanel1.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 320, 310, 10));
 
         OP.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         OP.setText("Online Pay");
@@ -794,8 +793,8 @@ public final class Payment extends javax.swing.JInternalFrame {
         jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 270, 100));
 
         jLabel6.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        jLabel6.setText("Card Number:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 130, -1, -1));
+        jLabel6.setText("PIN:");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 230, -1, -1));
 
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 10, 510));
@@ -806,7 +805,7 @@ public final class Payment extends javax.swing.JInternalFrame {
         address.setToolTipText("");
         address.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         address.setOpaque(true);
-        jPanel1.add(address, new org.netbeans.lib.awtextra.AbsoluteConstraints(311, 230, 300, 400));
+        jPanel1.add(address, new org.netbeans.lib.awtextra.AbsoluteConstraints(311, 340, 300, 290));
 
         cardNum.setBackground(new java.awt.Color(204, 204, 204));
         cardNum.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -815,6 +814,11 @@ public final class Payment extends javax.swing.JInternalFrame {
             }
         });
         jPanel1.add(cardNum, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 160, 280, 50));
+
+        jLabel9.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel9.setText("Card Number:");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 130, -1, -1));
+        jPanel1.add(pin, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 260, 280, 50));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, -1));
 
@@ -938,6 +942,7 @@ public final class Payment extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
@@ -950,6 +955,7 @@ public final class Payment extends javax.swing.JInternalFrame {
     private javax.swing.JRadioButton metroBank;
     private javax.swing.JRadioButton one;
     private javax.swing.JPanel payInfo;
+    private javax.swing.JPasswordField pin;
     private javax.swing.JRadioButton six;
     private javax.swing.JRadioButton three;
     private javax.swing.JRadioButton two;

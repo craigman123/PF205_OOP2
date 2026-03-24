@@ -109,7 +109,7 @@ public class LoginRegister extends javax.swing.JFrame {
                 jLabelImageMouseClicked(evt);
             }
         });
-        jPanel1.add(jLabelImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 0, 500, 450));
+        jPanel1.add(jLabelImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 450));
 
         log_name.setEditable(false);
         log_name.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
@@ -330,6 +330,7 @@ public class LoginRegister extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Nirmala UI", 1, 16)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("LOG IN");
+        jLabel5.setOpaque(true);
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel5MouseClicked(evt);
@@ -351,7 +352,6 @@ public class LoginRegister extends javax.swing.JFrame {
         jLabel13.setFont(new java.awt.Font("Nirmala UI", 1, 16)); // NOI18N
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel13.setText("CREATE ACCOUNT");
-        jLabel13.setOpaque(true);
         jLabel13.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel13MouseClicked(evt);
@@ -569,9 +569,9 @@ public class LoginRegister extends javax.swing.JFrame {
         String bdg = badge.getText();
         String ps = pass.getText();
         System.out.println(ps);
-        String FinalPass = conf.hashPassword(ps);
         
-        LogReg_config.Register(nm, bdg, FinalPass, this);
+        
+        LogReg_config.Register(nm, bdg, ps, this);
     }//GEN-LAST:event_jLabel13MouseClicked
 
     private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed

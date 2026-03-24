@@ -110,7 +110,7 @@ public final class profile extends javax.swing.JInternalFrame {
             .append("Now <span style='color:").append(color).append(";'>")
             .append(status).append("</span>: Reference Number: ")
             .append("<i style='text-decoration:none;'><a href='product://").append(prodID).append("'>")
-            .append(prodID).append("</a></i><br><br>")
+            .append(prodID).append("</a></i>")
             .append("<br>Added At: ").append(getDate);
     }
 
@@ -357,7 +357,7 @@ public final class profile extends javax.swing.JInternalFrame {
                 jLabel7MouseClicked(evt);
             }
         });
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(-50, 0, 186, 410));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(-50, 0, 186, 400));
 
         pass.setBackground(new java.awt.Color(255, 255, 255));
         pass.setFont(new java.awt.Font("Yu Gothic UI", 1, 16)); // NOI18N

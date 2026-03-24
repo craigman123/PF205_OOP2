@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import main.LoginRegister;
 
 /**
@@ -74,9 +75,9 @@ public class User_Permission extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         details = new javax.swing.JCheckBox();
         securityprivacy = new javax.swing.JCheckBox();
-        jLabel2 = new javax.swing.JLabel();
+        agreemnet = new javax.swing.JLabel();
         agreement = new javax.swing.JCheckBox();
-        jLabel3 = new javax.swing.JLabel();
+        balck = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -114,17 +115,27 @@ public class User_Permission extends javax.swing.JFrame {
         securityprivacy.setText("Agreement for Security & Privacy");
         jPanel1.add(securityprivacy, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 109, -1, -1));
 
-        jLabel2.setForeground(new java.awt.Color(51, 102, 255));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Terms");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 113, -1, -1));
+        agreemnet.setForeground(new java.awt.Color(51, 102, 255));
+        agreemnet.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        agreemnet.setText("Terms");
+        agreemnet.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                agreemnetMouseClicked(evt);
+            }
+        });
+        jPanel1.add(agreemnet, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 113, -1, -1));
 
         agreement.setText("Terms and Agreements");
         jPanel1.add(agreement, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 146, -1, -1));
 
-        jLabel3.setForeground(new java.awt.Color(51, 102, 255));
-        jLabel3.setText("Terms");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(232, 150, -1, -1));
+        balck.setForeground(new java.awt.Color(51, 102, 255));
+        balck.setText("Terms");
+        balck.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                balckMouseClicked(evt);
+            }
+        });
+        jPanel1.add(balck, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 150, -1, -1));
 
         jLabel4.setBackground(new java.awt.Color(153, 153, 153));
         jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
@@ -157,43 +168,45 @@ public class User_Permission extends javax.swing.JFrame {
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
             config conf = new config();
         
-            if(details.isSelected()){
-                User_Details det = new User_Details(GetName(), GetBadge(), GetPass(), false);
-                det.setVisible(true);
-                
-            }else{
-                System.out.println("Account Created: ");
-                String sql = "INSERT INTO users (user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
-                int id = conf.addRecordAndReturnId(sql, GetName(), GetBadge(), GetPass(), "User", "Enable");
-                
-                LocalDateTime now = LocalDateTime.now();
-                Timestamp date = Timestamp.valueOf(now);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                String formattedDate = now.format(formatter);
-                String queryNow = "INSERT INTO notification(user_id, n_content, date, read) VALUES (?, ?,?, ?)";
-                conf.addRecordAndReturnId(queryNow, id, "Successfully Registered", formattedDate, false);
-                
-                queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
-                conf.addRecordAndReturnId(queryNow, id, formattedDate, "Register");
-                
-                session see = new session();
-                see.SaveLogIn(id);
-                
-                LoginRegister log = new LoginRegister();
-                log.setVisible(false);
-                frame.dispose();
-                
-                UserDashboard dash = new UserDashboard();
-                dash.setVisible(true);
-                this.dispose();
-            }
-            
-            if(securityprivacy.isSelected()){
-                
-            }
-            
-            if(agreement.isSelected()){
-                
+            if(securityprivacy.isSelected() && agreement.isSelected()){
+                if(details.isSelected()){
+                    User_Details det = new User_Details(GetName(), GetBadge(), GetPass(), false);
+                    det.setVisible(true);
+
+                }else{
+                    System.out.println("Account Created: ");
+                    String FinalPass = conf.hashPassword(GetPass());
+                    String sql = "INSERT INTO users (user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
+                    int id = conf.addRecordAndReturnId(sql, GetName(), GetBadge(), FinalPass, "User", "Disable");
+
+                    LocalDateTime now = LocalDateTime.now();
+                    Timestamp date = Timestamp.valueOf(now);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String formattedDate = now.format(formatter);
+                    String queryNow = "INSERT INTO notification(user_id, n_content, date, read) VALUES (?, ?,?, ?)";
+                    conf.addRecordAndReturnId(queryNow, id, "Successfully Registered", formattedDate, false);
+
+                    queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+                    conf.addRecordAndReturnId(queryNow, id, formattedDate, "Register");
+
+                    session see = new session();
+                    see.SaveLogIn(id);
+
+                    LoginRegister log = new LoginRegister();
+                    log.setVisible(false);
+                    frame.dispose();
+
+                    UserDashboard dash = new UserDashboard();
+                    dash.setVisible(true);
+                    this.dispose();
+                }
+            } else {
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Please Agree to the Terms and Agreement", 
+                    "Terms of Use", 
+                    JOptionPane.INFORMATION_MESSAGE
+                );
             }
             // TODO add your handling code here:
     }//GEN-LAST:event_jLabel4MouseClicked
@@ -209,6 +222,16 @@ public class User_Permission extends javax.swing.JFrame {
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel5MouseClicked
+
+    private void agreemnetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_agreemnetMouseClicked
+        Agreement ag = new Agreement();
+        ag.setVisible(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_agreemnetMouseClicked
+
+    private void balckMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_balckMouseClicked
+        terms t = new terms();
+        t.setVisible(true); // TODO add your handling code here:
+    }//GEN-LAST:event_balckMouseClicked
 
     /**
      * @param args the command line arguments
@@ -248,10 +271,10 @@ public class User_Permission extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox agreement;
+    private javax.swing.JLabel agreemnet;
+    private javax.swing.JLabel balck;
     private javax.swing.JCheckBox details;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;

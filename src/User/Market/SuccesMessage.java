@@ -1,0 +1,214 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package User.Market;
+
+import User.User_config;
+import configuration.config;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+
+/**
+ *
+ * @author user
+ */
+public class SuccesMessage extends javax.swing.JInternalFrame {
+
+    /**
+     * Creates new form SuccesMessage
+     */
+    private int orderID;
+    
+    public SuccesMessage(int id) {
+        this.orderID = id;
+        
+        initComponents();
+        StyleFrame();
+        Image();
+        ShowOrderInfo();
+    }
+    
+    public final void StyleFrame(){
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        javax.swing.plaf.basic.BasicInternalFrameUI ui =
+            (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
+        ui.setNorthPane(null);
+    }
+    
+    public void Image(){
+        ImageIcon icon = null;
+        int w = 0, h = 0;
+
+        icon = new ImageIcon(getClass().getResource("/images/balcj.png"));
+        w = image.getWidth() - 10;
+        h = image.getHeight() - 10;
+
+        Image img = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        image.setIcon(new ImageIcon(img));
+        image.setHorizontalAlignment(JLabel.CENTER);
+        image.setVerticalAlignment(JLabel.CENTER);
+    }
+    
+    public void ShowOrderInfo(){
+        config conf = new config();
+        StringBuilder build = new StringBuilder();
+        
+        String qry = "SELECT * FROM details WHERE order_id = ?";
+        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, orderID); 
+        
+        
+        if(!result.isEmpty()){
+            java.util.Map<String, Object> user = result.get(0);
+            String status = user.get("user_status").toString();
+            String prodName = user.get("order_prod").toString();
+            String quant = user.get("order_quantity").toString();
+            String total = user.get("order_totalPrice").toString();
+            String fullAddress = user.get("order_shippingAddress").toString();
+            String paymethod = user.get("order_paymentMethod").toString();
+            String date = user.get("order_date").toString();
+            String additionals = user.get("order_additionals").toString();
+            String name, description, address;
+            
+            String[] parts = fullAddress.split(",");
+            
+            if (parts.length < 2) {
+                System.out.println("Invalid format!");
+                return;
+            }
+
+            name = parts[0].trim();
+            description = parts[parts.length - 1].trim();
+
+            StringBuilder addressBuilder = new StringBuilder();
+
+            for (int i = 1; i < parts.length - 1; i++) {
+                addressBuilder.append(parts[i].trim());
+
+                if (i < parts.length - 2) {
+                    addressBuilder.append(", ");
+                }
+            }
+
+            address = addressBuilder.toString();
+            
+            build.append("=====================================\n");
+        build.append("            ORDER DETAILS            \n");
+        build.append("=====================================\n\n");
+
+        build.append(String.format("%-18s : %s\n", "Customer Name", name));
+        build.append(String.format("%-18s : %s\n", "Address", address));
+        build.append(String.format("%-18s : %s\n", "Description", description));
+        build.append("\n");
+
+        build.append(String.format("%-18s : %s\n", "Product", prodName));
+        build.append(String.format("%-18s : %s\n", "Quantity", quant));
+        build.append(String.format("%-18s : %s\n", "Total Price", total));
+        build.append("\n");
+
+        build.append(String.format("%-18s : %s\n", "Payment Method", paymethod));
+        build.append(String.format("%-18s : %s\n", "Order Date", date));
+        build.append(String.format("%-18s : %s\n", "Status", status));
+
+        if (additionals != null && !additionals.equals("null")) {
+            build.append(String.format("%-18s : %s\n", "Notes", additionals));
+        }
+
+        build.append("\n=====================================\n");
+        build.append("         THANK YOU FOR ORDERING      \n");
+        build.append("=====================================\n");
+
+        // ✅ FINAL OUTPUT
+        area.setText(build.toString());
+            
+            
+        } else {
+            area.setText("No order details found.");
+            return;
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        image = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        area = new javax.swing.JTextArea();
+
+        jPanel1.setBackground(new java.awt.Color(222, 222, 222));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setBackground(new java.awt.Color(197, 197, 197));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("COMPLETE");
+        jLabel1.setOpaque(true);
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 490, 247, 57));
+
+        image.setText("successimage");
+        jPanel1.add(image, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 16, 312, 420));
+
+        area.setColumns(20);
+        area.setRows(5);
+        jScrollPane1.setViewportView(area);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 20, 560, 410));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        JDesktopPane desktopPane = User_config.GetPane();
+        if (desktopPane != null) {
+            for (JInternalFrame f : desktopPane.getAllFrames()) {
+                if (f.isVisible()) {
+                    f.dispose();
+                }
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel1MouseClicked
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea area;
+    private javax.swing.JLabel image;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    // End of variables declaration//GEN-END:variables
+}

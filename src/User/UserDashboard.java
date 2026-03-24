@@ -262,6 +262,7 @@ public final class UserDashboard extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void profileSectionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profileSectionMouseClicked

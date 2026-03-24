@@ -29,9 +29,15 @@ public class LogReg_config {
         StringBuilder errors = new StringBuilder();
         int Finalbadge = 0;
         boolean loop = true;
+        System.out.println(ps);
         
         while(loop){
             try{
+                
+                if (ps == null || ps.trim().isEmpty() || ps.equals("Password")) {
+                    errors.append("• Password cannot be empty.\n");
+                }
+                
                 if (nm == null || nm.trim().isEmpty() || nm.equals("Username")) {
                     errors.append("• Username cannot be empty.\n");
                 }
@@ -40,10 +46,6 @@ public class LogReg_config {
                     errors.append("• Badge cannot be empty.\n");
                 }else{
                     Finalbadge = Integer.parseInt(bdg);
-                }
-
-                if (ps == null || ps.trim().isEmpty() || ps.equals("Password")) {
-                    errors.append("• Password cannot be empty.\n");
                 }
 
                 loop = false;
@@ -99,7 +101,6 @@ public class LogReg_config {
             );
      
         }else{
-            
             User_Permission perms = new User_Permission(nm, Finalbadge, ps, frame);
             perms.setVisible(true);
             System.out.println("Account Created: " + ps);
