@@ -14,15 +14,25 @@ import java.time.*;
  */
 public class session {
     private static int ID;
+    private int sesID;
     
-    public static void SaveLogIn(int id){
+    public void SaveLogIn(int id){
         config conf = new config();
         
         ID = id;
         
         String qry = "INSERT INTO session(login, logout, user_id) VALUES(?,?,?)";
-        conf.addRecordAndReturnId(qry, GetDate(), "null", id);
+        sesID = conf.addRecordAndReturnId(qry, GetDate(), "null", id);
         
+    }
+    
+    public void LogOut(int id){
+        config conf = new config();
+        
+        ID = id;
+        
+        String qry = "UPDATE session SET logout = ? WHERE session_id = ?";
+        conf.updateRecord(qry, GetDate(), sesID);
     }
     
     public final int GetID(){

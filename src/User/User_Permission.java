@@ -176,7 +176,8 @@ public class User_Permission extends javax.swing.JFrame {
                 queryNow = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
                 conf.addRecordAndReturnId(queryNow, id, formattedDate, "Register");
                 
-                session.SaveLogIn(id);
+                session see = new session();
+                see.SaveLogIn(id);
                 
                 LoginRegister log = new LoginRegister();
                 log.setVisible(false);

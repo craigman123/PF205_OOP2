@@ -5,6 +5,7 @@
  */
 package dispatcher;
 
+import Profiles.session;
 import configuration.animation;
 import configuration.config;
 import dispatcher.AllOrders.allOrders;
@@ -13,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ButtonGroup;
+import main.LoginRegister;
 
 /**
  *
@@ -134,6 +136,7 @@ public class DispatcherDashboard extends javax.swing.JFrame {
         parcels = new javax.swing.JLabel();
         comp = new javax.swing.JLabel();
         totalOrders = new javax.swing.JToggleButton();
+        logout = new javax.swing.JToggleButton();
         MainPane = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -195,7 +198,25 @@ public class DispatcherDashboard extends javax.swing.JFrame {
                 totalOrdersMouseClicked(evt);
             }
         });
+        totalOrders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                totalOrdersActionPerformed(evt);
+            }
+        });
         jPanel1.add(totalOrders, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 480, 210, 60));
+
+        logout.setText("LOG OUT");
+        logout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logoutMouseClicked(evt);
+            }
+        });
+        logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutActionPerformed(evt);
+            }
+        });
+        jPanel1.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 550, 210, 60));
 
         javax.swing.GroupLayout MainPaneLayout = new javax.swing.GroupLayout(MainPane);
         MainPane.setLayout(MainPaneLayout);
@@ -246,6 +267,24 @@ public class DispatcherDashboard extends javax.swing.JFrame {
         MainPane.add(ord).setVisible(true);       // TODO add your handling code here:
     }//GEN-LAST:event_totalOrdersMouseClicked
 
+    private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_logoutMouseClicked
+
+    private void totalOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalOrdersActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_totalOrdersActionPerformed
+
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        this.dispose();
+        session see = new session();
+        LoginRegister lr = new LoginRegister();
+        lr.setVisible(true);
+        int setID = 0;
+        see.LogOut(setID);
+                // TODO add your handling code here:
+    }//GEN-LAST:event_logoutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -290,6 +329,7 @@ public class DispatcherDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JToggleButton logout;
     private javax.swing.JLabel parcels;
     private javax.swing.JToggleButton pend;
     private javax.swing.JLabel pendings;
