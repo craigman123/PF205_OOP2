@@ -48,10 +48,10 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
         SwingUtilities.invokeLater(() -> {
             ShowComponent();
             SetStatusIndicator();
-            CheckValidation();
             checkHeart();
             RenderOrderBtn();
             SetOrderButton();
+            CheckValidation();
         });
         StyleScrollPane();
     }
@@ -63,13 +63,18 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
         String qry = "SELECT user_ussage FROM users WHERE user_id = ?";
         java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, see.GetID()); 
         
-        if(!result.isEmpty()){
-            java.util.Map<String, Object> user = result.get(0);
-            String access = user.get("user_ussage").toString();
-            
-            if(access.equals("Enable")){
-                orderBtn.setBackground(new Color(204,204,204));
-                orderBtn.setForeground(Color.BLACK);
+        String query = "SELECT * FROM details WHERE user_id = ?";
+        java.util.List<java.util.Map<String, Object>> detailCheck = conf.fetchRecords(query, see.GetID());
+        
+        if(!detailCheck.isEmpty()){
+            if(!result.isEmpty()){
+                java.util.Map<String, Object> user = result.get(0);
+                String access = user.get("user_ussage").toString();
+
+                if(access.equals("Enable")){
+                    orderBtn.setBackground(new Color(204,204,204));
+                    orderBtn.setForeground(Color.BLACK);
+                }
             }
         }
     }
@@ -156,6 +161,7 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
     private boolean stockAllow;
     private boolean ussageAllow;
     private boolean statusAllow;
+    private boolean detailChecked;
     
     public void SetOrderButton(){
         config conf = new config();
@@ -165,20 +171,34 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
         java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, see.GetID());
         System.out.println("user: " + see.GetID());
         
+        String query = "SELECT * FROM details WHERE user_id = ?";
+        java.util.List<java.util.Map<String, Object>> detailCheck = conf.fetchRecords(query, see.GetID());
+        
+        if(!detailCheck.isEmpty()){
+            detailChecked = true;
+        }else {
+            detailChecked = false;
+        }
+        
+        System.out.println("DETAILS: " + detailChecked);
+        
         if(!result.isEmpty()){
             java.util.Map<String, Object> user = result.get(0);
             String ussage = user.get("user_ussage").toString();
             System.out.println(ussage);
-            
+
             if(ussage.equals("Enable")){
                 badgeLabel.setText("Badge Verified!");
                 badgeLabel.setForeground(new Color(0,153,0));
                 ussageAllow = true;
+
             } else if (ussage.equals("Disable")){
                 badgeLabel.setText("Badge Unverified!");
                 badgeLabel.setForeground(new Color(153,0,0));
                 ussageAllow = false;
+                
             }
+            
         }
     }
     
@@ -392,7 +412,7 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
     }
     
     private void CheckValidation(){
-        if(statusAllow && stockAllow && ussageAllow){
+        if(statusAllow && stockAllow && ussageAllow && detailChecked){
             OpenBtn();
         }
     }
@@ -803,7 +823,7 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_heartAncestorAdded
 
     private void orderBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderBtnMouseClicked
-        if (statusAllow && stockAllow && ussageAllow) {
+        if (statusAllow && stockAllow && ussageAllow && detailChecked) {
             orderBtn.setToolTipText(null);
             
             Order();    
@@ -817,42 +837,42 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
     
     private void orderBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderBtnMouseEntered
 //        animatio ani = new animation();
-        
-        originalText = orderBtn.getText();
-        
+        boolean canOrder = statusAllow && stockAllow && ussageAllow && detailChecked;
+
+        if (!canOrder) {
+            orderBtn.setBackground(new Color(102,102,102));
+            orderBtn.setForeground(new Color(153,153,153));
+        }
+
+        // build messages regardless
         List<String> messages = new ArrayList<>();
-        
+
         if (!statusAllow) messages.add("INACTIVE");
         if (!stockAllow) messages.add("SOLD OUT");
         if (!ussageAllow) messages.add("BADGE UNVERIFIED");
+        if (!detailChecked) messages.add("UNCOMPLETE DETAILS");
+
         messages.add("ORDER");
+        System.out.println(messages);
         
-        if (messages.equals(1)) {
-            orderBtn.setBackground(new Color(102,102,102));
-            orderBtn.setForeground(new Color(153,153,153));
-            return;
+        if (hoverTimer != null && hoverTimer.isRunning()) {
+            hoverTimer.stop();
         }
 
         String[] hoverMessages = messages.toArray(new String[0]);
 
-            messageIndex = 0;
+        messageIndex = 0;
 
         hoverTimer = new Timer(1500, e -> {
             orderBtn.setText(hoverMessages[messageIndex]);
-            messageIndex++;
-
-            if (messageIndex >= hoverMessages.length) {
-                messageIndex = 0;
-            }
+            messageIndex = (messageIndex + 1) % hoverMessages.length;
         });
+
         hoverTimer.start();
     }//GEN-LAST:event_orderBtnMouseEntered
 
     private void orderBtnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderBtnMouseExited
-        if (hoverTimer != null) hoverTimer.stop();
-            orderBtn.setText(originalText);
-            
-        if(statusAllow && stockAllow && ussageAllow){
+        if(statusAllow && stockAllow && ussageAllow && detailChecked){
             orderBtn.setBackground(new Color(204,204,204));
             orderBtn.setForeground(new Color(0,0,0));
         }

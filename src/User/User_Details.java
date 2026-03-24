@@ -310,10 +310,9 @@ public final class User_Details extends javax.swing.JFrame {
 
             if (!female.isSelected() && !male.isSelected())
                 errors.append("Gender must be selected.\n");
-            
-            validatedUpdate = true;
         }
         
+        validatedUpdate = errors.length() == 0;
         return errors.toString();
         
     }
@@ -498,7 +497,10 @@ public final class User_Details extends javax.swing.JFrame {
         java.util.List<Object> detailsParams = new java.util.ArrayList<>();
         boolean updateDetails = false;
         
-        if(validatedUpdate = false){
+        System.out.println(validatedUpdate);
+        System.out.println(hasDetails);
+        
+        if(validatedUpdate){
             if (currentDetails.isEmpty()) {
                     System.out.println("No details found, inserting...");
 
