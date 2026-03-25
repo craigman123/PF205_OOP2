@@ -11,6 +11,8 @@ import configuration.config;
 import dispatcher.AllOrders.allOrders;
 import dispatcher.delivered.deliveredPanel;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ButtonGroup;
@@ -38,10 +40,12 @@ public class DispatcherDashboard extends javax.swing.JFrame {
         menuGroup.add(pend);
         menuGroup.add(delivered);
         menuGroup.add(totalOrders);
+        menuGroup.add(logout);
         
         ani.StyleToggleButtons(pend); 
         ani.StyleToggleButtons(delivered); 
         ani.StyleToggleButtons(totalOrders); 
+        ani.StyleToggleButtons(logout); 
     }       
     
     public void ShowParcelCount() {
@@ -178,18 +182,33 @@ public class DispatcherDashboard extends javax.swing.JFrame {
         pendings.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         pendings.setText("PENDINGS");
         pendings.setOpaque(true);
+        pendings.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pendingsMouseClicked(evt);
+            }
+        });
         jPanel1.add(pendings, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, 210, 50));
 
         parcels.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         parcels.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         parcels.setText("PARCELS");
         parcels.setOpaque(true);
+        parcels.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                parcelsMouseClicked(evt);
+            }
+        });
         jPanel1.add(parcels, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 210, 50));
 
         comp.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         comp.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         comp.setText("COMPLETED");
         comp.setOpaque(true);
+        comp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                compMouseClicked(evt);
+            }
+        });
         jPanel1.add(comp, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 210, 50));
 
         totalOrders.setText("ALL ORDERS");
@@ -209,6 +228,9 @@ public class DispatcherDashboard extends javax.swing.JFrame {
         logout.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 logoutMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                logoutMouseEntered(evt);
             }
         });
         logout.addActionListener(new java.awt.event.ActionListener() {
@@ -268,7 +290,15 @@ public class DispatcherDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_totalOrdersMouseClicked
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
-        // TODO add your handling code here:
+        config conf = new config();
+        session see = new session();
+        
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formatted = now.format(formatter);
+        
+        String qry = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+        conf.addRecordAndReturnId(qry, see.GetID(), formatted, "Logged Out");        // TODO add your handling code here:
     }//GEN-LAST:event_logoutMouseClicked
 
     private void totalOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalOrdersActionPerformed
@@ -284,6 +314,22 @@ public class DispatcherDashboard extends javax.swing.JFrame {
         see.LogOut(setID);
                 // TODO add your handling code here:
     }//GEN-LAST:event_logoutActionPerformed
+
+    private void logoutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_logoutMouseEntered
+
+    private void pendingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pendingsMouseClicked
+        ShowParcelCount();        // TODO add your handling code here:
+    }//GEN-LAST:event_pendingsMouseClicked
+
+    private void compMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_compMouseClicked
+        ShowParcelCount();          // TODO add your handling code here:
+    }//GEN-LAST:event_compMouseClicked
+
+    private void parcelsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parcelsMouseClicked
+        ShowParcelCount();          // TODO add your handling code here:
+    }//GEN-LAST:event_parcelsMouseClicked
 
     /**
      * @param args the command line arguments

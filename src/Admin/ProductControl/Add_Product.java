@@ -262,8 +262,18 @@ public class Add_Product extends javax.swing.JInternalFrame {
         String qry = "SELECT user_name FROM users WHERE user_id = ?";
         java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, id); 
         
-        java.util.Map<String, Object> user = result.get(0);
-        String getAddedBy = user.get("user_name").toString();
+        String q = "SELECT user_name FROM details WHERE user_id = ?";
+        java.util.List<java.util.Map<String, Object>> det = conf.fetchRecords(q, id); 
+        
+        String getAddedBy = "";
+        
+        if(!det.isEmpty()){
+            java.util.Map<String, Object> detailCheck = det.get(0);
+            getAddedBy = detailCheck.get("user_name").toString();
+        } else {
+            java.util.Map<String, Object> user = result.get(0);
+            getAddedBy = user.get("user_name").toString();
+        }
         
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

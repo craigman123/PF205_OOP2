@@ -7,6 +7,7 @@ package User.Market;
 
 import Profiles.session;
 import User.User_config;
+import configuration.animation;
 import configuration.config;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -83,31 +84,49 @@ public final class Payment extends javax.swing.JInternalFrame {
             String stat = prod.get("prod_status").toString();
             String seller = prod.get("prod_addedBy").toString();
 
-            // ================= LOCATION =================
-            location.append("<html>");
-            location.append("Location:<br>");
-            location.append(Address).append("<br><br>");
-            location.append("Specific Location:<br>");
-            location.append(specInfo);
-            location.append("</html>");
-
+            location.append("<html><div style='font-family:Segoe UI; font-size:14px; line-height:1.6;'>");
+            location.append("<h2 style='margin-bottom:8px; font-weight:bold;'>📍 DELIVERY LOCATION</h2>");
+            location.append("<hr>");
+            location.append("<b style='font-size:13px;'>ADDRESS:</b><br>");
+            location.append("<div style='font-weight:bold; color:#222;'>")
+                    .append(Address)
+                    .append("</div><br>");
+            location.append("<b style='font-size:13px;'>SPECIFIC LOCATION:</b><br>");
+            location.append("<div style='font-weight:bold; color:#222;'>")
+                    .append(specInfo)
+                    .append("</div>");
+            location.append("</div></html>");
+            
+            address.setContentType("text/html");
             address.setText(location.toString());
 
             // ================= PRODUCT INFO =================
             StringBuilder due = new StringBuilder();
-            due.append("<html>");
-            due.append("Product Info: <br>");
-            due.append("Name: ").append(name).append("<br>");
-            due.append("Category: ").append(cat).append("<br>");
-            due.append("Status: ").append(stat).append("<br>");
-            due.append("Seller: ").append(seller).append("<br><br>");
-            due.append("Payment Information:<br>");
-            due.append("Product Price: ").append(cash).append("<br>");
-            due.append("Quantity: ").append(quan).append("<br>");
-            due.append("Shipping Fee: ").append(shipFee).append("<br>");
-            due.append("</html>");
-
-            PayInfo.setText(due.toString());
+            String statusColor = stat.equalsIgnoreCase("Active") ? "#0a8f08" : "#c40000";
+            due.append("<html><div style='font-family:Segoe UI; font-size:14px; line-height:1.6;'>");
+            due.append("<h2 style='font-weight:bold;'>🛒 PRODUCT SUMMARY</h2><hr>");
+            due.append("<b>NAME:</b> <span style='font-weight:bold;'>").append(name).append("</span><br>");
+            due.append("<b>CATEGORY:</b> <span style='font-weight:bold;'>").append(cat).append("</span><br>");
+            due.append("<b>STATUS:</b> ")
+               .append("<span style='font-weight:bold; color:")
+               .append(statusColor)
+               .append(";'>")
+               .append(stat)
+               .append("</span><br>");
+            due.append("<b>SELLER:</b> <span style='font-weight:bold;'>").append(seller).append("</span><br><br>");
+            due.append("<h3 style='font-weight:bold;'>💳 PAYMENT INFORMATION</h3><hr>");
+            due.append("<table style='width:100%; font-size:13px; font-weight:bold;'>");
+            due.append("<tr><td>PRODUCT PRICE:</td><td style='color:green;'>₱")
+               .append(cash).append("</td></tr>");
+            due.append("<tr><td>QUANTITY:</td><td>")
+               .append(quan).append("</td></tr>");
+            due.append("<tr><td>SHIPPING FEE:</td><td style='color:blue;'>₱")
+               .append(shipFee).append("</td></tr>");
+            due.append("</table>");
+            due.append("</div></html>");
+            
+            payInfo.setContentType("text/html");
+            payInfo.setText(due.toString());
 
             // ================= CALCULATIONS =================
             float installmentPrice = 0;
@@ -192,6 +211,8 @@ public final class Payment extends javax.swing.JInternalFrame {
             cardNum.setEnabled(false);
             cardNum.setText("Card Number");
             cardNum.setForeground(new Color(153, 153, 153));
+            
+            pin.setEnabled(false);
 
         } // ================= ONLINE PAYMENT SELECTED =================
         else if (apSelected) {
@@ -216,6 +237,8 @@ public final class Payment extends javax.swing.JInternalFrame {
             cardNum.setEnabled(true);
             cardNum.setText("");
             cardNum.setForeground(Color.BLACK);
+            
+            pin.setEnabled(true);
         } // ================= AP SELECTED =================
         else if (opSelected) {
 
@@ -237,6 +260,8 @@ public final class Payment extends javax.swing.JInternalFrame {
             cardNum.setEnabled(true);
             cardNum.setText("");
             cardNum.setForeground(Color.BLACK);
+            
+            pin.setEnabled(true);
         }
     }
 
@@ -433,7 +458,7 @@ public final class Payment extends javax.swing.JInternalFrame {
         qry = "INSERT INTO creditCards(user_id, pay_method, card_num) VALUES(?,?,?)";
         conf.addRecordAndReturnId(qry, see.GetID(), paymentMethod, card);
 
-        SuccesMessage mes = new SuccesMessage(orderID);
+        SuccesMessage mes = new SuccesMessage(orderID, panel);
         panel.add(mes).setVisible(true);
     }
 
@@ -453,8 +478,6 @@ public final class Payment extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         DueNow = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        payInfo = new javax.swing.JPanel();
-        PayInfo = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -483,10 +506,13 @@ public final class Payment extends javax.swing.JInternalFrame {
         BPI = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
-        address = new javax.swing.JLabel();
         cardNum = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         pin = new javax.swing.JPasswordField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        payInfo = new javax.swing.JTextPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        address = new javax.swing.JTextPane();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -535,36 +561,12 @@ public final class Payment extends javax.swing.JInternalFrame {
 
         DueNow.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         DueNow.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        DueNow.setText("DUE");
-        jPanel1.add(DueNow, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 500, 110, 43));
+        DueNow.setText("A-Pay Later");
+        jPanel1.add(DueNow, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 500, 170, 43));
 
         jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel3.setText("TOTAL:");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 540, 80, 30));
-
-        payInfo.setBackground(new java.awt.Color(204, 204, 204));
-
-        PayInfo.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 18)); // NOI18N
-        PayInfo.setText("Payment Info");
-        PayInfo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-
-        javax.swing.GroupLayout payInfoLayout = new javax.swing.GroupLayout(payInfo);
-        payInfo.setLayout(payInfoLayout);
-        payInfoLayout.setHorizontalGroup(
-            payInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(payInfoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(PayInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        payInfoLayout.setVerticalGroup(
-            payInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, payInfoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(PayInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE))
-        );
-
-        jPanel1.add(payInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 100, 290, 390));
 
         jLabel10.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel10.setText("PAYMENT METHOD");
@@ -575,6 +577,17 @@ public final class Payment extends javax.swing.JInternalFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("CANCEL");
         jLabel4.setOpaque(true);
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel4MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel4MouseExited(evt);
+            }
+        });
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 590, 270, 56));
 
         jLabel7.setBackground(new java.awt.Color(204, 204, 204));
@@ -585,6 +598,12 @@ public final class Payment extends javax.swing.JInternalFrame {
         jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel7MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel7MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel7MouseExited(evt);
             }
         });
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 580, 190, 56));
@@ -601,8 +620,8 @@ public final class Payment extends javax.swing.JInternalFrame {
         jPanel1.add(FullDue, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 540, 200, 30));
 
         jLabel12.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jLabel12.setText("AMOUNT DUE NOW: ");
-        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 510, -1, -1));
+        jLabel12.setText("AMOUNT DUE : ");
+        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 510, 130, -1));
         jPanel1.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 320, 310, 10));
 
         OP.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
@@ -799,14 +818,6 @@ public final class Payment extends javax.swing.JInternalFrame {
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 10, 510));
 
-        address.setBackground(new java.awt.Color(204, 204, 204));
-        address.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        address.setText("Address");
-        address.setToolTipText("");
-        address.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        address.setOpaque(true);
-        jPanel1.add(address, new org.netbeans.lib.awtextra.AbsoluteConstraints(311, 340, 300, 290));
-
         cardNum.setBackground(new java.awt.Color(204, 204, 204));
         cardNum.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -819,6 +830,16 @@ public final class Payment extends javax.swing.JInternalFrame {
         jLabel9.setText("Card Number:");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 130, -1, -1));
         jPanel1.add(pin, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 260, 280, 50));
+
+        payInfo.setEditable(false);
+        jScrollPane1.setViewportView(payInfo);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 90, 310, 410));
+
+        address.setEditable(false);
+        jScrollPane2.setViewportView(address);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 330, 300, 310));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, -1));
 
@@ -885,7 +906,7 @@ public final class Payment extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_sixMouseClicked
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-
+        
         if (validation()) {
             SendInputs();
         }// TODO add your handling code here:
@@ -916,6 +937,68 @@ public final class Payment extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cardNumKeyTyped
 
+    private void jLabel7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseEntered
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel7,
+            Color.decode("#CCCCCC"),
+            Color.decode("#B3B3B3"),
+            200
+        );         // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel7MouseEntered
+
+    private void jLabel7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseExited
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel7,
+            Color.decode("#B3B3B3"),
+            Color.decode("#CCCCCC"),
+            200
+        );          // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel7MouseExited
+
+    private void jLabel4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseEntered
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel4,
+            Color.decode("#CCCCCC"),
+            Color.decode("#B3B3B3"),
+            200
+        );                  // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel4MouseEntered
+
+    private void jLabel4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseExited
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel4,
+            Color.decode("#B3B3B3"),
+            Color.decode("#CCCCCC"),
+            200
+        );        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel4MouseExited
+
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        int choice = JOptionPane.showConfirmDialog(
+            null,
+            "Do you want to cancel the order?",
+            "Order Confirmation",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (choice == JOptionPane.YES_OPTION) {
+            this.dispose();
+            System.out.println("Order cancelled");
+        } else {
+            
+            System.out.println("Order retained");
+        }       
+    }//GEN-LAST:event_jLabel4MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton AP;
@@ -926,9 +1009,8 @@ public final class Payment extends javax.swing.JInternalFrame {
     private javax.swing.JLabel FullDue;
     private javax.swing.JRadioButton Gcash;
     private javax.swing.JRadioButton OP;
-    private javax.swing.JLabel PayInfo;
     private javax.swing.JRadioButton UnionBank;
-    private javax.swing.JLabel address;
+    private javax.swing.JTextPane address;
     private javax.swing.JTextField cardNum;
     private javax.swing.JRadioButton five;
     private javax.swing.JRadioButton four;
@@ -947,6 +1029,8 @@ public final class Payment extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
@@ -954,7 +1038,7 @@ public final class Payment extends javax.swing.JInternalFrame {
     private javax.swing.JRadioButton landBank;
     private javax.swing.JRadioButton metroBank;
     private javax.swing.JRadioButton one;
-    private javax.swing.JPanel payInfo;
+    private javax.swing.JTextPane payInfo;
     private javax.swing.JPasswordField pin;
     private javax.swing.JRadioButton six;
     private javax.swing.JRadioButton three;

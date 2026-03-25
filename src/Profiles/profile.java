@@ -603,11 +603,20 @@ public final class profile extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        config conf = new config();
+        session see = new session();
+        
         LoginRegister regis = new LoginRegister();
         regis.setVisible(true);
         this.dispose();
         fr.dispose();
         
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formatted = now.format(formatter);
+        
+        String qry = "INSERT INTO logs(user_id, dateTime, log_action) VALUES(?,?,?)";
+        conf.addRecordAndReturnId(qry, see.GetID(), formatted, "Logged Out");
                 // TODO add your handling code here:
     }//GEN-LAST:event_jLabel2MouseClicked
 

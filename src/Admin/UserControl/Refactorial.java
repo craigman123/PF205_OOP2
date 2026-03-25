@@ -134,6 +134,13 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         String bdg = badge4.getText().trim();
         String ps = pass4.getText().trim();
         String ussage = ussageToggle.getText();
+        String acc = "null";
+        
+        if(sysacc.isSelected()){
+            acc = "open";
+        } else {
+            acc = "close";
+        }
 
         if (id.isEmpty() || id.equals("User ID") ||
             nm.isEmpty() || nm.equals("Username") ||
@@ -153,6 +160,7 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         }
 
         String access = users.isSelected() ? "User" :
+                        dispatcher.isSelected() ? "Dispatcher":
                         admin.isSelected() ? "Admin" : null;
 
         String qry = "SELECT * FROM users WHERE user_id = ?";
@@ -171,6 +179,7 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         String oldPass = (String) user.get("user_hashpass");
         String oldAccess = (String) user.get("user_access");
         String oldUssage = (String) user.get("user_ussage");
+        String oldAcc = (String) user.get("system_access");
 
         StringBuilder updateQuery = new StringBuilder("UPDATE users SET ");
         java.util.List<Object> params = new java.util.ArrayList<>();
@@ -206,6 +215,12 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         if (!ussage.equals(oldUssage)) {
             updateQuery.append("user_ussage = ?, ");
             params.add(ussage);
+            hasChanges = true;
+        }
+        
+        if (!acc.equals(oldAcc)) {
+            updateQuery.append("system_access = ?, ");
+            params.add(acc);
             hasChanges = true;
         }
 
@@ -270,6 +285,7 @@ public final class Refactorial extends javax.swing.JInternalFrame {
             String ps = user.get("user_hashpass").toString();
             String access = user.get("user_access").toString();
             String ussage = user.get("user_ussage").toString();
+            String acc = user.get("system_access").toString();
             
             String pass = conf.hashPassword(ps);
             
@@ -303,7 +319,14 @@ public final class Refactorial extends javax.swing.JInternalFrame {
                 ussageToggle.setSelected(false);
                 ussageToggle.setText("Disable");
             }
-           
+            
+            if(acc.equals("open")){
+                sysacc.setSelected(true);
+                sysacc.setText("Open");
+            } else {
+                sysacc.setSelected(false);
+                sysacc.setText("Close");
+            }
             
         }else{
                 JOptionPane.showMessageDialog(
@@ -345,6 +368,9 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         jLabel29 = new javax.swing.JLabel();
         PassLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        sysacc = new javax.swing.JToggleButton();
+        jLabel6 = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -467,7 +493,7 @@ public final class Refactorial extends javax.swing.JInternalFrame {
                     .addGroup(jPanel16Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(admin, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(13, 15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -598,6 +624,41 @@ public final class Refactorial extends javax.swing.JInternalFrame {
             }
         });
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, 193, 40));
+
+        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
+
+        sysacc.setText("Open");
+        sysacc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sysaccMouseClicked(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel6.setText("SYSTEM ACCESS");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sysacc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(jLabel6)
+                .addContainerGap(35, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(sysacc))
+        );
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 190, 60));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 512));
 
@@ -764,6 +825,14 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_dispatcherActionPerformed
 
+    private void sysaccMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sysaccMouseClicked
+        if(sysacc.isSelected()){
+            sysacc.setText("Open");
+        }else{
+            sysacc.setText("Close");
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_sysaccMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel PassLabel4;
@@ -777,13 +846,16 @@ public final class Refactorial extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField name4;
     private javax.swing.JTextField pass4;
     private javax.swing.JProgressBar passStrength4;
+    private javax.swing.JToggleButton sysacc;
     private javax.swing.JTextField userid;
     private javax.swing.JToggleButton users;
     private javax.swing.JToggleButton ussageToggle;

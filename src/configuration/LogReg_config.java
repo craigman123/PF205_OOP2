@@ -12,10 +12,12 @@ import User.UserDashboard;
 import User.User_Permission;
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.*;
+import java.awt.event.*;
 
 /**
  *
@@ -133,8 +135,8 @@ public class LogReg_config {
         panel.add(label, BorderLayout.CENTER);
         panel.add(okButton, BorderLayout.SOUTH);
 
-        String sql = "INSERT INTO users(user_name, user_hashpass, user_badge, user_access, user_ussage) VALUES (?,?,?,?,?)";
-        int id = conf.addRecordAndReturnId(sql, nm, FinalPass, Finalbadge, "User", "Disable");
+        String sql = "INSERT INTO users(user_name, user_hashpass, user_badge, user_access, user_ussage, system_access) VALUES (?,?,?,?,?,?)";
+        int id = conf.addRecordAndReturnId(sql, nm, FinalPass, Finalbadge, "User", "Disable", "open");
         
         LocalDateTime now = LocalDateTime.now();
         Timestamp date = Timestamp.valueOf(now);
@@ -223,10 +225,12 @@ public class LogReg_config {
         } else {
             java.util.Map<String, Object> user = result.get(0);
             String access = user.get("user_access").toString();
+            String systemAccess = user.get("system_access").toString();
             int id = ((Number) user.get("user_id")).intValue();
             
             JFrame Dashboard = null;
             
+            if(systemAccess.equals("open")){
                 switch(access){
                     case "Admin":
                         see.SaveLogIn(id);
@@ -244,6 +248,13 @@ public class LogReg_config {
                         
                         break;
                 }
+            } else {
+                int close = showTimedDialog();
+                if(close == 3){
+                    System.exit(0);
+                }
+                return 0;
+            }
                 
                 LocalDateTime now = LocalDateTime.now();
                 Timestamp date = Timestamp.valueOf(now);
@@ -261,7 +272,7 @@ public class LogReg_config {
         return 0;
     }
     
-    public static void RegisterByAdmin(String nm, String bdg, String ps, String access, String ussage) {
+    public static void RegisterByAdmin(String nm, String bdg, String ps, String access, String ussage, String acc) {
     config conf = new config();
     StringBuilder errors = new StringBuilder();
     int Finalbadge = 0;
@@ -309,8 +320,8 @@ public class LogReg_config {
     }else{
     
         String hashpass = conf.hashPassword(ps);
-        String qry = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES(?,?,?,?,?)";
-        int id = conf.addRecordAndReturnId(qry, nm, Finalbadge, hashpass, access, ussage);
+        String qry = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage, system_access) VALUES(?,?,?,?,?,?)";
+        int id = conf.addRecordAndReturnId(qry, nm, Finalbadge, hashpass, access, ussage, acc);
         
         LocalDateTime now = LocalDateTime.now();
         Timestamp date = Timestamp.valueOf(now);
@@ -330,6 +341,47 @@ public class LogReg_config {
         );
     }
 }
+    
+    public static int showTimedDialog() {
+        final int[] timeLeft = {10};
+
+        JOptionPane optionPane = new JOptionPane(
+                "<html>You are prohibited to enter this website:<br>closing in <b>10</b></html>",
+                JOptionPane.ERROR_MESSAGE
+        );
+
+        JDialog dialog = optionPane.createDialog("Prohibited");
+
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timeLeft[0]--;
+                
+                if (timeLeft[0] >= 4 && timeLeft[0] < 11) {
+                    optionPane.setMessage(
+                        "<html>You are prohibited to enter this website:<br>closing in <b><font size='4'>"
+                        + timeLeft[0] + "</font></b></html>"
+                    );
+                } else {
+                    optionPane.setMessage(
+                        "<html>You are prohibited to enter this website:<br>closing in <b><font size='4' color='red'>"
+                        + timeLeft[0] + "</font></b></html>"
+                    );
+                }
+
+                if (timeLeft[0] <= 0) {
+                    dialog.dispose();
+                    ((Timer) e.getSource()).stop();
+                }
+            }
+        });
+
+        timer.start();
+        dialog.setVisible(true);
+
+        return 3;
+    }
+
     
     
 

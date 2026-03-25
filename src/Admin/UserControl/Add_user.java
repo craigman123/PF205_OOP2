@@ -42,6 +42,7 @@ public final class Add_user extends javax.swing.JInternalFrame {
         animation.StyleToggleButtons(admin); 
         animation.StyleToggleButtons(driver); 
         animation.StyleToggleButtons(ussageToggle); 
+        animation.StyleToggleButtons(sysacc); 
     }
     
     public final void StyleFrame(){
@@ -55,11 +56,13 @@ public final class Add_user extends javax.swing.JInternalFrame {
     public final void GetInputs(){
         LogReg_config conf = new LogReg_config();
         String access = "null";
+        String acc = "null";
         
         String nm = name4.getText();
         String bdg = badge4.getText();
         String ps = pass4.getText();
         String ussage = ussageToggle.getText();
+        
         
         if(user.isSelected()){
             access = "User";
@@ -68,8 +71,12 @@ public final class Add_user extends javax.swing.JInternalFrame {
         }else if(driver.isSelected()){
             access = "Dispatcher";
         }
+        
+        if(sysacc.isSelected()){
+            acc = "open";
+        }
        
-        conf.RegisterByAdmin(nm, bdg, ps, access, ussage);
+        conf.RegisterByAdmin(nm, bdg, ps, access, ussage, acc);
         
         EraseText();
     }
@@ -161,6 +168,9 @@ public final class Add_user extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel28 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        sysacc = new javax.swing.JToggleButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -271,7 +281,7 @@ public final class Add_user extends javax.swing.JInternalFrame {
         driver.setText("DISPATCHER");
         jPanel16.add(driver, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 160, -1));
 
-        jPanel15.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(205, 150, 185, 171));
+        jPanel15.add(jPanel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(205, 150, 185, 180));
 
         ussageToggle.setText("Disable");
         ussageToggle.addActionListener(new java.awt.event.ActionListener() {
@@ -289,24 +299,24 @@ public final class Add_user extends javax.swing.JInternalFrame {
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ussageToggle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(ussageToggle, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel17Layout.createSequentialGroup()
-                .addContainerGap(68, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(59, 59, 59))
+                .addGap(63, 63, 63))
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel17Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(9, 9, 9)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ussageToggle, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addComponent(ussageToggle)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel15.add(jPanel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 153, -1, 120));
+        jPanel15.add(jPanel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 153, -1, -1));
 
         jLabel2.setBackground(new java.awt.Color(153, 153, 153));
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
@@ -366,6 +376,47 @@ public final class Add_user extends javax.swing.JInternalFrame {
         );
 
         jPanel15.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-8, 0, 410, 40));
+
+        jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
+        jLabel4.setText("SYSTEM ACCESS");
+
+        sysacc.setSelected(true);
+        sysacc.setText("OPEN");
+        sysacc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sysaccMouseClicked(evt);
+            }
+        });
+        sysacc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sysaccActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabel4)
+                .addContainerGap(31, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sysacc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sysacc)
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+
+        jPanel15.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 180, 90));
 
         getContentPane().add(jPanel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 410, 500));
 
@@ -502,6 +553,14 @@ public final class Add_user extends javax.swing.JInternalFrame {
         EraseText();        // TODO add your handling code here:
     }//GEN-LAST:event_jLabel3MouseClicked
 
+    private void sysaccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sysaccActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sysaccActionPerformed
+
+    private void sysaccMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sysaccMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sysaccMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel PassLabel4;
@@ -515,13 +574,16 @@ public final class Add_user extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField name4;
     private javax.swing.JTextField pass4;
     private javax.swing.JProgressBar passStrength4;
+    private javax.swing.JToggleButton sysacc;
     private javax.swing.JToggleButton user;
     private javax.swing.JToggleButton ussageToggle;
     // End of variables declaration//GEN-END:variables

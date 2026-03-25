@@ -176,8 +176,8 @@ public class User_Permission extends javax.swing.JFrame {
                 }else{
                     System.out.println("Account Created: ");
                     String FinalPass = conf.hashPassword(GetPass());
-                    String sql = "INSERT INTO users (user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
-                    int id = conf.addRecordAndReturnId(sql, GetName(), GetBadge(), FinalPass, "User", "Disable");
+                    String sql = "INSERT INTO users (user_name, user_badge, user_hashpass, user_access, user_ussage, system_access) VALUES (?,?,?,?,?,?)";
+                    int id = conf.addRecordAndReturnId(sql, GetName(), GetBadge(), FinalPass, "User", "Disable", "open");
 
                     LocalDateTime now = LocalDateTime.now();
                     Timestamp date = Timestamp.valueOf(now);

@@ -40,6 +40,14 @@ public final class UserDashboard extends javax.swing.JFrame {
         Toggle_Buttons();
         GetSession();
         conf.SendPane(MainPane);
+        SwingUtilities.invokeLater(() -> {
+            ShowMarket();
+        });
+    }
+    
+    public void ShowMarket(){
+        MarketMain mark = new MarketMain(MainPane);
+        MainPane.add(mark).setVisible(true);
     }
     
     private static boolean run = true;

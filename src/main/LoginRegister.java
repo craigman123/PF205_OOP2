@@ -99,7 +99,7 @@ public class LoginRegister extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBackground(new java.awt.Color(228, 228, 228));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabelImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Title_Logo_design_bg.png"))); // NOI18N
@@ -326,7 +326,7 @@ public class LoginRegister extends javax.swing.JFrame {
         });
         jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 37, -1));
 
-        jLabel5.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel5.setBackground(new java.awt.Color(204, 204, 204));
         jLabel5.setFont(new java.awt.Font("Nirmala UI", 1, 16)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("LOG IN");
@@ -344,7 +344,7 @@ public class LoginRegister extends javax.swing.JFrame {
         });
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 300, 290, 40));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Departenst Logo with bg.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/depart.png"))); // NOI18N
         jLabel2.setText("jLabel2");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 270, 450, -1));
 
@@ -495,19 +495,47 @@ public class LoginRegister extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel15MouseClicked
 
     private void jLabel13MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MouseEntered
-        jLabel13.setBackground(new Color(102,102,102));        
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel13,
+            Color.decode("#CCCCCC"),
+            Color.decode("#B3B3B3"),
+            200
+        );       
     }//GEN-LAST:event_jLabel13MouseEntered
 
     private void jLabel5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseEntered
-        jLabel5.setBackground(new Color(102,102,102));
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel5,
+            Color.decode("#CCCCCC"),
+            Color.decode("#B3B3B3"),
+            200
+        ); 
     }//GEN-LAST:event_jLabel5MouseEntered
 
     private void jLabel13MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MouseExited
-        jLabel13.setBackground(new Color(153,153,153));        
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel13,
+            Color.decode("#B3B3B3"),
+            Color.decode("#CCCCCC"),
+            200
+        );        
     }//GEN-LAST:event_jLabel13MouseExited
 
     private void jLabel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseExited
-        jLabel5.setBackground(new Color(153,153,153));        
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel5,
+            Color.decode("#B3B3B3"),
+            Color.decode("#CCCCCC"),
+            200
+        );         
     }//GEN-LAST:event_jLabel5MouseExited
 
     private void badgeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_badgeMouseEntered

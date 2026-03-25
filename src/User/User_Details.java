@@ -415,8 +415,8 @@ public final class User_Details extends javax.swing.JFrame {
         
         String hashpass = conf.hashPassword(pass);
         
-        String sql = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage) VALUES (?,?,?,?,?)";
-        int userID = conf.addRecordAndReturnId(sql, nm, bdg, hashpass, "User", "Disable");
+        String sql = "INSERT INTO users(user_name, user_badge, user_hashpass, user_access, user_ussage, system_access) VALUES (?,?,?,?,?,?)";
+        int userID = conf.addRecordAndReturnId(sql, nm, bdg, hashpass, "User", "Disable", "open");
         
         sql = "INSERT INTO details(user_id, user_age, user_gender, user_number, user_email, user_name, user_education, "
                 + "user_ValidId, user_birthdate, user_country) VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -742,16 +742,16 @@ public final class User_Details extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(125, 125, 125)
+                .addGap(96, 96, 96)
                 .addComponent(jLabel2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(24, 24, 24)
                 .addComponent(jLabel2)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         nm.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N

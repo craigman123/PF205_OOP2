@@ -82,11 +82,25 @@ public class LandingPage extends javax.swing.JFrame {
 
     private void jLabel2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseEntered
 
-       jLabel2.setBackground(new Color(153,153,153));
+       animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel2,
+            Color.decode("#CCCCCC"),
+            Color.decode("#B3B3B3"),
+            200
+        );  
     }//GEN-LAST:event_jLabel2MouseEntered
 
     private void jLabel2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseExited
-        jLabel2.setBackground(new Color(204,204,204));
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel2,
+            Color.decode("#B3B3B3"),
+            Color.decode("#CCCCCC"),
+            200
+        );  
     }//GEN-LAST:event_jLabel2MouseExited
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked

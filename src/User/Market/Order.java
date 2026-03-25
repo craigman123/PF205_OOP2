@@ -59,7 +59,10 @@ public class Order extends javax.swing.JInternalFrame {
         StockLeft();
         ShowDue();
         updateTotal();
-        CheckToPrefillLocation();
+        SwingUtilities.invokeLater(() -> {
+            CheckToPrefillLocation();
+        });
+        
     }
     
     private int stock;
@@ -336,39 +339,57 @@ public class Order extends javax.swing.JInternalFrame {
         barangay.setText(config.getBrg());
         spec.setText(config.getSpecificInf());
         Location.setText(config.getPosition());
+        
+        name1.setForeground(Color.BLACK);
+        province.setForeground(Color.BLACK);
+        region.setForeground(Color.BLACK);
+        city.setForeground(Color.BLACK);
+        zipCode.setForeground(Color.BLACK);
+        barangay.setForeground(Color.BLACK);
+        spec.setForeground(Color.BLACK);
+        Location.setForeground(Color.BLACK);
 
-        return;
-    }
+    } else {
 
     String qry = "SELECT * FROM userOrders WHERE user_id = ?";
     java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, see.GetID());
 
-    if (!result.isEmpty()) {
-        for (java.util.Map<String, Object> previousOrders : result) {
-            String rawAddress = previousOrders.get("order_shippingAddress").toString();
-            String exact = previousOrders.get("exact_location").toString();
-            String[] parts = rawAddress.split(",");
+        if (!result.isEmpty()) {
+            for (java.util.Map<String, Object> previousOrders : result) {
+                String rawAddress = previousOrders.get("order_shippingAddress").toString();
+                String exact = previousOrders.get("exact_location").toString();
+                String[] parts = rawAddress.split(",");
 
-            for (int i = 0; i < parts.length; i++) {
-                parts[i] = parts[i].trim();
-            }
+                for (int i = 0; i < parts.length; i++) {
+                    parts[i] = parts[i].trim();
+                }
 
-            // ✅ Safe assignment (check length first)
-            if (parts.length >= 8) {
-                name1.setText(parts[0]);
-                barangay.setText(parts[1]);
-                city.setText(parts[2]);
-                province.setText(parts[3]);
-                region.setText(parts[4]);
-                comboCountry.setSelectedItem(parts[5]);
-                zipCode.setText(parts[6]);
-                spec.setText(parts[7]);
+                // ✅ Safe assignment (check length first)
+                if (parts.length >= 8) {
+                    name1.setText(parts[0]);
+                    barangay.setText(parts[1]);
+                    city.setText(parts[2]);
+                    province.setText(parts[3]);
+                    region.setText(parts[4]);
+                    comboCountry.setSelectedItem(parts[5]);
+                    zipCode.setText(parts[6]);
+                    spec.setText(parts[7]);
+                }
+
+                Location.setText(exact);
+                
+                name1.setForeground(Color.BLACK);
+                province.setForeground(Color.BLACK);
+                region.setForeground(Color.BLACK);
+                city.setForeground(Color.BLACK);
+                zipCode.setForeground(Color.BLACK);
+                barangay.setForeground(Color.BLACK);
+                spec.setForeground(Color.BLACK);
+                Location.setForeground(Color.BLACK);
             }
-            
-            Location.setText(exact);
+        } else {
+            System.out.println("No previous Order Details");
         }
-    } else {
-        System.out.println("No previous Order Details");
     }
 }
     
@@ -1086,6 +1107,8 @@ public class Order extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        
+        
         this.dispose();
         Order order = new Order(id, pane);
         pane.add(order).setVisible(true);        // TODO add your handling code here:

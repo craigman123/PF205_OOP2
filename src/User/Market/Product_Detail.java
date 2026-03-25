@@ -38,6 +38,7 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
     
     private int ID;
     private JDesktopPane panel;
+    private String GlobalStat;
     
     public Product_Detail(int id, JDesktopPane pane) {
         this.ID = id;
@@ -119,8 +120,8 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
                     LocalDateTime nowDate = LocalDateTime.now();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     String formattedDate = nowDate.format(formatter);
-                    String queryNow = "INSERT INTO notification(user_id, n_content, date) VALUES (?, ?, ?)";
-                    conf.addRecordAndReturnId(queryNow, see.GetID(), "Product Added to Cart ID: " + ID, formattedDate);
+                    String queryNow = "INSERT INTO notification(user_id, n_content, date, read) VALUES (?, ?, ?, ?)";
+                    conf.addRecordAndReturnId(queryNow, see.GetID(), "Product Added to Cart ID: " + ID, formattedDate, "0");
                 }
 
             } else {
@@ -232,10 +233,10 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
     }
     
     public void SetStatusIndicator() {
-        String stat = status.getText();
         animation ani = new animation();
+        System.out.println("SET STATUS INDICATOR");
 
-        switch (stat) {
+        switch (GlobalStat) {
             case "Active":
                 statusindicator.setBackground(new Color(0, 180, 0));
                 statusindicator.setBorder(greenBorder);
@@ -276,7 +277,7 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
                 statusAllow = false;
         }
 
-        setStatusTooltip(stat);
+        setStatusTooltip(GlobalStat);
     }            
     
     private void setStatusTooltip(String stat) {
@@ -310,7 +311,46 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
                 statusindicator.setToolTipText(null);
                 
         }
-}
+    }
+    
+    public String statusColor() {
+        String statusColor = "black";
+
+        switch (GlobalStat) {
+            case "Active":
+                statusColor = "green";
+                statusAllow = true;
+                break;
+
+            case "Pending":
+                statusColor = "orange";
+                statusAllow = false;
+                break;
+
+            case "Sold Out":
+            case "Out of Stock":
+            case "Discontinued":
+                statusColor = "red";
+                statusAllow = false;
+                break;
+
+            case "Suspended":
+                statusColor = "darkorange";
+                statusAllow = false;
+                break;
+
+            case "Inactive":
+            case "Archived":
+                statusColor = "gray";
+                statusAllow = false;
+                break;
+
+            default:
+                statusColor = "black";
+                statusAllow = false;
+        }
+        return statusColor;
+    }
     
     public void StyleScrollPane(){
         desc.setLineWrap(true);
@@ -323,6 +363,7 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
     
     public void ShowComponent(){
         config conf = new config();
+        StringBuilder info = new StringBuilder();
         
         String qry = "SELECT * FROM products WHERE prod_id = ?";
         java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, ID); 
@@ -335,21 +376,52 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
             String descript = prod.get("prod_descript").toString();
             String stock = prod.get("prod_stock").toString();
             String stat = prod.get("prod_status").toString();
+            
+            System.out.println(stat);
             int prodId = ((Number) prod.get("prod_id")).intValue();
             String seller = prod.get("prod_addedBy").toString();
+            String date = prod.get("date_added").toString();
             
             String finalId = String.valueOf(prodId);
-            
-            prodName.setText(name);
-            category.setText(cat);
-            rarity.setText(rare);
-            price.setText(cash);
-            desc.setText(descript);
             GlobalStock = stock;
+            GlobalStat = stat;
+            
+            info.append("<html>");
+            info.append("<div style='font-family:Segoe UI; padding:10px;'>");
+
+            info.append("<h2 style='margin-bottom:5px;'>Product Information</h2>");
+            info.append("<hr>");
+
+            info.append("<table style='font-size:13px;'>");
+            info.append("<tr><td><b>Name:</b></td><td>").append(name).append("</td></tr>");
+            info.append("<tr><td><b>Category:</b></td><td>").append(cat).append("</td></tr>");
+            info.append("<tr><td><b>Rarity:</b></td><td>").append(rare).append("</td></tr>");
+            info.append("<tr><td><b>Price:</b></td><td style='color:green;'><b>₱")
+                .append(cash).append("</b></td></tr>");
+            info.append("<tr><td><b>Status:</b></td><td style='color:").append(statusColor()).append("'><b>").append(stat)
+            .append("</b></td></tr>");
+            
+            info.append("<tr><td><b>Stock:</b></td><td>").append(updateStockIndicator()).append("</td></tr>");
+            info.append("</table>");
+
+            info.append("<br>");
+
+            info.append("<h3 style='margin-bottom:5px;'>Additional Details</h3>");
+            info.append("<hr>");
+            info.append("<table style='font-size:12px;'>");
+            info.append("<tr><td><b>Seller:</b></td><td>").append(seller).append("</td></tr>");
+            info.append("<tr><td><b>Date Added:</b></td><td>").append(date).append("</td></tr>");
+            info.append("</table>");
+
+            info.append("</div>");
+            info.append("</html>");
+
+            area.setContentType("text/html");
+            area.setText(info.toString());
+            
+            desc.setText(descript);
             Onstock.setText(updateStockIndicator());
-            id.setText(finalId);
-            addedBy.setText(seller);              
-            status.setText(stat);
+            id.setText(finalId);             
             
             try {
                 Object imgPath = prod.get("prod_image");
@@ -415,6 +487,7 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
         if(statusAllow && stockAllow && ussageAllow && detailChecked){
             OpenBtn();
         }
+        SetStatusIndicator();
     }
     
     public void Order(){
@@ -440,24 +513,14 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        Onstock = new javax.swing.JLabel();
+        status = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         imageUpload = new javax.swing.JLabel();
-        prodName = new javax.swing.JLabel();
-        category = new javax.swing.JLabel();
-        price = new javax.swing.JLabel();
-        rarity = new javax.swing.JLabel();
         id = new javax.swing.JLabel();
         scrollTextArea = new javax.swing.JScrollPane();
         desc = new javax.swing.JTextArea();
-        status = new javax.swing.JLabel();
-        addedBy = new javax.swing.JLabel();
-        Onstock = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -469,59 +532,8 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
         stockindicator = new javax.swing.JLabel();
         heart = new javax.swing.JLabel();
         badgeLabel = new javax.swing.JLabel();
-
-        imageUpload.setBackground(new java.awt.Color(153, 153, 153));
-        imageUpload.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
-        imageUpload.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        imageUpload.setText("IMAGE");
-        imageUpload.setOpaque(true);
-
-        prodName.setBackground(new java.awt.Color(204, 204, 204));
-        prodName.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        prodName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        prodName.setText("Product Name");
-        prodName.setOpaque(true);
-
-        category.setBackground(new java.awt.Color(204, 204, 204));
-        category.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        category.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        category.setText("Category");
-        category.setOpaque(true);
-
-        price.setBackground(new java.awt.Color(204, 204, 204));
-        price.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        price.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        price.setText("Price");
-        price.setOpaque(true);
-
-        rarity.setBackground(new java.awt.Color(204, 204, 204));
-        rarity.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        rarity.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        rarity.setText("Rarity");
-        rarity.setOpaque(true);
-
-        id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        id.setText("id");
-
-        desc.setEditable(false);
-        desc.setColumns(20);
-        desc.setFont(new java.awt.Font("Open Sans Semibold", 1, 18)); // NOI18N
-        desc.setRows(5);
-        desc.setText("Description . . .");
-        desc.setWrapStyleWord(true);
-        scrollTextArea.setViewportView(desc);
-
-        status.setBackground(new java.awt.Color(204, 204, 204));
-        status.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        status.setText("Status");
-        status.setOpaque(true);
-
-        addedBy.setBackground(new java.awt.Color(204, 204, 204));
-        addedBy.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        addedBy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        addedBy.setText("Seller");
-        addedBy.setOpaque(true);
+        jScrollPane2 = new javax.swing.JScrollPane();
+        area = new javax.swing.JTextPane();
 
         Onstock.setBackground(new java.awt.Color(204, 204, 204));
         Onstock.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
@@ -529,26 +541,43 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
         Onstock.setText("Stock");
         Onstock.setOpaque(true);
 
-        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jLabel1.setText("Name:");
+        status.setBackground(new java.awt.Color(204, 204, 204));
+        status.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        status.setText("Status");
+        status.setOpaque(true);
 
-        jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jLabel2.setText("Category:");
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jLabel3.setText("Rarity: ");
+        imageUpload.setBackground(new java.awt.Color(153, 153, 153));
+        imageUpload.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
+        imageUpload.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        imageUpload.setText("IMAGE");
+        imageUpload.setOpaque(true);
+        jPanel1.add(imageUpload, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 108, 380, 300));
 
-        jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jLabel4.setText("Price:");
+        id.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        id.setText("id");
+        jPanel1.add(id, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 490, 50, 30));
+
+        desc.setEditable(false);
+        desc.setColumns(20);
+        desc.setFont(new java.awt.Font("Open Sans Semibold", 1, 18)); // NOI18N
+        desc.setLineWrap(true);
+        desc.setRows(5);
+        desc.setText("Description . . .");
+        desc.setWrapStyleWord(true);
+        scrollTextArea.setViewportView(desc);
+
+        jPanel1.add(scrollTextArea, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 417, 380, 210));
 
         jLabel5.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel5.setText("Status: ");
-
-        jLabel6.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jLabel6.setText("Seller: ");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 530, -1, 30));
 
         jLabel9.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel9.setText("Stock:");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 570, -1, 40));
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -587,6 +616,8 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 964, -1));
+
         orderBtn.setBackground(new java.awt.Color(102, 102, 102));
         orderBtn.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         orderBtn.setForeground(new java.awt.Color(153, 153, 153));
@@ -604,16 +635,21 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
                 orderBtnMouseExited(evt);
             }
         });
+        jPanel1.add(orderBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 570, 205, 56));
 
         jLabel14.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 115, -1, -1));
 
         jLabel16.setOpaque(true);
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(916, 412, 30, -1));
 
         statusindicator.setBackground(new java.awt.Color(153, 153, 153));
         statusindicator.setOpaque(true);
+        jPanel1.add(statusindicator, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 530, 30, 27));
 
         stockindicator.setBackground(new java.awt.Color(153, 153, 153));
         stockindicator.setOpaque(true);
+        jPanel1.add(stockindicator, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 580, 30, 27));
 
         heart.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         heart.setText("cart");
@@ -631,151 +667,19 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
                 heartMouseClicked(evt);
             }
         });
+        jPanel1.add(heart, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 560, 70, 70));
 
+        badgeLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         badgeLabel.setForeground(new java.awt.Color(153, 0, 0));
+        badgeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         badgeLabel.setText("Badge Unverified!");
+        jPanel1.add(badgeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 520, 200, 40));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel14)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(scrollTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
-                    .addComponent(imageUpload, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 41, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel6)
-                                .addGap(360, 360, 360)
-                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(118, 118, 118)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(Onstock, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(stockindicator, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(statusindicator, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(orderBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(heart, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(370, 370, 370))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(59, 59, 59)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel5))
-                                .addGap(36, 36, 36)
-                                .addComponent(addedBy, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(196, 196, 196)
-                                .addComponent(badgeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(121, 121, 121)
-                                .addComponent(jLabel3)
-                                .addGap(113, 113, 113)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(59, 59, 59)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(rarity, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(prodName, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel14)
-                .addGap(0, 0, 0)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(prodName, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addGap(33, 33, 33)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(1, 1, 1)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(rarity, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(addedBy, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(Onstock, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(stockindicator, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(badgeLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(orderBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(14, 14, 14))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addComponent(statusindicator, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(heart, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel16)
-                                .addGap(5, 5, 5))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(imageUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addComponent(scrollTextArea, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28))))
-        );
+        area.setEditable(false);
+        area.setFont(new java.awt.Font("Trebuchet MS", 1, 17)); // NOI18N
+        jScrollPane2.setViewportView(area);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 110, 530, 370));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -785,7 +689,9 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -881,30 +787,22 @@ public final class Product_Detail extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Onstock;
-    private javax.swing.JLabel addedBy;
+    private javax.swing.JTextPane area;
     private javax.swing.JLabel badgeLabel;
-    private javax.swing.JLabel category;
     private javax.swing.JTextArea desc;
     private javax.swing.JLabel heart;
     private javax.swing.JLabel id;
     private javax.swing.JLabel imageUpload;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel orderBtn;
-    private javax.swing.JLabel price;
-    private javax.swing.JLabel prodName;
-    private javax.swing.JLabel rarity;
     private javax.swing.JScrollPane scrollTextArea;
     private javax.swing.JLabel status;
     private javax.swing.JLabel statusindicator;

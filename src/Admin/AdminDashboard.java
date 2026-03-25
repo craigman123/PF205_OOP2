@@ -32,6 +32,12 @@ public class AdminDashboard extends javax.swing.JFrame {
         initComponents();
         Toggle_Buttons();
         GetSession();
+        ShowOverview();
+    }
+    
+    public void ShowOverview(){
+        Overview o = new Overview(jDesktopPane1);
+        jDesktopPane1.add(o).setVisible(true);
     }
     
     private Integer ID;
@@ -71,12 +77,14 @@ public class AdminDashboard extends javax.swing.JFrame {
         menuGroup.add(jToggleButton4);
         menuGroup.add(jToggleButton7);
         menuGroup.add(jToggleButton8);
+        menuGroup.add(orv);
         
         animation.StyleToggleButtons(jToggleButton2); 
         animation.StyleToggleButtons(jToggleButton3); 
         animation.StyleToggleButtons(jToggleButton4);  
         animation.StyleToggleButtons(jToggleButton7); 
         animation.StyleToggleButtons(jToggleButton8);
+        animation.StyleToggleButtons(orv);
         
     }
     
@@ -97,6 +105,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         jToggleButton3 = new javax.swing.JToggleButton();
         jToggleButton4 = new javax.swing.JToggleButton();
         jToggleButton7 = new javax.swing.JToggleButton();
+        orv = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -116,9 +125,8 @@ public class AdminDashboard extends javax.swing.JFrame {
                 jToggleButton8MouseClicked(evt);
             }
         });
-        jPanel2.add(jToggleButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 204, 60));
+        jPanel2.add(jToggleButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 500, 204, 60));
 
-        jToggleButton2.setSelected(true);
         jToggleButton2.setText("Users");
         jToggleButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -130,7 +138,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 jToggleButton2ActionPerformed(evt);
             }
         });
-        jPanel2.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, 204, 60));
+        jPanel2.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 204, 60));
 
         jToggleButton3.setText("Manage Product");
         jToggleButton3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -148,7 +156,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 jToggleButton3KeyPressed(evt);
             }
         });
-        jPanel2.add(jToggleButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, 204, 60));
+        jPanel2.add(jToggleButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 204, 60));
 
         jToggleButton4.setText("Sales");
         jToggleButton4.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -156,7 +164,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 jToggleButton4MouseClicked(evt);
             }
         });
-        jPanel2.add(jToggleButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 204, 60));
+        jPanel2.add(jToggleButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, 204, 60));
 
         jToggleButton7.setText("Logs");
         jToggleButton7.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -164,7 +172,25 @@ public class AdminDashboard extends javax.swing.JFrame {
                 jToggleButton7MouseClicked(evt);
             }
         });
-        jPanel2.add(jToggleButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 204, 60));
+        jPanel2.add(jToggleButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 570, 204, 60));
+
+        orv.setText("Overview");
+        orv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                orvMouseClicked(evt);
+            }
+        });
+        orv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                orvActionPerformed(evt);
+            }
+        });
+        orv.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                orvKeyPressed(evt);
+            }
+        });
+        jPanel2.add(orv, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 204, 60));
 
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -300,6 +326,20 @@ public class AdminDashboard extends javax.swing.JFrame {
         jDesktopPane1.add(uorder).setVisible(true);// TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton8MouseClicked
 
+    private void orvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orvMouseClicked
+        Overview o = new Overview(jDesktopPane1);
+        jDesktopPane1.add(o).setVisible(true);
+                // TODO add your handling code here:
+    }//GEN-LAST:event_orvMouseClicked
+
+    private void orvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orvActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_orvActionPerformed
+
+    private void orvKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_orvKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_orvKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -348,5 +388,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JToggleButton jToggleButton4;
     private javax.swing.JToggleButton jToggleButton7;
     private javax.swing.JToggleButton jToggleButton8;
+    private javax.swing.JToggleButton orv;
     // End of variables declaration//GEN-END:variables
 }

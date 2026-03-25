@@ -6,31 +6,36 @@
 package User.Market;
 
 import User.User_config;
+import configuration.animation;
 import configuration.config;
+import java.awt.Color;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author user
  */
-public class SuccesMessage extends javax.swing.JInternalFrame {
+public final class SuccesMessage extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form SuccesMessage
      */
     private int orderID;
+    private JDesktopPane MainPane;
     
-    public SuccesMessage(int id) {
+    public SuccesMessage(int id, JDesktopPane pane) {
         this.orderID = id;
+        this.MainPane = pane;
         
         initComponents();
         StyleFrame();
-        Image();
+        SwingUtilities.invokeLater(() -> { Image(); });
         ShowOrderInfo();
     }
     
@@ -42,97 +47,131 @@ public class SuccesMessage extends javax.swing.JInternalFrame {
         ui.setNorthPane(null);
     }
     
-    public void Image(){
-        ImageIcon icon = null;
-        int w = 0, h = 0;
+    public void Image() {
+        ImageIcon icon = new ImageIcon(getClass().getResource("/images/balcj.jpg"));
+        System.out.println(getClass().getResource("/images/balcj.jpg"));
 
-        icon = new ImageIcon(getClass().getResource("/images/balcj.png"));
-        w = image.getWidth() - 10;
-        h = image.getHeight() - 10;
+        Image img = icon.getImage();
 
-        Image img = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
-        image.setIcon(new ImageIcon(img));
+        int labelWidth = image.getWidth();
+        int labelHeight = image.getHeight();
+
+        if (labelWidth <= 0 || labelHeight <= 0) return;
+
+        Image scaledImg = img.getScaledInstance(
+                labelWidth,
+                labelHeight,
+                Image.SCALE_SMOOTH
+        );
+
+        image.setIcon(new ImageIcon(scaledImg));
         image.setHorizontalAlignment(JLabel.CENTER);
         image.setVerticalAlignment(JLabel.CENTER);
     }
     
     public void ShowOrderInfo(){
-        config conf = new config();
-        StringBuilder build = new StringBuilder();
-        
-        String qry = "SELECT * FROM details WHERE order_id = ?";
-        java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, orderID); 
-        
-        
-        if(!result.isEmpty()){
-            java.util.Map<String, Object> user = result.get(0);
-            String status = user.get("user_status").toString();
-            String prodName = user.get("order_prod").toString();
-            String quant = user.get("order_quantity").toString();
-            String total = user.get("order_totalPrice").toString();
-            String fullAddress = user.get("order_shippingAddress").toString();
-            String paymethod = user.get("order_paymentMethod").toString();
-            String date = user.get("order_date").toString();
-            String additionals = user.get("order_additionals").toString();
-            String name, description, address;
-            
-            String[] parts = fullAddress.split(",");
-            
-            if (parts.length < 2) {
-                System.out.println("Invalid format!");
-                return;
-            }
+    config conf = new config();
+    StringBuilder build = new StringBuilder();
 
-            name = parts[0].trim();
-            description = parts[parts.length - 1].trim();
+    String qry = "SELECT * FROM userOrders WHERE order_id = ?";
+    java.util.List<java.util.Map<String, Object>> result = conf.fetchRecords(qry, orderID); 
 
-            StringBuilder addressBuilder = new StringBuilder();
+    if(!result.isEmpty()){
+        java.util.Map<String, Object> user = result.get(0);
 
-            for (int i = 1; i < parts.length - 1; i++) {
-                addressBuilder.append(parts[i].trim());
+        String status = user.get("order_status").toString();
+        String prodName = user.get("order_prod").toString();
+        String quant = user.get("order_quantity").toString();
+        String total = user.get("order_totalPrice").toString();
+        String fullAddress = user.get("order_shippingAddress").toString();
+        String paymethod = user.get("order_paymentMethod").toString();
+        String date = user.get("order_date").toString();
+        String additionals = user.get("order_additionals").toString();
 
-                if (i < parts.length - 2) {
-                    addressBuilder.append(", ");
-                }
-            }
+        String name, description, address;
 
-            address = addressBuilder.toString();
-            
-            build.append("=====================================\n");
-        build.append("            ORDER DETAILS            \n");
-        build.append("=====================================\n\n");
+        String[] parts = fullAddress.split(",");
 
-        build.append(String.format("%-18s : %s\n", "Customer Name", name));
-        build.append(String.format("%-18s : %s\n", "Address", address));
-        build.append(String.format("%-18s : %s\n", "Description", description));
-        build.append("\n");
-
-        build.append(String.format("%-18s : %s\n", "Product", prodName));
-        build.append(String.format("%-18s : %s\n", "Quantity", quant));
-        build.append(String.format("%-18s : %s\n", "Total Price", total));
-        build.append("\n");
-
-        build.append(String.format("%-18s : %s\n", "Payment Method", paymethod));
-        build.append(String.format("%-18s : %s\n", "Order Date", date));
-        build.append(String.format("%-18s : %s\n", "Status", status));
-
-        if (additionals != null && !additionals.equals("null")) {
-            build.append(String.format("%-18s : %s\n", "Notes", additionals));
-        }
-
-        build.append("\n=====================================\n");
-        build.append("         THANK YOU FOR ORDERING      \n");
-        build.append("=====================================\n");
-
-        // ✅ FINAL OUTPUT
-        area.setText(build.toString());
-            
-            
-        } else {
-            area.setText("No order details found.");
+        if (parts.length < 2) {
+            area.setText("Invalid address format!");
             return;
         }
+
+        name = parts[0].trim();
+        description = parts[parts.length - 1].trim();
+
+        StringBuilder addressBuilder = new StringBuilder();
+
+        for (int i = 1; i < parts.length - 1; i++) {
+            addressBuilder.append(parts[i].trim());
+            if (i < parts.length - 2) {
+                addressBuilder.append(", ");
+            }
+        }
+        
+        address = addressBuilder.toString();
+
+        // ================= HTML UI =================
+        build.append("<html>");
+        build.append("<div style='font-family:Segoe UI; font-size:15px; line-height:1.8; color:#111;'>");
+
+        // HEADER
+        build.append("<h1 style='text-align:center; font-weight:bold; margin-bottom:5px;'>🧾 ORDER RECEIPT</h1>");
+        build.append("<hr style='border:1px solid #ccc;'>");
+
+        // CUSTOMER INFO
+        build.append("<h1><b><span style='font-weieght: bold; size='5'>").append("7 Day(s) Estimation").append("</span></b></h1><br>");
+        build.append("<p><b>CUSTOMER NAME:</b> <span style='font-weight:bold;'>").append(name).append("</span></p>");
+        build.append("<p><b>ADDRESS:</b> <span style='font-weight:bold;'>").append(address).append("</span></p>");
+        build.append("<p><b>DESCRIPTION:</b> <span style='font-weight:bold;'>").append(description).append("</span></p>");
+
+        build.append("<hr>");
+
+        // PRODUCT DETAILS
+        build.append("<h2 style='font-weight:bold;'>🛒 PRODUCT DETAILS</h2>");
+
+        build.append("<p><b>PRODUCT:</b> <span style='font-weight:bold;'>").append(prodName).append("</span></p>");
+        build.append("<p><b>QUANTITY:</b> <span style='font-weight:bold;'>").append(quant).append("</span></p>");
+
+        build.append("<p><b>TOTAL PRICE:</b> ")
+             .append("<span style='color:green; font-weight:bold; font-size:16px;'>₱")
+             .append(total)
+             .append("</span></p>");
+
+        build.append("<hr>");
+
+        // PAYMENT INFO
+        build.append("<h2 style='font-weight:bold;'>💳 PAYMENT INFO</h2>");
+
+        build.append("<p><b>PAYMENT METHOD:</b> <span style='font-weight:bold;'>").append(paymethod).append("</span></p>");
+        build.append("<p><b>ORDER DATE:</b> <span style='font-weight:bold;'>").append(date).append("</span></p>");
+
+        // STATUS (ALWAYS GREEN)
+        build.append("<p><b>STATUS:</b> ")
+             .append("<span style='color:green; font-weight:bold; font-size:15px;'>")
+             .append(status.toUpperCase())
+             .append("</span></p>");
+
+        if (additionals != null && !additionals.equals("null") && !additionals.equals("[]")) {
+            build.append("<p><b>NOTES:</b> <span style='font-weight:bold;'>")
+                 .append(additionals)
+                 .append("</span></p>");
+        }
+
+        build.append("<hr>");
+
+        // FOOTER
+        build.append("<h2 style='text-align:center; font-weight:bold;'>THANK YOU FOR YOUR ORDER</h2>");
+
+        build.append("</div></html>");
+
+        area.setContentType("text/html");
+        area.setText(build.toString());
+
+    } else {
+        area.setText("No order details found.");
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -146,13 +185,16 @@ public class SuccesMessage extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         image = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        area = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        area = new javax.swing.JTextPane();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(222, 222, 222));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setBackground(new java.awt.Color(197, 197, 197));
+        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("COMPLETE");
         jLabel1.setOpaque(true);
@@ -160,17 +202,31 @@ public class SuccesMessage extends javax.swing.JInternalFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel1MouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel1MouseExited(evt);
+            }
         });
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 490, 247, 57));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 530, 247, 57));
 
         image.setText("successimage");
-        jPanel1.add(image, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 16, 312, 420));
+        jPanel1.add(image, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 312, 510));
 
-        area.setColumns(20);
-        area.setRows(5);
-        jScrollPane1.setViewportView(area);
+        area.setEditable(false);
+        jScrollPane2.setViewportView(area);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 20, 560, 410));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 80, 580, 430));
+
+        jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("WAITING TO BE SHIPPED ");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 530, 300, 60));
+
+        jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
+        jLabel3.setText("SUCCESFULLY PURCHASED");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 20, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -178,14 +234,14 @@ public class SuccesMessage extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 945, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -200,15 +256,41 @@ public class SuccesMessage extends javax.swing.JInternalFrame {
                     f.dispose();
                 }
             }
-        }        // TODO add your handling code here:
+        }   
+        MarketMain mark = new MarketMain(MainPane);
+        MainPane.add(mark).setVisible(true);// TODO add your handling code here:
     }//GEN-LAST:event_jLabel1MouseClicked
+
+    private void jLabel1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseEntered
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel1,
+            Color.decode("#CCCCCC"),
+            Color.decode("#B3B3B3"),
+            200
+        );          // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel1MouseEntered
+
+    private void jLabel1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseExited
+        animation ani = new animation();
+        
+        ani.transitionBackground(
+            jLabel1,
+            Color.decode("#B3B3B3"),
+            Color.decode("#CCCCCC"),
+            200
+        );           // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel1MouseExited
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea area;
+    private javax.swing.JTextPane area;
     private javax.swing.JLabel image;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 }

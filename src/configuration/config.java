@@ -296,7 +296,49 @@ public class config {
 
         return purchases;
     }
+    
+    public int getCount(String query) {
+        int count = 0;
+        try (Connection conn = this.connectDB();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
 
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+    
+    private int userID;
+    private double pay;
+    
+    public void GetHighPay(String q) throws SQLException{
+        try (Connection conn = this.connectDB();
+        PreparedStatement ps = conn.prepareStatement(q);
+        ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                int userId = rs.getInt("user_id");
+                double payment = rs.getDouble("order_totalPrice");
+
+                userID = userId;
+                pay = payment;
+            }
+        }
+    }
+    
+    public int GetID(){
+        return userID;
+    }
+    
+    public double GetPay(){
+        return pay;
+    }
 }
 
 

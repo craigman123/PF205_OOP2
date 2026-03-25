@@ -168,7 +168,14 @@ public final class SeeProductStatus extends javax.swing.JInternalFrame {
             String orderTotal = userBought.get("order_totalPrice").toString();
             String paymentMethod = userBought.get("order_paymentMethod").toString();
             String orderDate = userBought.get("order_date").toString();
-            String orderExtras = userBought.get("order_additionals").toString();
+            String extras = userBought.get("order_additionals").toString();
+            
+            String orderExtras = "None";
+            if(extras.equals("[]")){
+                orderExtras = "None";
+            } else {
+                orderExtras = extras;
+            }
             
             String orderStatColor;
         switch (stat) {
@@ -264,6 +271,22 @@ public final class SeeProductStatus extends javax.swing.JInternalFrame {
 
             java.util.Map<String, Object> userBought = prodResult.get(0);
             String orderStatus = userBought.get("order_status").toString();
+            String price = userBought.get("order_totalPrice").toString();
+            String address = userBought.get("order_shippingAddress").toString();
+            
+            String[] parts = address.split(",");
+            String cancelname = parts[0].trim();
+           
+            query = "SELECT * FROM products WHERE order_id = ?";
+            java.util.List<java.util.Map<String, Object>> resu = conf.fetchRecords(query, ProdId);
+            
+            String cat = "Common";
+            
+            if(!resu.isEmpty()){
+                java.util.Map<String, Object> result = resu.get(0);
+                cat = result.get("prod_category").toString();
+                
+            }
 
             if (orderStatus.equals("Pending")) {
 
@@ -279,6 +302,18 @@ public final class SeeProductStatus extends javax.swing.JInternalFrame {
 
                     String qry = "DELETE FROM userOrders WHERE order_id = ?";
                     conf.deleteRecord(qry, orderId);
+                    
+                    qry = "INSERT INTO cancelledOrders(order_id, priceLost, prod_category, cancelledBy) VALUES(?,?,?,?)";
+                    conf.addRecordAndReturnId(qry, orderId, price, cat, cancelname);
+                    
+                    LocalDateTime now = LocalDateTime.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    String formattedDate = now.format(formatter);
+                    String queryNow = "INSERT INTO notification(prod_id, user_id, n_content, date, read) VALUES (?,?,?,?,?)";
+                    conf.addRecordAndReturnId(queryNow, ProdId, see.GetID(), "Successfully Cancel Order:", formattedDate, false);
+                    
+                    queryNow = "INSERT INTO logs(prod_id, user_id, dateTime, log_action) VALUES(?,?,?,?)";
+                    conf.addRecordAndReturnId(queryNow, ProdId, see.GetID(), formattedDate, "Delete");
 
                     JOptionPane.showMessageDialog(
                         null,
@@ -286,6 +321,7 @@ public final class SeeProductStatus extends javax.swing.JInternalFrame {
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE
                     );
+                    this.dispose();
                 }
 
             } else if (orderStatus.equals("Completed")) {
