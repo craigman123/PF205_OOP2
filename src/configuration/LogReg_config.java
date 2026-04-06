@@ -38,6 +38,8 @@ public class LogReg_config {
                 
                 if (ps == null || ps.trim().isEmpty() || ps.equals("Password")) {
                     errors.append("• Password cannot be empty.\n");
+                }  else if (ps.length() < 4) {
+                    errors.append("• Password must be at least 4 characters.\n");
                 }
                 
                 if (nm == null || nm.trim().isEmpty() || nm.equals("Username")) {
@@ -272,7 +274,7 @@ public class LogReg_config {
         return 0;
     }
     
-    public static void RegisterByAdmin(String nm, String bdg, String ps, String access, String ussage, String acc) {
+    public static boolean RegisterByAdmin(String nm, String bdg, String ps, String access, String ussage, String acc) {
     config conf = new config();
     StringBuilder errors = new StringBuilder();
     int Finalbadge = 0;
@@ -316,7 +318,7 @@ public class LogReg_config {
             "Validation Errors",
             JOptionPane.ERROR_MESSAGE
         );
-        return;
+        return false;
     }else{
     
         String hashpass = conf.hashPassword(ps);
@@ -339,6 +341,7 @@ public class LogReg_config {
             "Success",
             JOptionPane.INFORMATION_MESSAGE
         );
+        return true;
     }
 }
     

@@ -15,6 +15,7 @@ import java.util.Date;
 import javax.swing.border.Border;
 import com.toedter.calendar.JDateChooser;
 import configuration.config;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -95,6 +96,8 @@ public final class User_Details extends javax.swing.JFrame {
         nm.setBorder(greenBorder);
         bdg.setBorder(greenBorder);
         pass.setBorder(greenBorder);
+        
+        number1.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
     }
     
     private void ChangeBarLabel(int value){   
@@ -239,7 +242,7 @@ public final class User_Details extends javax.swing.JFrame {
         StringBuilder errors = new StringBuilder();
         Validations validation = new Validations();
         String badgeValue = bdg.getText().trim();
-        String valueID = number1.getText().trim();
+        String valueID = number1.getText().replaceAll("\\D", "");
         String valuePhone = number.getText().trim();
         System.out.println("Arrived at Validations");
 
@@ -283,12 +286,16 @@ public final class User_Details extends javax.swing.JFrame {
                 errors.append("Valid ID Number is required.\n");
             else if (validation.ValidateIntegerBool(valueID))
                 errors.append("Valid ID Number should be Integer.\n");
+            else if (valueID.length() < 9 && valueID.length() > 9)
+                errors.append("Valid ID should be 9 digits");
 
             if (valuePhone.isEmpty() || valuePhone.equals("Phone Number"))
                 errors.append("Phone number is required.\n");
-            else if (validation.ValidateIntegerBool(valuePhone))
+            else if (!validation.ValidateIntegerBool(valuePhone))
                 errors.append("Phone Number should be Integer.\n");
-
+            else if (valuePhone.length() < 11)
+                errors.append("Phone should be only 11 Digits");
+                
             if (email.getText().trim().isEmpty() || email.getText().equals("Email"))
                 errors.append("Email is required.\n");
             else if (!validation.validateEmailBoolean(email))
@@ -321,18 +328,22 @@ public final class User_Details extends javax.swing.JFrame {
         StringBuilder errors = new StringBuilder();
         Validations validation = new Validations();
         String badgeValue = bdg.getText();
-        String value = number1.getText();
-        String value2 = number.getText();
+        String value = number.getText();
+        String value2 = number1.getText().replaceAll("\\D", "");
+        System.out.println("Valid ID: " + value2.length());
+        System.out.println("Phone Num: " + value);
 
-        if (nm.getText() == null || nm.getText().trim().isEmpty() || nm.getText().equals("Username")) errors.append("Username is required.\n");
+        if (nm.getText() == null || nm.getText().trim().isEmpty() || nm.getText().equals("Name")) errors.append("Username is required.\n");
         if (bdg.getText() == null || bdg.getText().trim().isEmpty() || bdg.getText().equals("badge")) errors.append("Badge is required.\n");
         else if (validation.ValidBadge(badgeValue)) errors.append("Badge is invalid.\n");
         if (pass.getText() == null || pass.getText().trim().isEmpty() || pass.getText().equals("Password")) errors.append("Password is required.\n");
         if (name.getText().trim().isEmpty()) errors.append("Full name is required.\n");
         if (number1.getText().trim().isEmpty() || number1.getText().equals("Valid ID Number")) errors.append("Valid ID Number is required.\n");
-        else if (validation.ValidateIntegerBool(value)) errors.append("Valid ID Number should be Integer.\n");
+        else if (validation.ValidateIntegerBool(value2)) errors.append("Valid ID Number should be Integer.\n");
+        else if (value2.length() < 9) errors.append("Valid ID should be 9 digits\n");
         if (number.getText().trim().isEmpty() || number.getText().equals("Phone Number")) errors.append("Phone number is required.\n");
-        else if (validation.ValidateIntegerBool(value2)) errors.append("Phone Number should be Integer.\n");
+        else if (!validation.ValidateIntegerBool(value)) errors.append("Phone Number should be Integer.\n");
+        else if (value.length() < 11 && value.length() > 11) errors.append("Phone Number should be 11 digits\n");
         if (email.getText().trim().isEmpty() || email.getText().equals("Email")) errors.append("Email is required.\n");
         else if (!validation.validateEmailBoolean(email)) errors.append("Email format is invalid.\n");
         if (BirthField.getText().equals("Select Birthdate")) errors.append("Birthdate must be selected.\n");
@@ -650,7 +661,6 @@ public final class User_Details extends javax.swing.JFrame {
         number = new javax.swing.JTextField();
         email = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        number1 = new javax.swing.JTextField();
         BirthPane = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -670,6 +680,8 @@ public final class User_Details extends javax.swing.JFrame {
         agePane = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         age = new javax.swing.JComboBox<>();
+        number1 = new javax.swing.JFormattedTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -888,26 +900,6 @@ public final class User_Details extends javax.swing.JFrame {
             }
         });
 
-        number1.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
-        number1.setForeground(new java.awt.Color(153, 153, 153));
-        number1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        number1.setText("Valid ID Number");
-        number1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                number1MouseClicked(evt);
-            }
-        });
-        number1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                number1ActionPerformed(evt);
-            }
-        });
-        number1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                number1KeyReleased(evt);
-            }
-        });
-
         BirthPane.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
@@ -1078,6 +1070,30 @@ public final class User_Details extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        number1.setColumns(12);
+        try {
+            number1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###-###-###")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        number1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        number1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                number1ActionPerformed(evt);
+            }
+        });
+        number1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                number1KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                number1KeyReleased(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel1.setText("Valid ID Number");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1088,12 +1104,16 @@ public final class User_Details extends javax.swing.JFrame {
                     .addComponent(name)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(number)
-                                .addComponent(number1)
-                                .addComponent(educationPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(gender, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(number)
+                            .addComponent(educationPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(email, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(gender, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(number1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(countryPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1131,13 +1151,15 @@ public final class User_Details extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(number, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(number1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(number1, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(agePane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(142, 142, 142)
-                                .addComponent(BirthPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(BirthPane, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(countryPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1222,7 +1244,9 @@ public final class User_Details extends javax.swing.JFrame {
     private void emailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_emailMouseClicked
         animation ani = new animation();
 
-        ani.addPlaceholder(email, "Email");         // TODO add your handling code here:
+        ani.addPlaceholder(email, "Email"); 
+        System.out.println(number1.getText()); 
+        System.out.println(number1.getText().length());// TODO add your handling code here:
     }//GEN-LAST:event_emailMouseClicked
 
     private void emailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailActionPerformed
@@ -1233,10 +1257,16 @@ public final class User_Details extends javax.swing.JFrame {
         Validations validate = new Validations();
         session see = new session();
         int OnSession = see.GetID();
+        int validID = 0;
         
         String genderGet = male.isSelected() ? "male" : female.isSelected() ? "female" : "";
             int badgeget = validate.ConvertInts(bdg.getText());
-            int validID = validate.ConvertInts(number1.getText());
+            String textString = number1.getText();
+            String digited = textString.replaceAll("\\D", "");
+            System.out.println("ID len: " + digited);
+            if(digited.length() != 0) {
+                validID = Integer.parseInt(digited);
+            }
 
             String errors = (flag == 0) ? checkAllInputs() : checkAllInputsUpdate();
             if (!errors.isEmpty()) {
@@ -1270,16 +1300,6 @@ public final class User_Details extends javax.swing.JFrame {
             jLabel3.setBackground(new Color(153,153,153)); // TODO add your handling code here:
     }//GEN-LAST:event_jLabel3MouseExited
 
-    private void number1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_number1MouseClicked
-        animation ani = new animation();
-
-        ani.addPlaceholder(number1, "Valid ID Number");// TODO add your handling code here:
-    }//GEN-LAST:event_number1MouseClicked
-
-    private void number1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_number1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_number1ActionPerformed
-
     private void nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameKeyReleased
         animation ani = new animation();
         ani.validateRequired(name);        // TODO add your handling code here:
@@ -1307,24 +1327,6 @@ public final class User_Details extends javax.swing.JFrame {
         animation ani = new animation();
         ani.validateEmail(email);          // TODO add your handling code here:
     }//GEN-LAST:event_emailKeyReleased
-
-    private void number1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_number1KeyReleased
-        Validations valid = new Validations();
-        
-        String value = number1.getText();
-        
-        switch (valid.ValidateInteger(value)) {
-            case 1:
-                number1.setBorder(greenBorder);
-                break;
-            case 0:
-                number1.setBorder(orangeBorder);
-                break;
-            default:
-                number1.setBorder(redBorder);
-                break;
-        }
-    }//GEN-LAST:event_number1KeyReleased
 
     private void passKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passKeyReleased
         animation ani = new animation();
@@ -1500,6 +1502,28 @@ public final class User_Details extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel9MouseClicked
 
+    private void number1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_number1KeyPressed
+                // TODO add your handling code here:
+    }//GEN-LAST:event_number1KeyPressed
+
+    private void number1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_number1KeyReleased
+        String text = number1.getText();
+        String digitsOnly = text.replaceAll("\\D", "");
+        System.out.println(digitsOnly);
+        
+        if(!digitsOnly.isEmpty() && digitsOnly.length() == 9) {// TODO add your handling code here:
+            number1.setBorder(greenBorder);
+        } else if (!digitsOnly.isEmpty() && digitsOnly.length() < 9) {
+            number1.setBorder(orangeBorder);
+        } else {
+            number1.setBorder(redBorder);
+        }
+    }//GEN-LAST:event_number1KeyReleased
+
+    private void number1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_number1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_number1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1550,6 +1574,7 @@ public final class User_Details extends javax.swing.JFrame {
     private javax.swing.JTextField email;
     private javax.swing.JToggleButton female;
     private javax.swing.JPanel gender;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1568,7 +1593,7 @@ public final class User_Details extends javax.swing.JFrame {
     private javax.swing.JTextField name;
     private javax.swing.JTextField nm;
     private javax.swing.JTextField number;
-    private javax.swing.JTextField number1;
+    private javax.swing.JFormattedTextField number1;
     private javax.swing.JTextField pass;
     private javax.swing.JProgressBar passStrength;
     // End of variables declaration//GEN-END:variables

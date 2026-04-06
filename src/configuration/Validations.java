@@ -51,16 +51,19 @@ public class Validations {
         return 0;
     }
     
-    public static int ValidateInteger(String input){
-        
-        try{
-            int FinalInput = Integer.parseInt(input);
-        }catch(NumberFormatException e){
-            
+    public static int ValidateInteger(String input) {
+        try {
+            long FinalInput = Long.parseLong(input);
+
+            if (input.length() == 11) {
+                return 1;
+            }
+
+        } catch (NumberFormatException e) {
             return 0;
         }
-        
-        return 1;
+
+        return 0;
     }
     
     public static boolean ValidateIntegerBool(String input){

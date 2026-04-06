@@ -11,6 +11,7 @@ import configuration.animation;
 import configuration.config;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -208,9 +209,9 @@ public final class Payment extends javax.swing.JInternalFrame {
             six.setEnabled(false);
 
             // Disable card number
-            cardNum.setEnabled(false);
-            cardNum.setText("Card Number");
-            cardNum.setForeground(new Color(153, 153, 153));
+            cardNumber.setEnabled(false);
+            cardNumber.setText("Card Number");
+            cardNumber.setForeground(new Color(153, 153, 153));
             
             pin.setEnabled(false);
 
@@ -234,9 +235,9 @@ public final class Payment extends javax.swing.JInternalFrame {
             six.setEnabled(true);
 
             // Enable card number
-            cardNum.setEnabled(true);
-            cardNum.setText("");
-            cardNum.setForeground(Color.BLACK);
+            cardNumber.setEnabled(true);
+            cardNumber.setText("");
+            cardNumber.setForeground(Color.BLACK);
             
             pin.setEnabled(true);
         } // ================= AP SELECTED =================
@@ -257,9 +258,9 @@ public final class Payment extends javax.swing.JInternalFrame {
             five.setEnabled(false);
             six.setEnabled(false);
 
-            cardNum.setEnabled(true);
-            cardNum.setText("");
-            cardNum.setForeground(Color.BLACK);
+            cardNumber.setEnabled(true);
+            cardNumber.setText("");
+            cardNumber.setForeground(Color.BLACK);
             
             pin.setEnabled(true);
         }
@@ -287,6 +288,8 @@ public final class Payment extends javax.swing.JInternalFrame {
         groupPayMethod.add(four);
         groupPayMethod.add(five);
         groupPayMethod.add(six);
+        
+       cardNumber.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
     }
 
     public void ToggleAPayBtn() {
@@ -343,10 +346,14 @@ public final class Payment extends javax.swing.JInternalFrame {
                 = (javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
     }
+    
+    private String cardNum;
 
     public boolean validation() {
         char[] PIN = pin.getPassword();
         String password = new String(PIN);
+        String textString = cardNumber.getText();
+        cardNum = textString.replaceAll("\\D", "");
         
         // Check AP/OP/COD selection
         if (!AP.isSelected() && !OP.isSelected() && !COD.isSelected()) {
@@ -372,7 +379,7 @@ public final class Payment extends javax.swing.JInternalFrame {
 
         // Check card number if COD is not selected
         if (!COD.isSelected()) {
-            String cardText = cardNum.getText().trim();
+            String cardText = cardNumber.getText().trim();
             if (cardText.isEmpty() || cardText.equalsIgnoreCase("Card Number")) {
                 JOptionPane.showMessageDialog(this, "Please enter your card number.", "Validation Error", JOptionPane.WARNING_MESSAGE);
                 return false;
@@ -418,10 +425,10 @@ public final class Payment extends javax.swing.JInternalFrame {
             card = "none";
         } else if (OP.isSelected()) {
             paymentMethod = "Online Pay";
-            card = cardNum.getText();
+            card = cardNum;
         } else if (AP.isSelected()) {
             paymentMethod = "Apay-Later";
-            card = cardNum.getText();
+            card = cardNum;
         }
         
         String locationString = location.getLatitude() + ", " + location.getLongitude();
@@ -506,13 +513,13 @@ public final class Payment extends javax.swing.JInternalFrame {
         BPI = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
-        cardNum = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         pin = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
         payInfo = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         address = new javax.swing.JTextPane();
+        cardNumber = new javax.swing.JFormattedTextField();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -625,6 +632,7 @@ public final class Payment extends javax.swing.JInternalFrame {
         jPanel1.add(jSeparator6, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 320, 310, 10));
 
         OP.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        OP.setSelected(true);
         OP.setText("Online Pay");
         OP.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -818,14 +826,6 @@ public final class Payment extends javax.swing.JInternalFrame {
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 10, 510));
 
-        cardNum.setBackground(new java.awt.Color(204, 204, 204));
-        cardNum.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                cardNumKeyTyped(evt);
-            }
-        });
-        jPanel1.add(cardNum, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 160, 280, 50));
-
         jLabel9.setFont(new java.awt.Font("Trebuchet MS", 1, 16)); // NOI18N
         jLabel9.setText("Card Number:");
         jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 130, -1, -1));
@@ -840,6 +840,14 @@ public final class Payment extends javax.swing.JInternalFrame {
         jScrollPane2.setViewportView(address);
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 330, 300, 310));
+
+        try {
+            cardNumber.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        cardNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel1.add(cardNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 160, 290, 50));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 950, -1));
 
@@ -906,7 +914,7 @@ public final class Payment extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_sixMouseClicked
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        
+
         if (validation()) {
             SendInputs();
         }// TODO add your handling code here:
@@ -925,17 +933,6 @@ public final class Payment extends javax.swing.JInternalFrame {
         OpenCardField();
         DisplayDueandLocation();// TODO add your handling code here:
     }//GEN-LAST:event_APMouseClicked
-
-    private void cardNumKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cardNumKeyTyped
-        char c = evt.getKeyChar();
-        String text = cardNum.getText();
-
-        // If not a digit OR length >= 16, ignore the input
-        if (!Character.isDigit(c) || text.length() >= 16) {
-            evt.consume();
-        }
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cardNumKeyTyped
 
     private void jLabel7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseEntered
         animation ani = new animation();
@@ -1011,7 +1008,7 @@ public final class Payment extends javax.swing.JInternalFrame {
     private javax.swing.JRadioButton OP;
     private javax.swing.JRadioButton UnionBank;
     private javax.swing.JTextPane address;
-    private javax.swing.JTextField cardNum;
+    private javax.swing.JFormattedTextField cardNumber;
     private javax.swing.JRadioButton five;
     private javax.swing.JRadioButton four;
     private javax.swing.JLabel jLabel1;

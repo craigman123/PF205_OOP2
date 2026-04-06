@@ -85,7 +85,12 @@ public class deliveredPanel extends javax.swing.JInternalFrame {
             String productName = order.get("order_prod").toString();
             String totalPrice = order.get("order_totalPrice").toString();
             String quantity = order.get("order_quantity").toString();
-            int prodID = ((Number) order.get("prod_id")).intValue();
+            int prodID = 0;
+            try {
+                prodID = ((Number) order.get("prod_id")).intValue();
+            } catch (NullPointerException e) {
+
+            }
 
             qry = "SELECT * FROM products WHERE prod_id = ?";
             java.util.List<java.util.Map<String, Object>> products = conf.fetchRecords(qry, prodID); 

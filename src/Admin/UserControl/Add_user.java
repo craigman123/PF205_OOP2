@@ -76,9 +76,11 @@ public final class Add_user extends javax.swing.JInternalFrame {
             acc = "open";
         }
        
-        conf.RegisterByAdmin(nm, bdg, ps, access, ussage, acc);
+        boolean confirmation = conf.RegisterByAdmin(nm, bdg, ps, access, ussage, acc);
         
-        EraseText();
+        if(confirmation) {
+            EraseText();
+        }
     }
         
     Border grayBorder = BorderFactory.createLineBorder(Color.GRAY, 2);

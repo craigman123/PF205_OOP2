@@ -60,6 +60,7 @@ public class Remove_Productclass {
 
         String qry = "DELETE FROM products WHERE prod_id = ?";
         boolean deleted = conf.deleteRecord(qry, id);
+        System.out.println("ID: " + id);
         
         if (deleted) {
             JOptionPane.showMessageDialog(

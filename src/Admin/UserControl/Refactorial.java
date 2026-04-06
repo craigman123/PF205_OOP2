@@ -58,6 +58,7 @@ public final class Refactorial extends javax.swing.JInternalFrame {
         animation.StyleToggleButtons(admin); 
         animation.StyleToggleButtons(dispatcher); 
         animation.StyleToggleButtons(ussageToggle); 
+        animation.StyleToggleButtons(sysacc);
     }
     
     public final void StyleFrame(){

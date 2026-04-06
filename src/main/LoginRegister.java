@@ -708,8 +708,10 @@ public class LoginRegister extends javax.swing.JFrame {
     private void passKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passKeyReleased
         animation ani = new animation();
         
-        if(!pass.equals("Password")){
-            ani.validateRequired(pass);     
+        if(!pass.equals("Password") && pass.getText().length() >= 4 && !pass.getText().isEmpty()){
+            ani.validateRequired(pass);
+        } else if (pass.getText().length() < 4) {
+            pass.setBorder(orangeBorder);
         }else{
             pass.setBorder(grayBorder);
         }
